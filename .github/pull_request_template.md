@@ -1,6 +1,3 @@
-**REMEMBER TO DELETE ANY IRRELEVANT TEMPLATE PROMPT TEXT BEFORE SUBMITTING**
-**KEEP IT SHORT AND SWEET**
-
 # Abstract
 
 Please include a summary of the changes and the related issue. At minimum, describe:
