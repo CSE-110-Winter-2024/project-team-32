@@ -1,4 +1,4 @@
-# Team X - Successorator 
+# Team 32 - Successorator 
 
 ---
 
