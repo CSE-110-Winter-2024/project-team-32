@@ -12,7 +12,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class MostImportantThingEntity {
     @PrimaryKey(autoGenerate = true) // database IDs are generated for us
     @ColumnInfo(name = "id") // specify names of our fields so we can write queries against them
-    public Integer id = null;
+    public Integer id;
 
     @ColumnInfo(name = "task")
     public String task;
@@ -31,14 +31,16 @@ public class MostImportantThingEntity {
      * @param timeCreated - creation time in ms from epoch
      * @param sortOrder - the sort order int
      */
-    MostImportantThingEntity(@NonNull String task, @NonNull Long timeCreated, int sortOrder) {
+    MostImportantThingEntity(Integer id, @NonNull String task, @NonNull Long timeCreated, int sortOrder) {
+        this.id = id;
         this.task = task;
         this.timeCreated = timeCreated;
         this.sortOrder = sortOrder;
     }
 
     public static MostImportantThingEntity fromMostImportantThing(@NonNull MostImportantThing mostImportantThing) {
-        var mit = new MostImportantThingEntity(mostImportantThing.task(),
+        var mit = new MostImportantThingEntity(mostImportantThing.id(),
+                                               mostImportantThing.task(),
                                                mostImportantThing.timeCreated(),
                                                mostImportantThing.sortOrder());
 
