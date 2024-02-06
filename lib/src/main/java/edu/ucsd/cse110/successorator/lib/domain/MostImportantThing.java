@@ -17,6 +17,7 @@ public class MostImportantThing {
      * @param id required id
      * @param task what the task text should be
      * @param timeCreated epoch time, should come from java.lang.System.currentTimeMillis()
+     * @param sortOrder integer for sorting purposes
      */
     public MostImportantThing(@Nullable Integer id,
                               @NonNull String task,

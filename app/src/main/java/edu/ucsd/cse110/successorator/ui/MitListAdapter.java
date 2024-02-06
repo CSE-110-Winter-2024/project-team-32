@@ -1,0 +1,74 @@
+package edu.ucsd.cse110.successorator.ui;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+
+public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
+    Consumer<Integer> onDeleteClick; // for the future when we want to delete mits
+    public MitListAdapter(Context context,
+                           List<MostImportantThing> mits
+    ) {
+        // This sets a bunch of stuff internally, which we can access
+        // with getContext() and getItem() for example.
+        //
+        // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
+        // or it will crash!
+        super(context, 0, new ArrayList<>(mits));
+//        this.onDeleteClick = onDeleteClick; // todo - havent implemented yet, lab5
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // Get the mit for this position.
+        var mit = getItem(position);
+        assert mit != null;
+
+        // Check if a view is being reused...
+        ListItemMitBinding binding;
+        if (convertView != null) {
+            // if so, bind to it
+            binding = ListItemMitBinding.bind(convertView);
+        } else {
+            // otherwise inflate a new view from our layout XML.
+            var layoutInflater = LayoutInflater.from(getContext());
+            binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
+        }
+
+        // Populate the view with the mit's data.
+        binding.mitTaskText.setText(mit.task());
+
+        return binding.getRoot();
+    }
+
+    // The below methods aren't strictly necessary, usually.
+    // but a lab said we need them
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        var mit = getItem(position);
+        assert mit != null;
+
+        var id = mit.id();
+        assert id != null;
+
+        return id;
+    }
+}

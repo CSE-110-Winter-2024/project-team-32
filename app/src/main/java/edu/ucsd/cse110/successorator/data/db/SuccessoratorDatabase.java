@@ -5,5 +5,5 @@ import androidx.room.RoomDatabase;
 
 @Database(entities = {MostImportantThingEntity.class}, version = 1)
 public abstract class SuccessoratorDatabase extends RoomDatabase {
-    public abstract MostImportantThingDao MostImportantThingDao();
+    public abstract MostImportantThingDao mostImportantThingDao();
 }

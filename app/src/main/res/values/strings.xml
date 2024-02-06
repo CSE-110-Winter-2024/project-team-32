@@ -2,4 +2,6 @@
     <string name="app_name">Successorator</string>
     <string name="placeholder">Placeholder</string>
     <string name="hello_world">Hello, World!</string>
+    <string name="app_title">Successorator</string>
+    <string name="mit_text">Mit Text</string>
 </resources>

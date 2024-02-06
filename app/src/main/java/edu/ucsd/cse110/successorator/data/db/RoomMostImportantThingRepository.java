@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
-public class RoomMostImportantThingRepository {
+public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
 
     public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao) {
