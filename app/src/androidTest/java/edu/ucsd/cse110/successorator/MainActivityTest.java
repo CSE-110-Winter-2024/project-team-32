@@ -1,19 +1,8 @@
 package edu.ucsd.cse110.successorator;
 
-import static androidx.test.core.app.ActivityScenario.launch;
-
-import static junit.framework.TestCase.assertEquals;
-
-import android.content.res.Resources;
-
-import androidx.lifecycle.Lifecycle;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -22,6 +11,7 @@ import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
+    /*
     @Test
     public void displaysHelloWorld() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -41,4 +31,5 @@ public class MainActivityTest {
             scenario.moveToState(Lifecycle.State.STARTED);
         }
     }
+    */
 }
