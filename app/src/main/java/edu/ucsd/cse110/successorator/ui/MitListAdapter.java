@@ -18,7 +18,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onDeleteClick; // for the future when we want to delete mits
     public MitListAdapter(Context context,
-                           List<MostImportantThing> mits
+                          List<MostImportantThing> mits
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
