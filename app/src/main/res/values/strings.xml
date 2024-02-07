@@ -4,4 +4,6 @@
     <string name="hello_world">Hello, World!</string>
     <string name="app_title">Successorator</string>
     <string name="mit_text">Mit Text</string>
+    <string name="no_goals_for_the_day_click_the_at_the_upper_right_to_enter_your_most_important_thing">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
+    <string name="blank_message_text">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
 </resources>

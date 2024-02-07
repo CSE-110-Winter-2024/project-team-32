@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         // init adapter
         this.adapter = new MitListAdapter(this, List.of());
 
+        // init view
+        this.view = ActivityMainBinding.inflate(getLayoutInflater());
+
         this.activityModel.getOrderedMits().observe(mits -> {
             if (mits == null) {
                 System.out.println("MainActivity got null mits");
@@ -40,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
             adapter.clear();
             adapter.addAll(new ArrayList<>(mits));
             adapter.notifyDataSetChanged();
+
+            // this feels like it violates SRP
+            if (mits.size() == 0) {
+                this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
+            }
+            if (mits.size() != 0) {
+                this.view.blankMessageText.setText("");
+            }
         });
-        this.view = ActivityMainBinding.inflate(getLayoutInflater());
         this.view.mitList.setAdapter(adapter);
         setContentView(view.getRoot());
 

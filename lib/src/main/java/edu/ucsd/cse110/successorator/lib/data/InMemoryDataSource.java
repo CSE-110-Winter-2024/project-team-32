@@ -30,7 +30,7 @@ public class InMemoryDataSource {
     public InMemoryDataSource() {
     }
 
-    public final static List<MostImportantThing> DEFAULT_MITS = List.of(
+    public final static List<MostImportantThing> TEST_MITS = List.of(
             new MostImportantThing(0, "todo1", 0L, 0),
             new MostImportantThing(1, "todo2", 1L, 1),
             new MostImportantThing(2, "todo3", 2L, 2),
@@ -39,6 +39,7 @@ public class InMemoryDataSource {
             new MostImportantThing(5, "todo6", 5L, 5)
     );
 
+    public final static List<MostImportantThing> DEFAULT_MITS = List.of();
     public static InMemoryDataSource fromDefault() {
         var data = new InMemoryDataSource();
         data.putMostImportantThings(DEFAULT_MITS);
