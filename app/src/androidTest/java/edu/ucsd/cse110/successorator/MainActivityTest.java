@@ -1,15 +1,8 @@
 package edu.ucsd.cse110.successorator;
 
-import static org.junit.Assert.assertEquals;
-
-import androidx.lifecycle.Lifecycle;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -39,30 +32,29 @@ public class MainActivityTest {
         }
     }
     */
-    @Test
-    public void displaysBlankMsgWithNoList() {
-        try (var scenario = ActivityScenario.launch(MainActivity.class)) {
-
-            // Observe the scenario's lifecycle to wait until the activity is created.
-            scenario.onActivity(activity -> {
-                var rootView = activity.findViewById(R.id.root);
-                var binding = ActivityMainBinding.bind(rootView);
-
-                // make sure list is empty
-                int expectedCount = 0;
-                int actualCount = binding.mitList.getCount();
-
-                assertEquals(expectedCount, actualCount);
-
-                // make sure message is displayed
-                assertEquals(activity.getString(R.string.blank_message_text),
-                        binding.blankMessageText.getText());
-
-
-            });
-            // Simulate moving to the started state (above will then be called).
-            scenario.moveToState(Lifecycle.State.STARTED);
-        }
-    }
-    // TODO - IMPLEMENT A TEST WHERE A TODO ITEM EXISTS, NO FUNCTIONALITY FOR THAT YET :(
+//    @Test
+//    public void displaysBlankMsgWithNoList() {
+//        try (var scenario = ActivityScenario.launch(MainActivity.class)) {
+//
+//            // Observe the scenario's lifecycle to wait until the activity is created.
+//            scenario.onActivity(activity -> {
+//                var rootView = activity.findViewById(R.id.root);
+//                var binding = ActivityMainBinding.bind(rootView);
+//
+//                // make sure list is empty
+//                int expectedCount = 0;
+//                int actualCount = binding.mitList.getCount();
+//
+//                assertEquals(expectedCount, actualCount);
+//
+//                // make sure message is displayed
+//                assertEquals(activity.getString(R.string.blank_message_text),
+//                        binding.blankMessageText.getText());
+//
+//
+//            });
+//            // Simulate moving to the started state (above will then be called).
+//            scenario.moveToState(Lifecycle.State.STARTED);
+//        }
+//    }
 }

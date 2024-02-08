@@ -1,13 +1,12 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,10 +81,12 @@ public class MitList extends Fragment {
             adapter.notifyDataSetChanged();
 
             // this feels like it violates SRP
-            if (mits.size() == 0) {
+            if (adapter.getCount() == 0) {
+                System.out.println("im restoring the blank message");
                 this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
             }
-            if (mits.size() != 0) {
+            if (adapter.getCount() != 0) {
+                System.out.println("im setting blank msg to null");
                 this.view.blankMessageText.setText("");
             }
         });
