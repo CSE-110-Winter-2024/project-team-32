@@ -38,8 +38,6 @@ public class MitListTest {
         System.out.println("clearing database on setup:");
         application.getMostImportantThingRepository().clear();
         System.out.println("db count: " + application.getMostImportantThingRepository().count());
-
-        scenario.moveToState(Lifecycle.State.STARTED);
     }
 
     @After
@@ -51,6 +49,14 @@ public class MitListTest {
     public void displaysBlankMsgWithNoList() {
         // Observe the scenario's lifecycle to wait until the activity is created.
         scenario.onFragment(fragment -> {
+            Context context = getApplicationContext();
+
+            // Retrieve the application class
+            SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+            System.out.println("clearing database on setup:");
+            application.getMostImportantThingRepository().clear();
+            System.out.println("db count: " + application.getMostImportantThingRepository().count());
+
             var rootView = fragment.getView().findViewById(R.id.root);
             var binding = FragmentMitListBinding.bind(rootView);
 
@@ -73,6 +79,14 @@ public class MitListTest {
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
+            Context context = getApplicationContext();
+
+            // Retrieve the application class
+            SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+            System.out.println("clearing database on setup:");
+            application.getMostImportantThingRepository().clear();
+            System.out.println("db count: " + application.getMostImportantThingRepository().count());
+
             // grab stuff from the xml
             var rootView = fragment.getView().findViewById(R.id.root);
             var binding = FragmentMitListBinding.bind(rootView);
@@ -114,6 +128,14 @@ public class MitListTest {
     // TODO - GO TO OFFICE HOURS TO FIX THIS CODE
     @Test
     public void textEmptyWhenMitsAdded() {
+        Context context = getApplicationContext();
+
+        // Retrieve the application class
+        SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+        System.out.println("clearing database on setup:");
+        application.getMostImportantThingRepository().clear();
+        System.out.println("db count: " + application.getMostImportantThingRepository().count());
+
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
