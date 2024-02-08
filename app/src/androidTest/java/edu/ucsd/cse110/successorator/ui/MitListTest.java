@@ -30,14 +30,14 @@ public class MitListTest {
     @Before
     public void setup() {
         scenario = FragmentScenario.launchInContainer(MitList.class);
-        System.out.println("hhherea");
-        Context context = getApplicationContext();
-
-        // Retrieve the application class
-        SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
-        System.out.println("clearing database on setup:");
-        application.getMostImportantThingRepository().clear();
-        System.out.println("db count: " + application.getMostImportantThingRepository().count());
+//        System.out.println("hhherea");
+//        Context context = getApplicationContext();
+//
+//        // Retrieve the application class
+//        SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+//        System.out.println("clearing database on setup:");
+//        application.getMostImportantThingRepository().clear();
+//        System.out.println("db count: " + application.getMostImportantThingRepository().count());
     }
 
     @After
