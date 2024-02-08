@@ -49,7 +49,6 @@ public class MainViewModel extends ViewModel {
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
-
         });
 
 

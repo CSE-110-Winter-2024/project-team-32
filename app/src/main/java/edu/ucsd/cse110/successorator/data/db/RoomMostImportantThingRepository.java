@@ -67,4 +67,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public void clear() {
         this.mostImportantThingDao.clear();
     }
+
+    public int count() {
+        return this.mostImportantThingDao.count();
+    }
 }

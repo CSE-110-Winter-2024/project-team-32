@@ -81,14 +81,17 @@ public class MitList extends Fragment {
             adapter.notifyDataSetChanged();
 
             // this feels like it violates SRP
-            if (adapter.getCount() == 0) {
-                System.out.println("im restoring the blank message");
-                this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
+            if (isAdded()) {
+                if (adapter.getCount() == 0) {
+                    System.out.println("im restoring the blank message");
+                    this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
+                }
+                if (adapter.getCount() != 0) {
+                    System.out.println("im setting blank msg to null");
+                    this.view.blankMessageText.setText("");
+                }
             }
-            if (adapter.getCount() != 0) {
-                System.out.println("im setting blank msg to null");
-                this.view.blankMessageText.setText("");
-            }
+
         });
         this.view.mitList.setAdapter(adapter);
 

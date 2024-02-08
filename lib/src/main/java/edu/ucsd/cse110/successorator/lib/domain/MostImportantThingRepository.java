@@ -26,4 +26,6 @@ public interface MostImportantThingRepository {
     void prepend(MostImportantThing mostImportantThing);
 
     void clear();
+
+    int count();
 }
