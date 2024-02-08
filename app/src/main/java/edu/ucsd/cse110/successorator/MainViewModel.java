@@ -95,4 +95,8 @@ public class MainViewModel extends ViewModel {
     public void remove(int id) {
         mostImportantThingRepository.remove(id);
     }
+
+    public void clear() {
+        mostImportantThingRepository.clear();
+    }
 }

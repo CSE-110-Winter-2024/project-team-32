@@ -64,4 +64,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         mostImportantThingDao.delete(id);
     }
 
+    public void clear() {
+        this.mostImportantThingDao.clear();
+    }
 }

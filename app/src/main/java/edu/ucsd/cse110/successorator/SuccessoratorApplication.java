@@ -11,7 +11,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 public class SuccessoratorApplication extends Application {
     private InMemoryDataSource dataSource;
-    private MostImportantThingRepository mostImportantThingRepository;
+    public MostImportantThingRepository mostImportantThingRepository;
 
     @Override
     public void onCreate() {
@@ -31,7 +31,9 @@ public class SuccessoratorApplication extends Application {
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);
         var isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
 
-        if (isFirstRun && database.mostImportantThingDao().count() == 0) {
+//        if (isFirstRun && database.mostImportantThingDao().count() == 0) {
+        if (isFirstRun) { // by only checking if first run, we can trick it
+            database.mostImportantThingDao().clear();
             this.mostImportantThingRepository.save(InMemoryDataSource.DEFAULT_MITS);
             sharedPreferences.edit()
                     .putBoolean("isFirstRun", false)
