@@ -57,6 +57,12 @@ public class MostImportantThing {
         return new MostImportantThing(id, this.task, this.timeCreated, this.sortOrder);
     }
 
+    public MostImportantThing withCompleted(boolean completed) {
+        MostImportantThing output = new  MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder);
+        output.setCompleted(completed);
+        return output;
+    }
+
     /**
      * returns a copy of itself with modified sort order
      * @param sortOrder new sort order

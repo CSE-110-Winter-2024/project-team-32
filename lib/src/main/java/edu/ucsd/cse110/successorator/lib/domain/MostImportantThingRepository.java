@@ -27,5 +27,6 @@ public interface MostImportantThingRepository {
 
     void clear();
 
+    void toggleCompleted(int id);
     int count();
 }

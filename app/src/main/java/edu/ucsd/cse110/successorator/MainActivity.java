@@ -30,28 +30,6 @@ public class MainActivity extends AppCompatActivity {
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
 
-        //REMOVED since refactored to make a fragment for the default view
-        //init adapter
-//        this.adapter = new MitListAdapter(this, List.of());
-//
-//        this.activityModel.getOrderedMits().observe(mits -> {
-//            if (mits == null) {
-//                System.out.println("MainActivity got null mits");
-//                return;
-//            }
-//            adapter.clear();
-//            adapter.addAll(new ArrayList<>(mits));
-//            adapter.notifyDataSetChanged();
-//
-//            // this feels like it violates SRP
-//            if (mits.size() == 0) {
-//                this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
-//            }
-//            if (mits.size() != 0) {
-//                this.view.blankMessageText.setText("");
-//            }
-//        });
-//        this.view.mi
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
