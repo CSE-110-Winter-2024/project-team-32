@@ -73,7 +73,7 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             }
 
         });
-
+        //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
         var checkBox = binding.toggleCompletedButton;
         if (!mit.completed()) {
