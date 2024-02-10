@@ -35,9 +35,12 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         // Get the mit for this position.
         var mit = getItem(position);
         assert mit != null;
+
+        System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
 
         // Check if a view is being reused...
         ListItemMitBinding binding;
@@ -58,14 +61,31 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             onToggleCompletedClick.accept(id);
             var taskText = binding.mitTaskText;
             //This is the logic that changes the text to strikethrough if it's completed
-            if (taskText.getPaint().isStrikeThruText()) {
+            //mit.setCompleted(true);
+            System.out.println("Completed is " + mit.completed());
+            if (mit.completed()) {
+                System.out.println("striking the text for id:" + mit.id());
                 taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             else {
+                System.out.println("unstriking the text! for the mit with id " + mit.id());
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
 
         });
+
+        var taskText = binding.mitTaskText;
+        var checkBox = binding.toggleCompletedButton;
+        if (!mit.completed()) {
+            System.out.println("unstriking the text for id:" + mit.id());
+            taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            checkBox.setChecked(false);
+        }
+        else {
+            checkBox.setChecked(true);
+            System.out.println("striking the text! for the mit with id " + mit.id());
+            taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
 
         // Populate the view with the mit's data.

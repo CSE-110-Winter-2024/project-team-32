@@ -50,6 +50,6 @@ public class MostImportantThingEntity {
     }
 
     public @NonNull MostImportantThing toMostImportantThing() {
-        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder);
+        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
     }
 }

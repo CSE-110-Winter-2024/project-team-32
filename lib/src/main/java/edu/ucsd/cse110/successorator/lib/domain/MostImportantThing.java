@@ -22,12 +22,13 @@ public class MostImportantThing {
     public MostImportantThing(@Nullable Integer id,
                               @NonNull String task,
                               @NonNull Long timeCreated,
-                              int sortOrder)
+                              int sortOrder,
+                              boolean completed)
     {
         this.id = id;
         this.task = task;
         this.timeCreated = timeCreated;
-        this.completed = true;
+        this.completed = completed;
         this.sortOrder = sortOrder;
     }
 
@@ -54,11 +55,11 @@ public class MostImportantThing {
      */
 
     public MostImportantThing withId(int id) {
-        return new MostImportantThing(id, this.task, this.timeCreated, this.sortOrder);
+        return new MostImportantThing(id, this.task, this.timeCreated, this.sortOrder, this.completed);
     }
 
     public MostImportantThing withCompleted(boolean completed) {
-        MostImportantThing output = new  MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder);
+        MostImportantThing output = new  MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
         output.setCompleted(completed);
         return output;
     }
@@ -69,7 +70,7 @@ public class MostImportantThing {
      * @return identical MostImportantThing but with changed sort order
      */
     public MostImportantThing withSortOrder(int sortOrder) {
-        return new MostImportantThing(this.id, this.task, this.timeCreated, sortOrder);
+        return new MostImportantThing(this.id, this.task, this.timeCreated, sortOrder, this.completed);
     }
 
     // TODO - this probably violates SRP

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
 
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -31,12 +31,12 @@ public class InMemoryDataSource {
     }
 
     public final static List<MostImportantThing> TEST_MITS = List.of(
-            new MostImportantThing(0, "todo1", 0L, 0),
-            new MostImportantThing(1, "todo2", 1L, 1),
-            new MostImportantThing(2, "todo3", 2L, 2),
-            new MostImportantThing(3, "todo4", 3L, 3),
-            new MostImportantThing(4, "todo5", 4L, 4),
-            new MostImportantThing(5, "todo6", 5L, 5)
+            new MostImportantThing(0, "todo1", 0L, 0, false),
+            new MostImportantThing(1, "todo2", 1L, 1, false),
+            new MostImportantThing(2, "todo3", 2L, 2, false),
+            new MostImportantThing(3, "todo4", 3L, 3, false),
+            new MostImportantThing(4, "todo5", 4L, 4, false),
+            new MostImportantThing(5, "todo6", 5L, 5, false)
     );
 
     public final static List<MostImportantThing> DEFAULT_MITS = List.of();
