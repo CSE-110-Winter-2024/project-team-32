@@ -99,11 +99,11 @@ public class MitListTest {
 
             // append stuff, should be fine as we've tested append
             System.out.println("appending 1 in test");
-            activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50));
+            activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50, false));
             System.out.println("appending 2nd in test");
-            activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51));
+            activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
             System.out.println("appending 3rd in test");
-            activityModel.append(new MostImportantThing(2, "toodo3", 52L, 52));
+            activityModel.append(new MostImportantThing(2, "toodo3", 52L, 52, false));
             System.out.println("done appending");
 
 
@@ -154,11 +154,11 @@ public class MitListTest {
             System.out.println("i got here");
             // append stuff, should be fine as we've tested append
             System.out.println("appending 1 in test");
-            activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50));
+            activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50, false));
             System.out.println("appending 2nd in test");
-            activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51));
+            activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
             System.out.println("appending 3rd in test");
-            activityModel.append(new MostImportantThing(2, "toodo5", 52L, 52));
+            activityModel.append(new MostImportantThing(2, "toodo5", 52L, 52, false));
             System.out.println("done appending");
 
 
