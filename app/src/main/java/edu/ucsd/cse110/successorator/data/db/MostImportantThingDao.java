@@ -18,7 +18,6 @@ public interface MostImportantThingDao {
     List<Long> insert(List<MostImportantThingEntity> mostImportantThings);
 
 
-
     // defining selections
     @Query("SELECT * FROM most_important_things WHERE id = :id")
     MostImportantThingEntity find(int id);
@@ -54,7 +53,7 @@ public interface MostImportantThingDao {
         var maxSortOrder = getMaxSortOrder();
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
-                mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder+1
+                mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder + 1
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -64,10 +63,14 @@ public interface MostImportantThingDao {
         shiftSortOrders(getMinSortOrder(), getMaxSortOrder(), 1);
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
-                mostImportantThing.task, mostImportantThing.timeCreated, getMinSortOrder()-1
+                mostImportantThing.task, mostImportantThing.timeCreated, getMinSortOrder() - 1
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
     @Query("DELETE FROM most_important_things WHERE id = :id")
-    void delete(int id);}
+    void delete(int id);
+
+    @Query("DELETE FROM most_important_things")
+    void clear();
+}

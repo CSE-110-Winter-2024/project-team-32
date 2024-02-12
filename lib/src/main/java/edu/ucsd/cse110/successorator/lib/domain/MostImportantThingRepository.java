@@ -9,7 +9,6 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
  * Used to implement the database, but it can also be
  * used to implement a simple InMemoryDatabase if we end up needing it
  *
- * @see RoomMostImportantThingRepository
  */
 public interface MostImportantThingRepository {
     Subject<MostImportantThing> find(int id);
@@ -25,4 +24,8 @@ public interface MostImportantThingRepository {
     void append(MostImportantThing mostImportantThing);
 
     void prepend(MostImportantThing mostImportantThing);
+
+    void clear();
+
+    int count();
 }

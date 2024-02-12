@@ -48,7 +48,6 @@ public class MainViewModel extends ViewModel {
             var newOrderedMits = mits.stream() // begin streaming block
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
-
             this.orderedMits.setValue(newOrderedMits);
         });
 
@@ -94,5 +93,9 @@ public class MainViewModel extends ViewModel {
     }
     public void remove(int id) {
         mostImportantThingRepository.remove(id);
+    }
+
+    public void clear() {
+        mostImportantThingRepository.clear();
     }
 }
