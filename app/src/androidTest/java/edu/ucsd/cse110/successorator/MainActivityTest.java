@@ -23,7 +23,7 @@ import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 public class MainActivityTest {
 
     @Test
-    public void displaysHelloWorld() {
+    public void displaysBlankMessageText() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
 
             // Observe the scenario's lifecycle to wait until the activity is created.
