@@ -226,11 +226,11 @@ public class SuccessoratorDatabaseTest {
         List<MostImportantThing> actualTasks = mitDao.findAll().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .collect(Collectors.toList());
+        //MITs come out in reverse order since we used prepend
         assertTrue(actualTasks.get(0).completed());
         assertFalse(actualTasks.get(1).completed());
         assertTrue(actualTasks.get(2).completed());
         assertFalse(actualTasks.get(3).completed());
-
 
         this.mitDao.toggleCompleted(0);
         this.mitDao.toggleCompleted(1);
@@ -245,8 +245,8 @@ public class SuccessoratorDatabaseTest {
         assertTrue(actualTasks.get(1).completed());
         assertFalse(actualTasks.get(2).completed());
         assertTrue(actualTasks.get(3).completed());
-
-        //assertEquals(actualTasks, expectedTasks);
     }
+
+
 
 }
