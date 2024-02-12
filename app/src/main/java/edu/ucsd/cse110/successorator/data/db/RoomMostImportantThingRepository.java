@@ -53,12 +53,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
 //    @Override
     public void prepend(MostImportantThing mostImportantThing) {
-        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
+        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
     }
 
 //    @Override
     public void append(MostImportantThing mostImportantThing) {
-        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
+        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
     }
 
 //    @Override
@@ -109,7 +109,36 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing().withSortOrder(sortOrder)));
 
         }
-                }
+    }
+
+    public void addNewMostImportantThing(MostImportantThing mit) {
+        var ElementList = this.mostImportantThingDao.findAll();
+        int numElems = ElementList.size();
+        int insertIdx = 0;
+        for (int i = 0; i < numElems; i++) {
+            if (ElementList.get(i).completed) {
+                break;
+            }
+            insertIdx++;
+        }
+        System.out.println("InsertIdx is " + insertIdx);
+        if (numElems == 0) {
+            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        }
+        else if (insertIdx == 0) {
+            this.mostImportantThingDao.shiftSortOrders(this.mostImportantThingDao.getMinSortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMinSortOrder() - 1)));
+        }
+        else if (insertIdx == numElems) {
+            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        }
+        else {
+            int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
+            this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+
+        }
+    }
     public int count() {
         return this.mostImportantThingDao.count();
     }
