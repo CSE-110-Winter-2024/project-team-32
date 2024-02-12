@@ -4,6 +4,7 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
+import android.widget.TextView;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.lifecycle.Lifecycle;
@@ -191,4 +192,5 @@ public class MitListTest {
         // Simulate moving to the started state (above will then be called).
         scenario.moveToState(Lifecycle.State.STARTED);
     }
+
 }

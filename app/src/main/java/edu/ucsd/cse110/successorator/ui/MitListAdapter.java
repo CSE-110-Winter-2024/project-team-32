@@ -19,9 +19,11 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
+    Consumer<Integer> onDeleteClick;
     public MitListAdapter(Context context,
                           List<MostImportantThing> mits,
-                          Consumer<Integer> onToggleCompletedClick
+                          Consumer<Integer> onToggleCompletedClick,
+                          Consumer<Integer> onDeleteClick
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
@@ -30,6 +32,7 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         // or it will crash!
         super(context, 0, new ArrayList<>(mits));
         this.onToggleCompletedClick = onToggleCompletedClick;
+        this.onDeleteClick = onDeleteClick;
     }
 
     @NonNull
@@ -52,6 +55,12 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             var layoutInflater = LayoutInflater.from(getContext());
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
+
+        binding.cardDeleteButton.setOnClickListener(v -> {
+            var id = mit.id();
+            assert id != null;
+            onDeleteClick.accept(id);
+        });
 
         binding.toggleCompletedButton.setOnClickListener(v -> {
             //System.out.println("Finding ID");
