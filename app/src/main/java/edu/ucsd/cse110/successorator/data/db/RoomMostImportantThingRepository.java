@@ -104,11 +104,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.mostImportantThingDao.append(this.mostImportantThingDao.find(id));
         }
         else {
+            int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
             this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing().withSortOrder(sortOrder)));
 
         }
-        //        this.mostImportantThingDao.insert(this.mostImportantThingDao.find(id));
-    }
+                }
     public int count() {
         return this.mostImportantThingDao.count();
     }

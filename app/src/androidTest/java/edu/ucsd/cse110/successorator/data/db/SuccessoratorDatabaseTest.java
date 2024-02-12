@@ -247,6 +247,35 @@ public class SuccessoratorDatabaseTest {
         assertTrue(actualTasks.get(3).completed());
     }
 
+//    @Test
+//    public void moveToTopTest() {
+//        var mit0 = MostImportantThingEntity.fromMostImportantThing(
+//                new MostImportantThing(0, "task0", 0L, 0, false));
+//
+//        var mit1 = MostImportantThingEntity.fromMostImportantThing(
+//                new MostImportantThing(1, "task1", 0L, 5, false));
+//        var mit2 = MostImportantThingEntity.fromMostImportantThing(
+//                new MostImportantThing(2, "task2", 0L, 3, false));
+//
+//        var mit3 = MostImportantThingEntity.fromMostImportantThing(
+//                new MostImportantThing(3, "task3", 0L, 5, false));
+//
+//        // defined sort orders shouldn't matter
+//        this.mitDao.prepend(mit0);
+//        this.mitDao.prepend(mit1);
+//        this.mitDao.prepend(mit2);
+//        this.mitDao.prepend(mit3);
+//
+//
+//
+//
+//    }
+//
+//    @Test
+//    public void moveToTopOfFinishedTest() {
+//
+//    }
+
 
 
 }
