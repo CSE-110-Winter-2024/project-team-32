@@ -31,19 +31,20 @@ public class MostImportantThingEntity {
      * @param timeCreated - creation time in ms from epoch
      * @param sortOrder - the sort order int
      */
-    MostImportantThingEntity(Integer id, @NonNull String task, @NonNull Long timeCreated, int sortOrder) {
+    MostImportantThingEntity(Integer id, @NonNull String task, @NonNull Long timeCreated, int sortOrder, boolean completed) {
         this.id = id;
         this.task = task;
         this.timeCreated = timeCreated;
         this.sortOrder = sortOrder;
-        this.completed = false;
+        this.completed = completed;
     }
 
     public static MostImportantThingEntity fromMostImportantThing(@NonNull MostImportantThing mostImportantThing) {
         var mit = new MostImportantThingEntity(mostImportantThing.id(),
                                                mostImportantThing.task(),
                                                mostImportantThing.timeCreated(),
-                                               mostImportantThing.sortOrder());
+                                               mostImportantThing.sortOrder(),
+                                                mostImportantThing.completed());
 
         mit.id = mostImportantThing.id();
         return mit;

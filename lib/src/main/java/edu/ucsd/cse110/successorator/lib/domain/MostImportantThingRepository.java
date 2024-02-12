@@ -27,6 +27,9 @@ public interface MostImportantThingRepository {
 
     void clear();
 
+    void moveToTop(int id);
+
+    void moveToTopOfFinished(int id);
     void toggleCompleted(int id);
     int count();
 }

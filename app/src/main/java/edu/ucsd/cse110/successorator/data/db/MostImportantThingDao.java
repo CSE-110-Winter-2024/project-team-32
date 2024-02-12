@@ -53,7 +53,8 @@ public interface MostImportantThingDao {
         var maxSortOrder = getMaxSortOrder();
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
-                mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder + 1
+                mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder + 1,
+                mostImportantThing.completed
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -63,7 +64,8 @@ public interface MostImportantThingDao {
         shiftSortOrders(getMinSortOrder(), getMaxSortOrder(), 1);
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
-                mostImportantThing.task, mostImportantThing.timeCreated, getMinSortOrder() - 1
+                mostImportantThing.task, mostImportantThing.timeCreated, getMinSortOrder() - 1,
+                mostImportantThing.completed
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }

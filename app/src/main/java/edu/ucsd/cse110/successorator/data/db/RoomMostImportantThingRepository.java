@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import android.sax.Element;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
@@ -70,7 +72,42 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     public void toggleCompleted(int id) {
         System.out.println("Toggling completed");
+        if (this.mostImportantThingDao.find(id).completed) {
+            this.moveToTop(id);
+        }
+        else {
+            this.moveToTopOfFinished(id);
+        }
         this.mostImportantThingDao.toggleCompleted(id);
+    }
+
+    public void moveToTop(int id) {
+        this.mostImportantThingDao.prepend(this.mostImportantThingDao.find(id));
+    }
+
+    public void moveToTopOfFinished(int id) {
+        var ElementList = this.mostImportantThingDao.findAll();
+        int numElems = ElementList.size();
+        int insertIdx = 0;
+        for (int i = 0; i < numElems; i++) {
+            if (ElementList.get(i).completed && (ElementList.get(i).id != id)) {
+                break;
+            }
+            insertIdx++;
+        }
+        System.out.println("InsertIdx is " + insertIdx);
+        if (insertIdx == 0) {
+            this.mostImportantThingDao.shiftSortOrders(this.mostImportantThingDao.getMinSortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+
+        }
+        else if (insertIdx == numElems) {
+            this.mostImportantThingDao.append(this.mostImportantThingDao.find(id));
+        }
+        else {
+            this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+
+        }
+        //        this.mostImportantThingDao.insert(this.mostImportantThingDao.find(id));
     }
     public int count() {
         return this.mostImportantThingDao.count();
