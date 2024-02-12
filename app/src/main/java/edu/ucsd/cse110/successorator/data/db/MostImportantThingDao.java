@@ -71,6 +71,10 @@ public interface MostImportantThingDao {
     @Query("DELETE FROM most_important_things WHERE id = :id")
     void delete(int id);
 
+    @Query("UPDATE most_important_things set completed = NOT completed " +
+            "WHERE id = :id")
+    void toggleCompleted(int id);
+
     @Query("DELETE FROM most_important_things")
     void clear();
 }

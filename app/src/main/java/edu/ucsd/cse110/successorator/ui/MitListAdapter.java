@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
-    Consumer<Integer> onDeleteClick; // for the future when we want to delete mits
+    Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
     public MitListAdapter(Context context,
-                          List<MostImportantThing> mits
+                          List<MostImportantThing> mits,
+                          Consumer<Integer> onToggleCompletedClick
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
@@ -26,15 +29,18 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(mits));
-//        this.onDeleteClick = onDeleteClick; // todo - havent implemented yet, lab5
+        this.onToggleCompletedClick = onToggleCompletedClick;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         // Get the mit for this position.
         var mit = getItem(position);
         assert mit != null;
+
+        System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
 
         // Check if a view is being reused...
         ListItemMitBinding binding;
@@ -47,8 +53,43 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
 
+        binding.toggleCompletedButton.setOnClickListener(v -> {
+            //System.out.println("Finding ID");
+            var id = mit.id();
+            assert id != null;
+            //System.out.println("Found ID");
+            onToggleCompletedClick.accept(id);
+            var taskText = binding.mitTaskText;
+            //This is the logic that changes the text to strikethrough if it's completed
+            //mit.setCompleted(true);
+            System.out.println("Completed is " + mit.completed());
+            if (mit.completed()) {
+                System.out.println("striking the text for id:" + mit.id());
+                taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+            else {
+                System.out.println("unstriking the text! for the mit with id " + mit.id());
+                taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+
+        });
+        //Make sure the items are in the correct state when the app is loaded
+        var taskText = binding.mitTaskText;
+        var checkBox = binding.toggleCompletedButton;
+        if (!mit.completed()) {
+            System.out.println("unstriking the text for id:" + mit.id());
+            taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            checkBox.setChecked(false);
+        }
+        else {
+            checkBox.setChecked(true);
+            System.out.println("striking the text! for the mit with id " + mit.id());
+            taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+
         // Populate the view with the mit's data.
-        binding.mitTaskText.setText(mit.task());
+        binding.mitTaskText.setText(mit.task());//mit.task());
 
         return binding.getRoot();
     }

@@ -36,6 +36,7 @@ public class MostImportantThingEntity {
         this.task = task;
         this.timeCreated = timeCreated;
         this.sortOrder = sortOrder;
+        this.completed = false;
     }
 
     public static MostImportantThingEntity fromMostImportantThing(@NonNull MostImportantThing mostImportantThing) {
@@ -49,6 +50,6 @@ public class MostImportantThingEntity {
     }
 
     public @NonNull MostImportantThing toMostImportantThing() {
-        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder);
+        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
     }
 }

@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.ui;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,7 @@ public class MitList extends Fragment {
 
     private void setUpMvp() {
         // init adapter
-        this.adapter = new MitListAdapter(this.getContext(), List.of());
+        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted);
 
         this.activityModel.getOrderedMits().observe(mits -> {
             if (mits == null) {
@@ -79,6 +80,7 @@ public class MitList extends Fragment {
             adapter.clear();
             adapter.addAll(new ArrayList<>(mits));
             adapter.notifyDataSetChanged();
+
 
             // this feels like it violates SRP
             if (isAdded()) {

@@ -54,7 +54,7 @@ public class CreateMitDialogFragment extends DialogFragment {
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
 
-        var mit = new MostImportantThing(null, mitText,System.currentTimeMillis(),-1);
+        var mit = new MostImportantThing(null, mitText,System.currentTimeMillis(),-1, false);
 
         System.out.println("Trying to append an item via the UI");
         activityModel.append(mit);

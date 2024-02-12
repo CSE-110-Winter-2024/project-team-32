@@ -7,8 +7,10 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.data.db.MostImportantThingDao;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
@@ -49,7 +51,13 @@ public class MainViewModel extends ViewModel {
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
+//            var mitsList = this.orderedMits.getValue();
+//            if (this.orderedMits.getValue().size() == 0) {
+//                var mit = mitsList.get(0);
+//
+//            }
         });
+
 
 
 
@@ -95,6 +103,27 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.remove(id);
     }
 
+    public void toggleCompleted(int id) {
+//        System.out.println("Toggling completed!");
+//        var mits = this.orderedMits.getValue();
+//        MostImportantThing mit = null;
+//        for (int i = 0; i < mits.size(); i++) {
+//            if (mits.get(i).id() == id) {
+//                mit = mits.get(i);
+//                break;
+//            }
+//        }
+//        if (mit == null) {
+//            throw new NoSuchElementException("Couldn't find the MIT in list that" +
+//                    " you're trying to toggle completed on");
+//        }
+//        else {
+//            mostImportantThingRepository.save(mit.withCompleted(!mit.completed()));
+//        }
+        var mitSubject = mostImportantThingRepository.find(id);
+        MostImportantThing mit = mitSubject.getValue();
+        mostImportantThingRepository.toggleCompleted(id);
+    }
     public void clear() {
         mostImportantThingRepository.clear();
     }

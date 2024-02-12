@@ -68,6 +68,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         this.mostImportantThingDao.clear();
     }
 
+    public void toggleCompleted(int id) {
+        System.out.println("Toggling completed");
+        this.mostImportantThingDao.toggleCompleted(id);
+    }
     public int count() {
         return this.mostImportantThingDao.count();
     }
