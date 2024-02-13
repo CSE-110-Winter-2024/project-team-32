@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -43,6 +44,8 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         var mit = getItem(position);
         assert mit != null;
 
+
+
         System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
 
         // Check if a view is being reused...
@@ -55,6 +58,8 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             var layoutInflater = LayoutInflater.from(getContext());
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
+        //TextView date = binding.getRoot().findViewById(R.id.action_bar_menu_date);
+        //System.out.println("DATE is + " + date.getText());
 
         binding.cardDeleteButton.setOnClickListener(v -> {
             var id = mit.id();

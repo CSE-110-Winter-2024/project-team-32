@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
-    <item android:id="@+id/aciton_bar_menu_add_mit"
+
+    <item android:id="@+id/action_bar_menu_add_mit"
         android:title="AddMit"
         android:icon="@drawable/ic_add"
+        android:orderInCategory="2"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bar_menu_date"
+        android:title="Date"
         android:orderInCategory="1"
         app:iconTint="@color/white"
         app:showAsAction="always" />
+
 </menu>

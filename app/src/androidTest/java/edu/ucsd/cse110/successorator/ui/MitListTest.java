@@ -2,6 +2,7 @@ package edu.ucsd.cse110.successorator.ui;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import android.content.Context;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.SuccessoratorApplication;
 import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 @RunWith(AndroidJUnit4.class)
 public class MitListTest {
@@ -54,9 +56,9 @@ public class MitListTest {
 
             // Retrieve the application class
             SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
-            System.out.println("clearing database on setup:");
+           //System.out.println("clearing database on setup:");
             application.getMostImportantThingRepository().clear();
-            System.out.println("db count: " + application.getMostImportantThingRepository().count());
+           //System.out.println("db count: " + application.getMostImportantThingRepository().count());
 
             var rootView = fragment.getView().findViewById(R.id.root);
             var binding = FragmentMitListBinding.bind(rootView);
@@ -84,9 +86,9 @@ public class MitListTest {
 
             // Retrieve the application class
             SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
-            System.out.println("clearing database on setup:");
+           //System.out.println("clearing database on setup:");
             application.getMostImportantThingRepository().clear();
-            System.out.println("db count: " + application.getMostImportantThingRepository().count());
+           //System.out.println("db count: " + application.getMostImportantThingRepository().count());
 
             // grab stuff from the xml
             var rootView = fragment.getView().findViewById(R.id.root);
@@ -99,18 +101,21 @@ public class MitListTest {
 
 
             // append stuff, should be fine as we've tested append
-            System.out.println("appending 1 in test");
+           //System.out.println("appending 1 in test");
             activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50, false));
-            System.out.println("appending 2nd in test");
+           //System.out.println("appending 2nd in test");
             activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
-            System.out.println("appending 3rd in test");
+           //System.out.println("appending 3rd in test");
             activityModel.append(new MostImportantThing(2, "toodo3", 52L, 52, false));
-            System.out.println("done appending");
+           //System.out.println("done appending");
 
 
             // check that the listView saw this change
             int expectedCount = 3;
             int actualCount = binding.mitList.getAdapter().getCount();
+
+            //
+            assertEquals(expectedCount, actualCount);
 
             // now make sure that the list view is displaying the correct values
             for (int i = 0; i < actualCount; i++) {
@@ -126,6 +131,50 @@ public class MitListTest {
     }
 
 
+    @Test
+    //TODO - THIS DOES NOT WORK SADLY SAME PROBLEM AS DANIEL HAD, WE TESTED MANUALLY THO AT LEAST
+    public void testMoveToTop() {
+        // launching the fragment scenario
+        // Observe the fragment's lifecycle to wait until the fragment is created.
+        scenario.onFragment(fragment -> {
+            Context context = getApplicationContext();
+
+            // Retrieve the application class
+            SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+           //System.out.println("clearing database on setup:");
+            application.getMostImportantThingRepository().clear();
+           //System.out.println("db count: " + application.getMostImportantThingRepository().count());
+
+            // grab stuff from the xml
+            var rootView = fragment.getView().findViewById(R.id.root);
+            var binding = FragmentMitListBinding.bind(rootView);
+
+            var modelOwner = fragment.requireActivity();
+            var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
+            var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
+            var activityModel = modelProvider.get(MainViewModel.class);
+
+            // check that the database reflects the change
+            MostImportantThingRepository repository = application.getMostImportantThingRepository();
+            repository.append(new MostImportantThing(0, "toodo1", 50L, 50, false));
+            repository.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
+            repository.append(new MostImportantThing(2, "toodo3", 52L, 52, false));
+
+            // now make sure that the list view is correctly ordered
+            repository.moveToTop(2);
+            assertEquals(repository.find(0).getValue().task(), "toodo1");
+//            var allItems = repository.findAll().getValue();
+//            assertEquals("toodo3",allItems.get(0).task());
+//            assertEquals("toodo1",allItems.get(1).task());
+//            assertEquals("toodo2",allItems.get(2).task());
+
+
+        });
+        // Simulate moving to the started state (above will then be called).
+        scenario.moveToState(Lifecycle.State.STARTED);
+    }
+
+
     // TODO - GO TO OFFICE HOURS TO FIX THIS CODE
     @Test
     public void textEmptyWhenMitsAdded() {
@@ -133,14 +182,14 @@ public class MitListTest {
 
         // Retrieve the application class
         SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
-        System.out.println("clearing database on setup:");
+       //System.out.println("clearing database on setup:");
         application.getMostImportantThingRepository().clear();
-        System.out.println("db count: " + application.getMostImportantThingRepository().count());
+       //System.out.println("db count: " + application.getMostImportantThingRepository().count());
 
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
-            System.out.println("i got here1");
+           //System.out.println("i got here1");
 
             // grab stuff from the xml
             var rootView = Objects.requireNonNull(fragment.getView()).findViewById(R.id.root);
@@ -152,15 +201,15 @@ public class MitListTest {
             var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
             var activityModel = modelProvider.get(MainViewModel.class);
 
-            System.out.println("i got here");
+           //System.out.println("i got here");
             // append stuff, should be fine as we've tested append
-            System.out.println("appending 1 in test");
+           //System.out.println("appending 1 in test");
             activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50, false));
-            System.out.println("appending 2nd in test");
+           //System.out.println("appending 2nd in test");
             activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
-            System.out.println("appending 3rd in test");
+           //System.out.println("appending 3rd in test");
             activityModel.append(new MostImportantThing(2, "toodo5", 52L, 52, false));
-            System.out.println("done appending");
+           //System.out.println("done appending");
 
 
 //                // check that the listView saw this change
@@ -184,13 +233,16 @@ public class MitListTest {
 
             String actualMsg = binding.blankMessageText.getText().toString();
 
-            System.out.println("trying the assert:");
+           //System.out.println("trying the assert:");
             assertEquals(expectedMsg, actualMsg);
-            System.out.println("assert concluded");
+           //System.out.println("assert concluded");
 
         });
         // Simulate moving to the started state (above will then be called).
         scenario.moveToState(Lifecycle.State.STARTED);
     }
-
 }
+
+
+
+
