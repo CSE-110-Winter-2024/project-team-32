@@ -56,10 +56,8 @@ public class CreateMitDialogFragment extends DialogFragment {
 
         var mit = new MostImportantThing(null, mitText,System.currentTimeMillis(),-1, false);
 
-        System.out.println("Trying to append an item via the UI");
-        activityModel.append(mit);
-
-
+        //System.out.println("Trying to append an item via the UI");
+        activityModel.addNewMostImportantThing(mit);
 
         dialog.dismiss();
     }

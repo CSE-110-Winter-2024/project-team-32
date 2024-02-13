@@ -104,25 +104,13 @@ public class MainViewModel extends ViewModel {
     }
 
     public void toggleCompleted(int id) {
-//        System.out.println("Toggling completed!");
-//        var mits = this.orderedMits.getValue();
-//        MostImportantThing mit = null;
-//        for (int i = 0; i < mits.size(); i++) {
-//            if (mits.get(i).id() == id) {
-//                mit = mits.get(i);
-//                break;
-//            }
-//        }
-//        if (mit == null) {
-//            throw new NoSuchElementException("Couldn't find the MIT in list that" +
-//                    " you're trying to toggle completed on");
-//        }
-//        else {
-//            mostImportantThingRepository.save(mit.withCompleted(!mit.completed()));
-//        }
         var mitSubject = mostImportantThingRepository.find(id);
         MostImportantThing mit = mitSubject.getValue();
         mostImportantThingRepository.toggleCompleted(id);
+    }
+
+    public void addNewMostImportantThing(MostImportantThing mit) {
+        mostImportantThingRepository.addNewMostImportantThing(mit);
     }
     public void clear() {
         mostImportantThingRepository.clear();

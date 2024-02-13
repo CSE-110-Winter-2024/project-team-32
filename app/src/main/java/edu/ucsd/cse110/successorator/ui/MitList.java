@@ -70,7 +70,7 @@ public class MitList extends Fragment {
 
     private void setUpMvp() {
         // init adapter
-        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted);
+        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
 
         this.activityModel.getOrderedMits().observe(mits -> {
             if (mits == null) {

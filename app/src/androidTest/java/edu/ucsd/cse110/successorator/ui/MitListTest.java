@@ -251,4 +251,5 @@ public class MitListTest {
         // Simulate moving to the started state (above will then be called).
         scenario.moveToState(Lifecycle.State.STARTED);
     }
+
 }

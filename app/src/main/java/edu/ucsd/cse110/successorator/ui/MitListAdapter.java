@@ -19,9 +19,11 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
+    Consumer<Integer> onDeleteClick;
     public MitListAdapter(Context context,
                           List<MostImportantThing> mits,
-                          Consumer<Integer> onToggleCompletedClick
+                          Consumer<Integer> onToggleCompletedClick,
+                          Consumer<Integer> onDeleteClick
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
@@ -30,6 +32,7 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         // or it will crash!
         super(context, 0, new ArrayList<>(mits));
         this.onToggleCompletedClick = onToggleCompletedClick;
+        this.onDeleteClick = onDeleteClick;
     }
 
     @NonNull
@@ -53,22 +56,29 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
 
+        binding.cardDeleteButton.setOnClickListener(v -> {
+            var id = mit.id();
+            assert id != null;
+            onDeleteClick.accept(id);
+        });
+
         binding.toggleCompletedButton.setOnClickListener(v -> {
             //System.out.println("Finding ID");
             var id = mit.id();
             assert id != null;
+            boolean completed = !mit.completed();
             //System.out.println("Found ID");
             onToggleCompletedClick.accept(id);
             var taskText = binding.mitTaskText;
             //This is the logic that changes the text to strikethrough if it's completed
             //mit.setCompleted(true);
             System.out.println("Completed is " + mit.completed());
-            if (mit.completed()) {
-                System.out.println("striking the text for id:" + mit.id());
+            if (!completed) {
+                System.out.println("unstriking the text for id:" + mit.id());
                 taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             else {
-                System.out.println("unstriking the text! for the mit with id " + mit.id());
+                System.out.println("striking the text! for the mit with id " + mit.id());
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
 
