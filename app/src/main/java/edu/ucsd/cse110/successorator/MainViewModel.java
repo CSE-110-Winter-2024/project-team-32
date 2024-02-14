@@ -7,10 +7,8 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import edu.ucsd.cse110.successorator.data.db.MostImportantThingDao;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
@@ -23,17 +21,13 @@ public class MainViewModel extends ViewModel {
     private final MostImportantThingRepository mostImportantThingRepository;
     private final SimpleSubject<List<MostImportantThing>> orderedMits;
     private final SimpleSubject<String> displayedTask;
-
     private MitListAdapter adapter;
 
-    public static final ViewModelInitializer<MainViewModel> initializer =
-            new ViewModelInitializer<>(
-                    MainViewModel.class,
-                    creationExtras -> {
-                        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
-                        assert app != null;
-                        return new MainViewModel(app.getMostImportantThingRepository());
-                    });
+    public static final ViewModelInitializer<MainViewModel> initializer = new ViewModelInitializer<>(MainViewModel.class, creationExtras -> {
+        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
+        assert app != null;
+        return new MainViewModel(app.getMostImportantThingRepository());
+    });
 
     public MainViewModel(MostImportantThingRepository mostImportantThingRepository) {
         this.mostImportantThingRepository = mostImportantThingRepository;
@@ -57,10 +51,6 @@ public class MainViewModel extends ViewModel {
 //
 //            }
         });
-
-
-
-
     }
 
     public Subject<String> getDisplayedTask() {
@@ -70,7 +60,6 @@ public class MainViewModel extends ViewModel {
     public Subject<List<MostImportantThing>> getOrderedMits() {
         return orderedMits;
     }
-
 
     public void stepForward() {
         var mits = this.orderedMits.getValue();
@@ -96,9 +85,11 @@ public class MainViewModel extends ViewModel {
     public void append(MostImportantThing mit) {
         mostImportantThingRepository.append(mit);
     }
+
     public void prepend(MostImportantThing mit) {
         mostImportantThingRepository.prepend(mit);
     }
+
     public void remove(int id) {
         mostImportantThingRepository.remove(id);
     }
@@ -112,6 +103,7 @@ public class MainViewModel extends ViewModel {
     public void addNewMostImportantThing(MostImportantThing mit) {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
+
     public void clear() {
         mostImportantThingRepository.clear();
     }

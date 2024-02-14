@@ -20,8 +20,8 @@ import edu.ucsd.cse110.successorator.ui.MitList;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
 
-
     private MainViewModel activityModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +50,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
 }

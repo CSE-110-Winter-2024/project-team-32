@@ -10,8 +10,8 @@ import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 public class SuccessoratorApplication extends Application {
-    private InMemoryDataSource dataSource;
     public MostImportantThingRepository mostImportantThingRepository;
+    private InMemoryDataSource dataSource;
 
     @Override
     public void onCreate() {
