@@ -71,4 +71,16 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public int count() {
         return this.mostImportantThingDao.count();
     }
+
+    public boolean completedStatus(int id){
+        return mostImportantThingDao.findAll().get(id).completed;
+    }
+    public void removeCompletedTasks(){
+        for (int i = mostImportantThingDao.findAll().size() - 1; i >= 0; i--) { // Start from the end of the list
+            if (completedStatus(i) == true) {
+                this.remove(i); // Remove the completed task
+            }
+        }
+    }
+
 }
