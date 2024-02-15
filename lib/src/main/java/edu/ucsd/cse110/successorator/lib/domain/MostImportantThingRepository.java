@@ -35,4 +35,6 @@ public interface MostImportantThingRepository {
 
     void toggleCompleted(int id);
     int count();
+
+    public void removeCompletedTasks();
 }

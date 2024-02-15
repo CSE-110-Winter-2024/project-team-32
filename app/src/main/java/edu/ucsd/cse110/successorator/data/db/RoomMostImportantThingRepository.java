@@ -5,6 +5,7 @@ import android.sax.Element;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -146,10 +147,24 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public boolean completedStatus(int id){
         return mostImportantThingDao.findAll().get(id).completed;
     }
-    public void removeCompletedTasks(){
-        for (int i = mostImportantThingDao.findAll().size() - 1; i >= 0; i--) { // Start from the end of the list
+
+
+    public void removeCompletedTasks() {
+        //creating a calendar two hours behinh
+        long twoHours = 7200000;
+        Calendar cal = new Calendar.Builder().setInstant(System.currentTimeMillis() - twoHours).build();
+
+        var elements = mostImportantThingDao.findAll();
+        for (int i = elements.size() - 1; i >= 0; i--) { // Start from the end of the list
             if (completedStatus(i) == true) {
-                this.remove(i); // Remove the completed task
+                //if it's completed, then we want to look at the current day and the day before
+                Calendar elemCal = new Calendar.Builder()
+                    .setInstant(elements.get(i).toMostImportantThing().timeCreated() - twoHours)
+                        .build();
+                if(cal.get(Calendar.DAY_OF_YEAR) != elemCal.get(Calendar.DAY_OF_YEAR)) {
+                    this.remove(i); // Remove the completed task
+                }
+
             }
         }
     }
