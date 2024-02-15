@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_title);
 
+        //NEEDS TESTING LIKE REALLY BAD
+        //activityModel.removeCompletedTasks();
+
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
 

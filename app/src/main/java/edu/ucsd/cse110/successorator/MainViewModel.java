@@ -104,7 +104,7 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
 
-    public void clearCompletedTasks() {
+    public void removeCompletedTasks() {
         mostImportantThingRepository.removeCompletedTasks();
     }
 
