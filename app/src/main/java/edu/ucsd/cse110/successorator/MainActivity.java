@@ -38,37 +38,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         //When you make the options menu, add the date
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
         String date = dateFormat.format(c.getTime());
-        String day;
-        switch (c.get(Calendar.DAY_OF_WEEK)) {
-            case Calendar.SUNDAY:
-                day = "Sunday";
-                break;
-            case Calendar.MONDAY:
-                day = "Monday";
-                break;
-            case Calendar.TUESDAY:
-                day = "Tuesday";
-                break;
-            case Calendar.WEDNESDAY:
-                day = "Wednesday";
-                break;
-            case Calendar.THURSDAY:
-                day = "Thursday:";
-                break;
-            case Calendar.FRIDAY:
-                day = "Friday";
-                break;
-            case Calendar.SATURDAY:
-                day = "Saturday";
-                break;
-            default:
-                day = "Not a day (" + c.get(Calendar.DAY_OF_WEEK) + ")";
-        }
-        date = day + " " + date;
-
-
         var dateItem = (menu.findItem(R.id.action_bar_menu_date)).setTitle(date);
 
         return true;
