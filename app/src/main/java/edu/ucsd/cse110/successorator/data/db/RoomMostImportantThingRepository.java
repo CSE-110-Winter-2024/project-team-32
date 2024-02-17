@@ -5,6 +5,7 @@ import android.sax.Element;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -144,28 +145,39 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return this.mostImportantThingDao.count();
     }
 
-    public boolean completedStatus(int id){
-        return mostImportantThingDao.findAll().get(id).completed;
+    private long getReferenceTimeForRemoval() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 2);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        // Adjust to yesterday's 2 a.m. if current time is before 2 a.m.
+        if (System.currentTimeMillis() < cal.getTimeInMillis()) {
+            cal.add(Calendar.DATE, -1);
+        }
+        return cal.getTimeInMillis();
     }
 
-
-    public void removeCompletedTasks() {
-        //creating a calendar two hours behinh
-        long twoHours = 7200000;
-        Calendar cal = new Calendar.Builder().setInstant(System.currentTimeMillis() - twoHours).build();
-
-        var elements = mostImportantThingDao.findAll();
-        for (int i = elements.size() - 1; i >= 0; i--) { // Start from the end of the list
-            if (completedStatus(i) == true) {
-                //if it's completed, then we want to look at the current day and the day before
-                Calendar elemCal = new Calendar.Builder()
-                    .setInstant(elements.get(i).toMostImportantThing().timeCreated() - twoHours)
-                        .build();
-                if(cal.get(Calendar.DAY_OF_YEAR) != elemCal.get(Calendar.DAY_OF_YEAR)) {
-                    this.remove(i); // Remove the completed task
-                }
-
+    // Method to filter tasks that should be removed
+    private List<Integer> filterTasksForRemoval(List<MostImportantThingEntity> elements, long cutoffTime) {
+        List<Integer> tasksToRemove = new ArrayList<>();
+        for (MostImportantThingEntity element : elements) {
+            if (element.completed && element.toMostImportantThing().timeCreated() < cutoffTime) {
+                tasksToRemove.add(element.id);
             }
+        }
+        return tasksToRemove;
+    }
+
+    // Focused task removal method
+    public void removeCompletedTasks() {
+        long cutoffTime = getReferenceTimeForRemoval();
+        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
+
+        for (Integer taskId : tasksToRemove) {
+            this.remove(taskId);
         }
     }
 }
