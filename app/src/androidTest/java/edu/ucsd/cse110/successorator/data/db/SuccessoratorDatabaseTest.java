@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
-import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -30,13 +29,11 @@ public class SuccessoratorDatabaseTest {
 //    private MostImportantThingDao mitDao;
     private SuccessoratorDatabase db;
     private MostImportantThingDao mitDao;
-    private MostImportantThingRepository mitRepo;
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
         this.db = Room.inMemoryDatabaseBuilder(context, SuccessoratorDatabase.class).build();
         this.mitDao = this.db.mostImportantThingDao();
-        this.mitRepo = new RoomMostImportantThingRepository(mitDao);
     }
     @After
     public void closeDb() throws IOException {
