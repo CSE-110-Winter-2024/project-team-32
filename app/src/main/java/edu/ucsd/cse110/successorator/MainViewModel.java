@@ -7,10 +7,8 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import edu.ucsd.cse110.successorator.data.db.MostImportantThingDao;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
@@ -51,15 +49,7 @@ public class MainViewModel extends ViewModel {
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
-//            var mitsList = this.orderedMits.getValue();
-//            if (this.orderedMits.getValue().size() == 0) {
-//                var mit = mitsList.get(0);
-//
-//            }
         });
-
-
-
 
     }
 
@@ -72,6 +62,7 @@ public class MainViewModel extends ViewModel {
     }
 
 
+    //Shift all of the sort orders down 1
     public void stepForward() {
         var mits = this.orderedMits.getValue();
         if (mits == null) return; // not ready yet
@@ -82,6 +73,7 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.save(newMits);
     }
 
+    //Shift all of the sort orders up 1
     public void stepBackward() {
         var mits = this.orderedMits.getValue();
         if (mits == null) return; // not ready yet
@@ -104,11 +96,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public void toggleCompleted(int id) {
-        var mitSubject = mostImportantThingRepository.find(id);
-        MostImportantThing mit = mitSubject.getValue();
         mostImportantThingRepository.toggleCompleted(id);
     }
-
     public void addNewMostImportantThing(MostImportantThing mit) {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
