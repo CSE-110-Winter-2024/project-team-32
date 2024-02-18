@@ -14,5 +14,13 @@
         android:orderInCategory="1"
         app:iconTint="@color/white"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_bar_menu_advance_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_advance_date"
+        android:orderInCategory="3"
+        android:title="action_bar_menu_advance_date"
+        app:showAsAction="always" />
 
 </menu>
