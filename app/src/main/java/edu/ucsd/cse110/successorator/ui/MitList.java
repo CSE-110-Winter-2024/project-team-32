@@ -40,16 +40,34 @@ public class MitList extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initial creation of a fragment (before onCreate())
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //initialize viewModel
         var modelOwner = requireActivity();
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
         this.activityModel = modelProvider.get(MainViewModel.class);
     }
 
+    /**
+     * Called so fragment can create it's user view
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +79,9 @@ public class MitList extends Fragment {
         return view.getRoot();
     }
 
+    /**
+     * Set up Model-View-Presenter for fragment
+     */
     private void setUpMvp() {
         // init adapter
         this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
@@ -74,6 +95,7 @@ public class MitList extends Fragment {
             adapter.clear();
             adapter.addAll(new ArrayList<>(mits));
             adapter.notifyDataSetChanged();
+
 
             //Display the default message if there are no MITs
             if (isAdded()) {

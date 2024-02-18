@@ -12,12 +12,26 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
+
+/**
+ * Implementation of MostImportantThingRepository interface using Room
+ */
 public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
 
+    /**
+     * Constructor for RoomMostImportantThingRepository
+     * @param mostImportantThingDao The DAO for MostImportantThings
+     */
     public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao) {
         this.mostImportantThingDao = mostImportantThingDao;
     }
+
+    /**
+     * finds a MostImportantThing by it's id
+     * @param id the ID of the MostImportantThing you are trying to find
+     * @return The subject with the MostImportantThing found
+     */
 
     @Override
     public Subject<MostImportantThing> find(int id) {
@@ -27,6 +41,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
+    /**
+     * Finds all MostImportantThings
+     * @return A Subject List of all the MostImportantThings
+     */
     @Override
     public Subject<List<MostImportantThing>> findAll() {
         var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
@@ -38,11 +56,19 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
     }
 
+    /**
+     * Saves a MostImportantThing
+     * @param mostImportantThing the MostImportantThing to be saved
+     */
     @Override
     public void save(MostImportantThing mostImportantThing) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
     }
 
+    /**
+     * Saves a list of MostImportantThings
+     * @param mostImportantThings The List of MostImportantThings to save
+     */
     @Override
     public void save(List<MostImportantThing> mostImportantThings) {
         var entities = mostImportantThings.stream()
@@ -51,25 +77,44 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         this.mostImportantThingDao.insert(entities);
     }
 
+    /**
+     * Prepends a mostImportantThing
+     * @param mostImportantThing The mostImportantThing to prepend
+     */
     @Override
     public void prepend(MostImportantThing mostImportantThing) {
         mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
     }
 
+    /**
+     * Appends a mostImportantThing
+     * @param mostImportantThing The mostImportantThing to append
+     */
     @Override
     public void append(MostImportantThing mostImportantThing) {
         mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
     }
 
+    /**
+     * Removes a mostImportantThing by it's id
+     * @param id The ID of the mostImportantThing to remove
+     */
     @Override
     public void remove(int id) {
         mostImportantThingDao.delete(id);
     }
 
+    /**
+     * Clears all mostImportantThings from repository
+     */
     public void clear() {
         this.mostImportantThingDao.clear();
     }
 
+    /**
+     * Toggles the completed status of the mostImportantThing with the id
+     * @param id The ID of the mostImportantThing to mark completed
+     */
     public void toggleCompleted(int id) {
         System.out.println("Toggling completed");
         if (this.mostImportantThingDao.find(id).completed) {
@@ -85,13 +130,18 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         this.mostImportantThingDao.toggleCompleted(id);
     }
 
-    //Moves an MIT to the abolsute top of the list
+    /**
+     * Moves a mostImportantThing to the top of the unfinished list
+     * @param id The ID of the mostImportantThing to move
+     */
     public void moveToTop(int id) {
         this.mostImportantThingDao.prepend(this.mostImportantThingDao.find(id));
     }
 
-    //Moves an MIT to the top of the unfinished portion of the list
-    //This means below all unfinished tasks, but above all finished tasks
+    /**
+     * Moves a mostImportantThing to the top of the finished list
+     * @param id The ID of the mostImportantThing to move
+     */
     public void moveToTopOfFinished(int id) {
         var ElementList = this.mostImportantThingDao.findAll();
         int numElems = ElementList.size();
@@ -121,8 +171,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         }
     }
 
-    //Adds a new MIT in the correct order, below all of the unfinished MITs
-    //And above all of the finished MITs
+    /**
+     * Adds a new MostImportantThing to the repository
+     * @param mit The MostImportantThing being added
+     */
     public void addNewMostImportantThing(MostImportantThing mit) {
         var ElementList = this.mostImportantThingDao.findAll();
         int numElems = ElementList.size();
@@ -158,6 +210,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
         }
     }
+
+    /**
+     * Count of the number of things in the repository
+     * @return The count of the mostImportantThings
+     */
     public int count() {
         return this.mostImportantThingDao.count();
     }

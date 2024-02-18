@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
+/**
+ * Entity class of mostImportantThing in database
+ */
 @Entity(tableName = "most_important_things") // telling Room that this class is a database table
                                              // and I want it to be called "most_important_things
 public class MostImportantThingEntity {
@@ -27,6 +30,7 @@ public class MostImportantThingEntity {
     public int sortOrder;
 
     /**
+     * Constructor for creating a mostImportantThingEntity
      * @param task - the text this MIT should have
      * @param timeCreated - creation time in ms from epoch
      * @param sortOrder - the sort order int
@@ -39,6 +43,11 @@ public class MostImportantThingEntity {
         this.completed = completed;
     }
 
+    /**
+     * Converts a mostImportantThing to an entity object
+     * @param mostImportantThing the mostImportantThing to be converted
+     * @return The converted mostImportantThing object
+     */
     public static MostImportantThingEntity fromMostImportantThing(@NonNull MostImportantThing mostImportantThing) {
         var mit = new MostImportantThingEntity(mostImportantThing.id(),
                                                mostImportantThing.task(),
@@ -50,6 +59,11 @@ public class MostImportantThingEntity {
         return mit;
     }
 
+    /**
+     * Converts current iteration's MostImportantThingEntity object into a
+     * MostImportantThing object
+     * @return The converted MostImportantThing object
+     */
     public @NonNull MostImportantThing toMostImportantThing() {
         return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
     }

@@ -62,9 +62,9 @@ public class MostImportantThing {
     }
 
     /**
-     * returns a copy of itself with modified completed
-     * @param completed
-     * @return identical MostImportantThing with changed boolean
+     * returns a copy of the MostImportantThing with the completed status
+     * @param completed the new completed status
+     * @return a new MostImportantThing with the new completed status set
      */
     public MostImportantThing withCompleted(boolean completed) {
         return new  MostImportantThing(this.id,
@@ -83,11 +83,23 @@ public class MostImportantThing {
         return new MostImportantThing(this.id, this.task, this.timeCreated, sortOrder, this.completed);
     }
 
+    /**
+     * sets the completed value of mostImportantThing
+     * @param b the completed value to be set
+     */
     // TODO - this probably violates SRP
     public void setCompleted(Boolean b) {
         this.completed = b;
     }
 
+    /**
+     * Custom equals method for two mostImportantThing objects
+     * Equal if all sortOrder, id, task, timeCreated, and completed status
+     * are the same
+     * Compares current instance's object with parameter
+     * @param o the mostImportantThing object to compare
+     * @return true if they are equal, else false
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,6 +108,11 @@ public class MostImportantThing {
         return sortOrder == that.sortOrder && Objects.equals(id, that.id) && Objects.equals(task, that.task) && Objects.equals(timeCreated, that.timeCreated) && Objects.equals(completed, that.completed);
     }
 
+    /**
+     * Gets the hashCode value of the mostImportantThing based on it's id, task,
+     * timeCreated, completed, and sortOrder values
+     * @return the hash code value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, task, timeCreated, completed, sortOrder);
