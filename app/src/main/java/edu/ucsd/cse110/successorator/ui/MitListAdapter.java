@@ -20,6 +20,15 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
     Consumer<Integer> onDeleteClick;
+
+    /**
+     * Constructor for the MitListAdapter.
+     *
+     * @param context The context in which the adapter is being used
+     * @param mits The list of MostImportantThing items to display
+     * @param onToggleCompletedClick Toggling completion function
+     * @param onDeleteClick Deletion function
+     */
     public MitListAdapter(Context context,
                           List<MostImportantThing> mits,
                           Consumer<Integer> onToggleCompletedClick,
@@ -35,6 +44,19 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         this.onDeleteClick = onDeleteClick;
     }
 
+    /**
+     * Gets the view at a position in the dataset
+     * @param position The position of the item within the adapter's data set of the item whose view
+     *        we want.
+     * @param convertView The old view to reuse, if possible. Note: You should check that this view
+     *        is non-null and of an appropriate type before using. If it is not possible to convert
+     *        this view to display the correct data, this method can create a new view.
+     *        Heterogeneous lists can specify their number of view types, so that this View is
+     *        always of the right type (see {@link #getViewTypeCount()} and
+     *        {@link #getItemViewType(int)}).
+     * @param parent The parent that this view will eventually be attached to
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -107,11 +129,20 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     // The below methods aren't strictly necessary, usually.
     // but a lab said we need them
 
+    /**
+     * Determines if the IDs are stable over changes
+     * @return True if they are stable, else false
+     */
     @Override
     public boolean hasStableIds() {
         return true;
     }
 
+    /**
+     * Gets the item ID for the given position within the adapter
+     * @param position The position of the item within the adapter's data set whose row id we want.
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         var mit = getItem(position);

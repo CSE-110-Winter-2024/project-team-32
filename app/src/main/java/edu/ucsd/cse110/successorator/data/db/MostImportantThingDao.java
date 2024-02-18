@@ -9,6 +9,9 @@ import androidx.room.Transaction;
 
 import java.util.List;
 
+/**
+ * DAO interface for accessing MostImportantThings in the database
+ */
 @Dao // telling android that this is a DAO
 public interface MostImportantThingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -5,6 +5,9 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class containing operations for the list of MostImportantThings objects
+ */
 public class MostImportantThings {
 
     /**
