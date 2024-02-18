@@ -30,8 +30,7 @@ public class SuccessoratorApplication extends Application {
         // populate the database with some initial data on the first run.
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);
         var isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
-
-//        if (isFirstRun && database.mostImportantThingDao().count() == 0) {
+        
         if (isFirstRun) { // by only checking if first run, we can trick it
             database.mostImportantThingDao().clear();
             this.mostImportantThingRepository.save(InMemoryDataSource.DEFAULT_MITS);

@@ -29,7 +29,7 @@ public class MostImportantThingTest {
     }
 
     @Test
-    public void withSortOrder() {
+    public void testWithSortOrder() {
         var mit = new MostImportantThing(1, "todo", 2024L, 0, false);
         var expected = new MostImportantThing(1, "todo", 2024L, 42, false);
 
@@ -37,6 +37,17 @@ public class MostImportantThingTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testWithCompleted() {
+        var mit = new MostImportantThing(1, "todo", 2024L, 0, false);
+        var expected = new MostImportantThing(1, "todo", 2024L, 0, true);
+
+        var actual = mit.withCompleted(true);
+
+        assertEquals(expected, actual);
+    }
+
     @Test
     public void testEquals() {
         var mit1 = new MostImportantThing(1, "todo", 2024L, 0, false);
