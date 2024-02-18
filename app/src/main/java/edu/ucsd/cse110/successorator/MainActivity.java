@@ -1,12 +1,22 @@
 package edu.ucsd.cse110.successorator;
 
+
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
@@ -17,7 +27,11 @@ import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
  */
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
+    private TextView dateTextView;
+    private int incrementDateBy = 0;
+
     private MainViewModel activityModel;
+
 
     /**
      * Called when an activity is first created
@@ -26,15 +40,20 @@ public class MainActivity extends AppCompatActivity {
      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
      */
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_title);
 
-        this.view = ActivityMainBinding.inflate(getLayoutInflater());
+        this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
+        dateTextView = findViewById(R.id.action_bar_menu_advance_date);
+
+        //old code, commented out in github repo
+        //setContentView(view.getRoot());
+        //this.view = ActivityMainBinding.inflate(getLayoutInflater());
+        //setContentView(view.getRoot());
+  
         setContentView(view.getRoot());
-        //US3 completed by android already
 
 
     }
@@ -47,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
+        //When you make the options menu, add the date
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        String date = dateFormat.format(c.getTime());
+        var dateItem = (menu.findItem(R.id.action_bar_menu_date)).setTitle(date);
+
         return true;
     }
 
@@ -57,16 +82,31 @@ public class MainActivity extends AppCompatActivity {
      * @return true if interaction was handled, else false
      */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        incrementDateBy++;
         var itemId = item.getItemId();
 
-        //When the plus icon is selected, create a dialog to add a new MIT
-        if (itemId == R.id.aciton_bar_menu_add_mit) {
+        if (itemId == R.id.action_bar_menu_advance_date) {
+            advanceDate(incrementDateBy);
+        }
+        if (itemId == R.id.action_bar_menu_add_mit) {
+            //Todo, make button initiate a Dialog
             var dialogFragment = CreateMitDialogFragment.newInstance();
-            dialogFragment.show(getSupportFragmentManager(),
-                    "CreateMitDialogFragment");
+            dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
 
         }
         return super.onOptionsItemSelected(item);
     }
+
+    //only advances the date by 1 day
+    //restarting the app will reset to current day
+    public void advanceDate(int incrementDateBy) {
+        dateTextView = findViewById(R.id.action_bar_menu_date);
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
+        String date = dateFormat.format(c.getTime());
+        dateTextView.setText(date);
+    }
+
 
 }

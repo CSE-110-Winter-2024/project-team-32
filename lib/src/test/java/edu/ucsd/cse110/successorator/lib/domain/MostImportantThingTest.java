@@ -57,4 +57,5 @@ public class MostImportantThingTest {
         assertEquals(mit1, mit2);
         assertNotEquals(mit1, mit3);
     }
+
 }
