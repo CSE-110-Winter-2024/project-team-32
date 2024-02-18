@@ -7,10 +7,8 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import edu.ucsd.cse110.successorator.data.db.MostImportantThingDao;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
@@ -61,11 +59,6 @@ public class MainViewModel extends ViewModel {
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
-//            var mitsList = this.orderedMits.getValue();
-//            if (this.orderedMits.getValue().size() == 0) {
-//                var mit = mitsList.get(0);
-//
-//            }
         });
 
     }
@@ -99,6 +92,7 @@ public class MainViewModel extends ViewModel {
         // update the repository with the new sort orders.
         mostImportantThingRepository.save(newMits);
     }
+
 
     /**
      * Move the non Null MIT backwards (1 space back) and save
@@ -143,8 +137,6 @@ public class MainViewModel extends ViewModel {
      * @param id The ID of the MostImportantThing to be marked completed
      */
     public void toggleCompleted(int id) {
-        var mitSubject = mostImportantThingRepository.find(id);
-        MostImportantThing mit = mitSubject.getValue();
         mostImportantThingRepository.toggleCompleted(id);
     }
 

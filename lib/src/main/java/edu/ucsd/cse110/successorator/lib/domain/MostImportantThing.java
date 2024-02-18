@@ -6,7 +6,8 @@ import androidx.annotation.Nullable;
 import java.util.Objects;
 
 /**
- * Class representing a mostImportantThing aka the tasks
+ * Class which defines a MIT, stores the id, task, timeCreated, sortOrder,
+ * and whether or not it has been completed
  */
 public class MostImportantThing {
     private final @Nullable Integer id;
@@ -56,7 +57,6 @@ public class MostImportantThing {
      * @param id new id
      * @return identical MostImportantThing but with changed id
      */
-
     public MostImportantThing withId(int id) {
         return new MostImportantThing(id, this.task, this.timeCreated, this.sortOrder, this.completed);
     }
@@ -67,9 +67,11 @@ public class MostImportantThing {
      * @return a new MostImportantThing with the new completed status set
      */
     public MostImportantThing withCompleted(boolean completed) {
-        MostImportantThing output = new  MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
-        output.setCompleted(completed);
-        return output;
+        return new  MostImportantThing(this.id,
+                this.task,
+                this.timeCreated,
+                this.sortOrder,
+                completed);
     }
 
     /**

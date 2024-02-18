@@ -20,7 +20,6 @@ public interface MostImportantThingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insert(List<MostImportantThingEntity> mostImportantThings);
 
-
     // defining selections
     @Query("SELECT * FROM most_important_things WHERE id = :id")
     MostImportantThingEntity find(int id);
@@ -62,24 +61,30 @@ public interface MostImportantThingDao {
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
+    //Adds a specific MIT to the database, with a sort order
+    // lower than the rest of the items
     @Transaction
     default int prepend(MostImportantThingEntity mostImportantThing) {
         shiftSortOrders(getMinSortOrder(), getMaxSortOrder(), 1);
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
-                mostImportantThing.task, mostImportantThing.timeCreated, getMinSortOrder() - 1,
+                mostImportantThing.task, mostImportantThing.timeCreated,
+                getMinSortOrder() - 1,
                 mostImportantThing.completed
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
+    //Deletes a specific item from the databse
     @Query("DELETE FROM most_important_things WHERE id = :id")
     void delete(int id);
 
+    //Toggles the completed bool for a specific item in the database
     @Query("UPDATE most_important_things set completed = NOT completed " +
             "WHERE id = :id")
     void toggleCompleted(int id);
 
+    //Deletes all items from the database
     @Query("DELETE FROM most_important_things")
     void clear();
 }

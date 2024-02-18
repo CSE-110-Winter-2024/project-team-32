@@ -15,23 +15,17 @@ import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 /**
- * Dialog fragment for a MostImportantThing
+ * Dialog Fragment for when the user is adding an MIT
  */
 public class CreateMitDialogFragment extends DialogFragment {
     private FragmentDialogCreateMitBinding view;
     private MainViewModel activityModel;
 
     /**
-     * Constructor (empty)
-     */
-    CreateMitDialogFragment() {
-
-    }
-
-    /**
      * Creates a new CreateMitDialogFragment instance
      * @return new CreateMitDialogFragment instance
      */
+
     public static CreateMitDialogFragment newInstance() {
         var fragment = new CreateMitDialogFragment();
         Bundle args = new Bundle();
@@ -78,6 +72,7 @@ public class CreateMitDialogFragment extends DialogFragment {
      * @param dialog dialog from click
      * @param which button that was clicked
      */
+
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
 
