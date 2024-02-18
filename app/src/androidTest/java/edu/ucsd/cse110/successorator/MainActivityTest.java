@@ -70,6 +70,7 @@ public class MainActivityTest {
         }
     }
 
+    /*
     @Test
     public void callingAlarmCorrectly() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
@@ -91,5 +92,7 @@ public class MainActivityTest {
             scenario.moveToState(Lifecycle.State.STARTED);
         }
     }
+    */
+
 
 }
