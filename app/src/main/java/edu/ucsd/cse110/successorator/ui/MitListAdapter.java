@@ -43,8 +43,6 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         var mit = getItem(position);
         assert mit != null;
 
-        System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
-
         // Check if a view is being reused...
         ListItemMitBinding binding;
         if (convertView != null) {
@@ -56,6 +54,8 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
 
+        //Delete button that was implemented on accident, but doesn't get in
+        //the way
         binding.cardDeleteButton.setOnClickListener(v -> {
             var id = mit.id();
             assert id != null;
@@ -63,7 +63,6 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         });
 
         binding.toggleCompletedButton.setOnClickListener(v -> {
-            //System.out.println("Finding ID");
             var id = mit.id();
             assert id != null;
             boolean completed = !mit.completed();
@@ -71,42 +70,38 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             onToggleCompletedClick.accept(id);
             var taskText = binding.mitTaskText;
             //This is the logic that changes the text to strikethrough if it's completed
-            //mit.setCompleted(true);
-            System.out.println("Completed is " + mit.completed());
             if (!completed) {
-                System.out.println("unstriking the text for id:" + mit.id());
+                //Set the text to not strikethrough
                 taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             else {
-                System.out.println("striking the text! for the mit with id " + mit.id());
+                //Set the text to strikethrough
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-
         });
+
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
         var checkBox = binding.toggleCompletedButton;
         if (!mit.completed()) {
-            System.out.println("unstriking the text for id:" + mit.id());
+            //Set the text to not strikethrough
             taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             checkBox.setChecked(false);
         }
         else {
+            //Set the text to strikethrough
             checkBox.setChecked(true);
-            System.out.println("striking the text! for the mit with id " + mit.id());
             taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-
         // Populate the view with the mit's data.
-        binding.mitTaskText.setText(mit.task());//mit.task());
+        binding.mitTaskText.setText(mit.task());
 
         return binding.getRoot();
     }
 
     // The below methods aren't strictly necessary, usually.
     // but a lab said we need them
-
     @Override
     public boolean hasStableIds() {
         return true;

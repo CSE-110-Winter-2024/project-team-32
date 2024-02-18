@@ -14,13 +14,12 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
+/**
+ * Fragment for when the user is adding an MIT
+ */
 public class CreateMitDialogFragment extends DialogFragment {
     private FragmentDialogCreateMitBinding view;
     private MainViewModel activityModel;
-
-    CreateMitDialogFragment() {
-
-    }
 
     public static CreateMitDialogFragment newInstance() {
         var fragment = new CreateMitDialogFragment();
@@ -51,6 +50,7 @@ public class CreateMitDialogFragment extends DialogFragment {
                 .create();
     }
 
+    //When you confirm adding the MIT, add the MIT
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
 
@@ -62,6 +62,7 @@ public class CreateMitDialogFragment extends DialogFragment {
         dialog.dismiss();
     }
 
+    //Cancel adding the MIT
     public void onNegativeButtonClick(DialogInterface dialog, int which) {
         dialog.cancel();
     }
