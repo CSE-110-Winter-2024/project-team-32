@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
 
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private MainViewModel activityModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         dateTextView = findViewById(R.id.action_bar_menu_advance_date);
 
-        setContentView(view.getRoot());
-
+        //old code, commented out in github repo
+        //setContentView(view.getRoot());
+        //this.view = ActivityMainBinding.inflate(getLayoutInflater());
+        //setContentView(view.getRoot());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             //Todo, make button initiate a Dialog
             var dialogFragment = CreateMitDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -76,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
         String date = dateFormat.format(c.getTime());
         dateTextView.setText(date);
     }
-
-
-
 
 
 }

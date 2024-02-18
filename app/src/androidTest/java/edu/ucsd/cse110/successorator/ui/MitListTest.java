@@ -49,7 +49,7 @@ public class MitListTest {
     }
 
     @Test
-    public void displaysBlankMsgWithNoList() {
+    public void testDisplaysBlankMsgWithNoList() {
         // Observe the scenario's lifecycle to wait until the activity is created.
         scenario.onFragment(fragment -> {
             Context context = getApplicationContext();
@@ -77,8 +77,9 @@ public class MitListTest {
     }
 
 
+    //Todo - fix this code
     @Test
-    public void displayMitsWhenAdded() {
+    public void testDisplayMitsWhenAdded() {
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
@@ -122,6 +123,64 @@ public class MitListTest {
                 String expected = "toodo" + (i + 1);
                 // need to cast MostImportantThig
                 var actual = ((MostImportantThing) binding.mitList.getItemAtPosition(i)).task();
+                assertEquals(expected, actual);
+            }
+
+        });
+        // Simulate moving to the started state (above will then be called).
+        scenario.moveToState(Lifecycle.State.STARTED);
+    }
+
+    //TODO - fix this code
+    @Test
+    public void testDisplayStrikeThroughMits() {
+        // launching the fragment scenario
+        // Observe the fragment's lifecycle to wait until the fragment is created.
+        scenario.onFragment(fragment -> {
+            Context context = getApplicationContext();
+
+            // Retrieve the application class
+            SuccessoratorApplication application = (SuccessoratorApplication) context.getApplicationContext();
+            System.out.println("clearing database on setup:");
+            application.getMostImportantThingRepository().clear();
+            System.out.println("db count: " + application.getMostImportantThingRepository().count());
+
+            // grab stuff from the xml
+            var rootView = fragment.getView().findViewById(R.id.root);
+            var binding = FragmentMitListBinding.bind(rootView);
+
+            var modelOwner = fragment.requireActivity();
+            var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
+            var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
+            var activityModel = modelProvider.get(MainViewModel.class);
+
+
+            // append stuff, should be fine as we've tested append
+            System.out.println("appending 1 in test");
+            activityModel.append(new MostImportantThing(0, "toodo1", 50L, 50, true));
+            System.out.println("appending 2nd in test");
+            activityModel.append(new MostImportantThing(1, "toodo2", 51L, 51, false));
+            System.out.println("appending 3rd in test");
+            activityModel.append(new MostImportantThing(2, "toodo3", 52L, 52, true));
+            System.out.println("done appending");
+            System.out.println("appending 4th in test");
+            activityModel.append(new MostImportantThing(3, "toodo3", 52L, 52, true));
+            System.out.println("appending 5th in test");
+            activityModel.append(new MostImportantThing(4, "toodo3", 52L, 52, true));
+            System.out.println("appending 6th in test");
+            activityModel.append(new MostImportantThing(5, "toodo3", 52L, 52, false));
+
+
+
+            // check that the listView saw this change
+            int expectedCount = 3;
+            int actualCount = binding.mitList.getAdapter().getCount();
+                        // now make sure that the list view is displaying the correct values
+            for (int i = 0; i < actualCount; i++) {
+                //Just short hand to check for true values
+                boolean expected = ((i % 2) == 0 || i == 3);
+                //Cast to TextView to get each text view for each item in the list. Need to use getChildAt(i)
+                boolean actual = ((TextView) (binding.mitList.getChildAt(i))).getPaint().isStrikeThruText();
                 assertEquals(expected, actual);
             }
 
@@ -177,7 +236,7 @@ public class MitListTest {
 
     // TODO - GO TO OFFICE HOURS TO FIX THIS CODE
     @Test
-    public void textEmptyWhenMitsAdded() {
+    public void testTextEmptyWhenMitsAdded() {
         Context context = getApplicationContext();
 
         // Retrieve the application class
