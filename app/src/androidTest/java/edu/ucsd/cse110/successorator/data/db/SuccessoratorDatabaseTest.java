@@ -421,6 +421,7 @@ public class SuccessoratorDatabaseTest {
         List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0");
         assertEquals(expectedTasks, actualTasks);
 
+
     }
 
 }
