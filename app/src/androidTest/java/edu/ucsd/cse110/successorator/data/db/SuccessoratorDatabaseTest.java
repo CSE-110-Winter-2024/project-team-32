@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -29,11 +30,13 @@ public class SuccessoratorDatabaseTest {
 //    private MostImportantThingDao mitDao;
     private SuccessoratorDatabase db;
     private MostImportantThingDao mitDao;
+    private MostImportantThingRepository mitRepo;
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
         this.db = Room.inMemoryDatabaseBuilder(context, SuccessoratorDatabase.class).build();
         this.mitDao = this.db.mostImportantThingDao();
+        this.mitRepo = new RoomMostImportantThingRepository(mitDao);
     }
     @After
     public void closeDb() throws IOException {
@@ -258,33 +261,166 @@ public class SuccessoratorDatabaseTest {
         assertTrue(actualTasks.get(3).completed());
     }
 
-//    @Test
-//    public void moveToTopTest() {
-//        var mit0 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(0, "task0", 0L, 0, false));
-//
-//        var mit1 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(1, "task1", 0L, 5, false));
-//        var mit2 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(2, "task2", 0L, 3, false));
-//
-//        var mit3 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(3, "task3", 0L, 5, false));
-//
-//        // defined sort orders shouldn't matter
-//        this.mitDao.prepend(mit0);
-//        this.mitDao.prepend(mit1);
-//        this.mitDao.prepend(mit2);
-//        this.mitDao.prepend(mit3);
-//
-//
-//
-//
-//    }
-//
-//    @Test
-//    public void moveToTopOfFinishedTest() {
-//
-//    }
+    @Test
+    public void moveToTopTest() {
+        var mit0 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(0, "task0", 0L, 0, false));
+
+        var mit1 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(1, "task1", 0L, 1, false));
+        var mit2 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(2, "task2", 0L, 2, false));
+
+        var mit3 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(3, "task3", 0L, 3, false));
+
+        // defined sort orders shouldn't matter
+        this.mitDao.prepend(mit0);
+        this.mitDao.prepend(mit1);
+        this.mitDao.prepend(mit2);
+        this.mitDao.prepend(mit3);
+
+        this.mitRepo.moveToTop(mit0.id);
+
+        List<String> actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        List<String> expectedTasks = Arrays.asList("task0", "task3", "task2", "task1");
+        assertEquals(expectedTasks, actualTasks);
+
+        this.mitRepo.moveToTop(mit2.id);
+
+        actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        expectedTasks = Arrays.asList("task2", "task0", "task3", "task1");
+        assertEquals(expectedTasks, actualTasks);
+
+    }
+
+    @Test
+    public void testMoveToTopOfFinishedNoFinished() {
+        var mit0 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(0, "task0", 0L, 0, false));
+
+        var mit1 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(1, "task1", 0L, 1, false));
+        var mit2 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(2, "task2", 0L, 2, false));
+
+        var mit3 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(3, "task3", 0L, 3, false));
+
+        // defined sort orders shouldn't matter
+        this.mitDao.prepend(mit0);
+        this.mitDao.prepend(mit1);
+        this.mitDao.prepend(mit2);
+        this.mitDao.prepend(mit3);
+
+        this.mitRepo.moveToTopOfFinished(mit3.id);
+
+        List<String> actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        List<String> expectedTasks = Arrays.asList("task2", "task1", "task0", "task3");
+        assertEquals(expectedTasks, actualTasks);
+
+        this.mitRepo.moveToTopOfFinished(mit2.id);
+
+        actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        expectedTasks = Arrays.asList("task1", "task0", "task3", "task2");
+        assertEquals(expectedTasks, actualTasks);
+
+    }
+
+    @Test
+    public void testMoveToTopOfFinishedHasFinished() {
+        var mit0 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(0, "task0", 0L, 0, true));
+
+        var mit1 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(1, "task1", 0L, 1, true));
+        var mit2 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(2, "task2", 0L, 2, false));
+
+        var mit3 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(3, "task3", 0L, 3, false));
+
+        // defined sort orders shouldn't matter
+        this.mitDao.prepend(mit0);
+        this.mitDao.prepend(mit1);
+        this.mitDao.prepend(mit2);
+        this.mitDao.prepend(mit3);
+
+
+        this.mitRepo.moveToTopOfFinished(mit3.id);
+
+        List<String> actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        List<String> expectedTasks = Arrays.asList("task2", "task3", "task1", "task0");
+        assertEquals(expectedTasks, actualTasks);
+
+        this.mitRepo.moveToTopOfFinished(mit2.id);
+
+        actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        expectedTasks = Arrays.asList("task3", "task2", "task1", "task0");
+        assertEquals(expectedTasks, actualTasks);
+
+    }
+
+    @Test
+    public void testMoveToTopOfFinishedOnlyFinished() {
+        var mit0 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(0, "task0", 0L, 0, true));
+
+        var mit1 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(1, "task1", 0L, 1, true));
+        var mit2 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(2, "task2", 0L, 2, true));
+
+        var mit3 = MostImportantThingEntity.fromMostImportantThing(
+                new MostImportantThing(3, "task3", 0L, 3, false));
+
+        // defined sort orders shouldn't matter
+        this.mitDao.prepend(mit0);
+        this.mitDao.prepend(mit1);
+        this.mitDao.prepend(mit2);
+        this.mitDao.prepend(mit3);
+
+        this.mitRepo.moveToTopOfFinished(mit3.id);
+
+        List<String> actualTasks = mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+        assertEquals(4, actualTasks.size());
+
+        List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0");
+        assertEquals(expectedTasks, actualTasks);
+
+    }
 
 }
