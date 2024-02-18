@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
         //setContentView(view.getRoot());
         //this.view = ActivityMainBinding.inflate(getLayoutInflater());
         //setContentView(view.getRoot());
+  
+        setContentView(view.getRoot());
+
+
     }
 
     /**
