@@ -47,7 +47,7 @@ public class MitListTest {
     }
 
     @Test
-    public void displaysBlankMsgWithNoList() {
+    public void testDisplaysBlankMsgWithNoList() {
         // Observe the scenario's lifecycle to wait until the activity is created.
         scenario.onFragment(fragment -> {
             Context context = getApplicationContext();
@@ -75,8 +75,9 @@ public class MitListTest {
     }
 
 
+    //Todo - fix this code
     @Test
-    public void displayMitsWhenAdded() {
+    public void testDisplayMitsWhenAdded() {
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
@@ -125,8 +126,9 @@ public class MitListTest {
         scenario.moveToState(Lifecycle.State.STARTED);
     }
 
+    //TODO - fix this code
     @Test
-    public void displayStrikeThroughMits() {
+    public void testDisplayStrikeThroughMits() {
         // launching the fragment scenario
         // Observe the fragment's lifecycle to wait until the fragment is created.
         scenario.onFragment(fragment -> {
@@ -165,8 +167,6 @@ public class MitListTest {
 
 
 
-
-
             // check that the listView saw this change
             int expectedCount = 3;
             int actualCount = binding.mitList.getAdapter().getCount();
@@ -187,7 +187,7 @@ public class MitListTest {
 
     // TODO - GO TO OFFICE HOURS TO FIX THIS CODE
     @Test
-    public void textEmptyWhenMitsAdded() {
+    public void testTextEmptyWhenMitsAdded() {
         Context context = getApplicationContext();
 
         // Retrieve the application class

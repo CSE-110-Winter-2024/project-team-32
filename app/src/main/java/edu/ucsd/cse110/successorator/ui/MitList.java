@@ -27,19 +27,12 @@ public class MitList extends Fragment {
 
     private MitListAdapter adapter;
 
-
-
-       public MitList() {
-        // Required empty public constructor
-    }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @return A new instance of fragment Mit_list.
      */
-    // TODO: Rename and change types and number of parameters
     public static MitList newInstance() {
         MitList fragment = new MitList();
         Bundle args = new Bundle();
@@ -72,6 +65,7 @@ public class MitList extends Fragment {
         // init adapter
         this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
 
+        //Observers that display the MITs, or the default message if there are no MITs
         this.activityModel.getOrderedMits().observe(mits -> {
             if (mits == null) {
                 System.out.println("MainActivity got null mits");
@@ -81,22 +75,18 @@ public class MitList extends Fragment {
             adapter.addAll(new ArrayList<>(mits));
             adapter.notifyDataSetChanged();
 
-
-            // this feels like it violates SRP
+            //Display the default message if there are no MITs
             if (isAdded()) {
                 if (adapter.getCount() == 0) {
-                    System.out.println("im restoring the blank message");
                     this.view.blankMessageText.setText(this.getString(R.string.blank_message_text));
                 }
                 if (adapter.getCount() != 0) {
-                    System.out.println("im setting blank msg to null");
                     this.view.blankMessageText.setText("");
                 }
             }
 
         });
         this.view.mitList.setAdapter(adapter);
-
     }
 
 }
