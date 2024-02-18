@@ -1,5 +1,10 @@
 package edu.ucsd.cse110.successorator;
 
+import android.app.AlarmManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,13 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
-import edu.ucsd.cse110.successorator.ui.MitListAdapter;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
-import edu.ucsd.cse110.successorator.ui.MitList;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
@@ -27,13 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_title);
 
-        //NEEDS TESTING LIKE REALLY BAD
-        //activityModel.removeCompletedTasks();
-
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
 
-
+        scheduleAlarm();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,7 +49,21 @@ public class MainActivity extends AppCompatActivity {
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
 
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scheduleAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Set the alarm to start at 2 am every day
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 2);
+        calendar.set(Calendar.MINUTE, 0);
+
+        // Repeat the alarm every day
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 }
