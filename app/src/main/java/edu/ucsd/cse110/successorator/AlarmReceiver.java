@@ -12,5 +12,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         // Create an instance of MainViewModel and call removeCompletedTasks
         MainViewModel viewModel = new ViewModelProvider((MainActivity) context).get(MainViewModel.class);
         viewModel.removeCompletedTasks();
+        System.out.println("The method is called!");
     }
 }

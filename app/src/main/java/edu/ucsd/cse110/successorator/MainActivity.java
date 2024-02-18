@@ -1,7 +1,6 @@
 package edu.ucsd.cse110.successorator;
 
 import android.app.AlarmManager;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -53,15 +52,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void scheduleAlarm() {
+        scheduleAlarm(System.currentTimeMillis(), 2, 0);
+    }
+
+    private void scheduleAlarm(Long systemTime, int hour, int minute) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the alarm to start at 2 am every day
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 2);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.setTimeInMillis(systemTime);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
 
         // Repeat the alarm every day
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
