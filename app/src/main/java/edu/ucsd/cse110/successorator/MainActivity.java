@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
-
+        //US3 completed by android already
 
     }
 
