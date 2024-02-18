@@ -1,12 +1,11 @@
 package edu.ucsd.cse110.successorator.data.db;
 
-import android.sax.Element;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,18 +144,18 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return this.mostImportantThingDao.count();
     }
 
-    private long getReferenceTimeForRemoval() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 2);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        // Adjust to yesterday's 2 a.m. if current time is before 2 a.m.
-        if (System.currentTimeMillis() < cal.getTimeInMillis()) {
-            cal.add(Calendar.DATE, -1);
-        }
-        return cal.getTimeInMillis();
+    private long getReferenceTimeForRemoval(LocalDateTime time) {
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.HOUR_OF_DAY, 2);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//        // Adjust to yesterday's 2 a.m. if current time is before 2 a.m.
+//        if (System.currentTimeMillis() < cal.getTimeInMillis()) {
+//            cal.add(Calendar.DATE, -1);
+//        }
+//        return cal.getTimeInMillis();
+        return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     // Method to filter tasks that should be removed
@@ -172,7 +171,16 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     // Focused task removal method
     public void removeCompletedTasks() {
-        long cutoffTime = getReferenceTimeForRemoval();
+        long cutoffTime = getReferenceTimeForRemoval(LocalDateTime.now());
+        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
+
+        for (Integer taskId : tasksToRemove) {
+            this.remove(taskId);
+        }
+    }
+    public void removeCompletedTasks(LocalDateTime time) {
+        long cutoffTime = getReferenceTimeForRemoval(time);
         List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
 

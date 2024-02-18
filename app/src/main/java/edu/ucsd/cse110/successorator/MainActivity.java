@@ -11,12 +11,11 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
-
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding view;
@@ -31,7 +30,9 @@ public class MainActivity extends AppCompatActivity {
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         setContentView(view.getRoot());
 
-        scheduleAlarm();
+//        scheduleAlarm(); // keeping for milestone 2, not needed now
+
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
