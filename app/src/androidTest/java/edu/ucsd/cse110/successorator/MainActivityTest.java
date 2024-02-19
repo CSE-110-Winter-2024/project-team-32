@@ -12,7 +12,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.LocalDateTime;
+
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -67,6 +70,20 @@ public class MainActivityTest {
             });
             // Simulate moving to the started state (above will then be called).
             scenario.moveToState(Lifecycle.State.STARTED);
+        }
+    }
+
+    class MockTimeKeeper implements TimeKeeper {
+        private LocalDateTime currentTime;
+
+        @Override
+        public LocalDateTime getDateTime() {
+            return currentTime;
+        }
+
+        @Override
+        public void setDateTime(LocalDateTime dateTime) {
+            this.currentTime = dateTime;
         }
     }
 

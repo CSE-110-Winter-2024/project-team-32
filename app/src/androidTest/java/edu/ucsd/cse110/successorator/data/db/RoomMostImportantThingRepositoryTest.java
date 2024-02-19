@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
@@ -43,6 +46,32 @@ public class RoomMostImportantThingRepositoryTest {
         assertTrue("Task 1 should be removed", mockDao.isRemoved(1));
         assertFalse("Task 2 should not be removed", mockDao.isRemoved(2));
         assertTrue("Task 3 should be removed", mockDao.isRemoved(3));
+    }
+
+    @Test
+    public void testRemoveCompletedTasksAfter2AM() {
+        // Initialize the mock data with different scenarios
+        // Create tasks with creation times set for today but completed yesterday
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twoAMToday = now.withHour(2).withMinute(0).withSecond(0);
+        long timeYesterday = twoAMToday.minusDays(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long timeTodayAfter2AM = twoAMToday.plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        List<MostImportantThingEntity> entities = new ArrayList<>();
+        entities.add(new MostImportantThingEntity(1, "Completed Task Yesterday", timeYesterday, 1, true));
+        entities.add(new MostImportantThingEntity(2, "Incomplete Task Yesterday", timeYesterday, 2, false));
+        entities.add(new MostImportantThingEntity(3, "Completed Task Today After 2AM", timeTodayAfter2AM, 3, true));
+
+        // Assuming these entities represent the complete list from the database
+        mockDao.setEntities(entities);
+
+        // Simulate running the cleanup after 2 AM today
+        repository.removeCompletedTasks(twoAMToday.plusMinutes(1));  // Uses LocalDateTime.now() equivalent for test
+
+        // Verify that only the appropriate task(s) are removed
+        assertTrue("Completed Task Yesterday should be removed", mockDao.isRemoved(1));
+        assertFalse("Incomplete Task Yesterday should not be removed", mockDao.isRemoved(2));
+        assertFalse("Completed Task Today After 2AM should not be removed", mockDao.isRemoved(3));
     }
 
     // Implement your mock DAO as an inner class or separate class
