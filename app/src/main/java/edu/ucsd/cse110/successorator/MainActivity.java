@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         var itemId = item.getItemId();
 
         if (itemId == R.id.aciton_bar_menu_add_mit) {
-            //Todo, make button initiate a Dialog
             var dialogFragment = CreateMitDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
 

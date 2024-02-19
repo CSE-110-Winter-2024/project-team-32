@@ -24,6 +24,9 @@ import edu.ucsd.cse110.successorator.SuccessoratorApplication;
 import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
+/**
+ * Test class for Most Important Things
+ */
 @RunWith(AndroidJUnit4.class)
 public class MitListTest {
     private FragmentScenario<MitList> scenario;
