@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +156,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 //            cal.add(Calendar.DATE, -1);
 //        }
 //        return cal.getTimeInMillis();
-        return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        LocalDateTime referenceTime = time.withHour(2).withMinute(0).withSecond(0).withNano(0);
+
+        // Adjust to yesterday's 2 a.m. if current time is before today's 2 a.m.
+        if (time.toLocalTime().isBefore(LocalTime.of(2, 0))) {
+            referenceTime = referenceTime.minusDays(1);
+        }
+        return referenceTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     // Method to filter tasks that should be removed
