@@ -27,6 +27,12 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 @RunWith(AndroidJUnit4.class)
+/**
+ * This class was created for the purposes of testing the UI of our application,
+ * although we now know that with the Model View Presenter method in which we
+ * created our app, it is unnecessary for the purposes of this class to test the
+ * UI as such, so this somewhat broken code is unnecessary
+ */
 public class MitListTest {
     private FragmentScenario<MitList> scenario;
 
@@ -77,7 +83,6 @@ public class MitListTest {
     }
 
 
-    //Todo - fix this code
     @Test
     public void testDisplayMitsWhenAdded() {
         // launching the fragment scenario
@@ -131,7 +136,6 @@ public class MitListTest {
         scenario.moveToState(Lifecycle.State.STARTED);
     }
 
-    //TODO - fix this code
     @Test
     public void testDisplayStrikeThroughMits() {
         // launching the fragment scenario

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
-import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 
 
 /**
@@ -34,6 +33,7 @@ public class SuccessoratorDatabaseTest {
     private SuccessoratorDatabase db;
     private MostImportantThingDao mitDao;
     private MostImportantThingEntity mit0, mit1, mit2, mit3;
+
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
