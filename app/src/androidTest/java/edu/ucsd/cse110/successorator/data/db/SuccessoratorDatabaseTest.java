@@ -39,11 +39,15 @@ public class SuccessoratorDatabaseTest {
     public void closeDb() throws IOException {
         this.db.close();
     }
+
+    /**
+     * Tests inserting and then finding 10 MITs with different ids
+     */
     @Test
-    public void insertAndFind() {
+    public void testInsertAndFind() {
         MostImportantThing actual;
         MostImportantThing expected;
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             var mit = new MostImportantThing(i, "task1", 0L, 0, false);
             var mitEntity = MostImportantThingEntity.fromMostImportantThing(mit);
             this.mitDao.insert(mitEntity);
@@ -53,8 +57,12 @@ public class SuccessoratorDatabaseTest {
             assertEquals(expected, actual);
         }
     }
+
+    /**
+     * Tests inserting 10 different tasks and then calling findAll
+     */
     @Test
-    public void insertAndFindAll() {
+    public void testInsertAndFindAll() {
         List<MostImportantThingEntity> expectedList = new ArrayList<>();
         for (int i=0; i<10; i++) {
             var mit = new MostImportantThing(i, "task1", 0L, 0, false);
@@ -66,14 +74,17 @@ public class SuccessoratorDatabaseTest {
 
         assertEquals(expectedList.size(), mitDao.count());
 
-        // should stream this instead
         for (int i=0; i<actualList.size(); i++) {
             assertEquals(expectedList.get(i).toMostImportantThing(),
                          actualList.get(i).toMostImportantThing());
         }
     }
+
+    /**
+     * Tests inserting an item with the same ID as an item that's already in the
+     */
     @Test
-    public void replaceAndFind() {
+    public void testReplaceAndFind() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task1", 0L, 0, false));
 
@@ -87,7 +98,7 @@ public class SuccessoratorDatabaseTest {
     }
 
     @Test
-    public void getMinMaxSortOrder() {
+    public void testGetMinMaxSortOrder() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task1", 0L, 0, false));
 
@@ -118,7 +129,7 @@ public class SuccessoratorDatabaseTest {
     }
 
     @Test
-    public void appendTest() {
+    public void testAppend() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task0", 0L, 0, false));
 
@@ -146,7 +157,7 @@ public class SuccessoratorDatabaseTest {
         assertEquals(actualTasks, expectedTasks);
     }
     @Test
-    public void prependTest() {
+    public void testPrepend() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task0", 0L, 0, false));
 
@@ -175,7 +186,7 @@ public class SuccessoratorDatabaseTest {
     }
 
     @Test
-    public void deleteTest() {
+    public void testDelete() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task0", 0L, 0, false));
 
@@ -202,7 +213,7 @@ public class SuccessoratorDatabaseTest {
     }
 
     @Test
-    public void toggleCompletedTest() {
+    public void testToggleCompleted() {
         var mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task0", 0L, 0, false));
 
@@ -246,36 +257,5 @@ public class SuccessoratorDatabaseTest {
         assertFalse(actualTasks.get(2).completed());
         assertTrue(actualTasks.get(3).completed());
     }
-
-//    @Test
-//    public void moveToTopTest() {
-//        var mit0 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(0, "task0", 0L, 0, false));
-//
-//        var mit1 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(1, "task1", 0L, 5, false));
-//        var mit2 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(2, "task2", 0L, 3, false));
-//
-//        var mit3 = MostImportantThingEntity.fromMostImportantThing(
-//                new MostImportantThing(3, "task3", 0L, 5, false));
-//
-//        // defined sort orders shouldn't matter
-//        this.mitDao.prepend(mit0);
-//        this.mitDao.prepend(mit1);
-//        this.mitDao.prepend(mit2);
-//        this.mitDao.prepend(mit3);
-//
-//
-//
-//
-//    }
-//
-//    @Test
-//    public void moveToTopOfFinishedTest() {
-//
-//    }
-
-
 
 }

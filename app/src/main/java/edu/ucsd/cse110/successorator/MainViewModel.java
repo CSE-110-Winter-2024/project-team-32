@@ -16,19 +16,33 @@ import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.ui.MitListAdapter;
 
+/**
+ * ViewModel class for Succesorator
+ * manages UI and data interaction for main functionalities
+ */
 public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
-    private final MostImportantThingRepository mostImportantThingRepository;
-    private final SimpleSubject<List<MostImportantThing>> orderedMits;
+    private final MostImportantThingRepository mostImportantThingRepository; //Repo containing all MITs
+    private final SimpleSubject<List<MostImportantThing>> orderedMits;//List keeping track of MIT order
     private final SimpleSubject<String> displayedTask;
     private MitListAdapter adapter;
 
-    public static final ViewModelInitializer<MainViewModel> initializer = new ViewModelInitializer<>(MainViewModel.class, creationExtras -> {
-        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
-        assert app != null;
-        return new MainViewModel(app.getMostImportantThingRepository());
-    });
+    /**
+     * initializes MainViewModel with it's dependencies
+     */
+    public static final ViewModelInitializer<MainViewModel> initializer =
+            new ViewModelInitializer<>(
+                    MainViewModel.class,
+                    creationExtras -> {
+                        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
+                        assert app != null;
+                        return new MainViewModel(app.getMostImportantThingRepository());
+                    });
 
+    /**
+     * Creates/initializes subjects and orders pre existing list
+     * @param mostImportantThingRepository the repository containing all the MostImportantThings
+     */
     public MainViewModel(MostImportantThingRepository mostImportantThingRepository) {
         this.mostImportantThingRepository = mostImportantThingRepository;
 
@@ -45,22 +59,30 @@ public class MainViewModel extends ViewModel {
                     .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
-//            var mitsList = this.orderedMits.getValue();
-//            if (this.orderedMits.getValue().size() == 0) {
-//                var mit = mitsList.get(0);
-//
-//            }
         });
+
     }
 
+    /**
+     * Retrieves the Subject tracking the current displayedTask
+     * @return the Subject tracking the current displayedTask
+     */
     public Subject<String> getDisplayedTask() {
         return this.displayedTask;
     }
 
+    /**
+     * Retrieves the Subject tracking ordered list of MITs
+     * @return SimpleSubject<List<MostImportantThing>>; The Subject tracking ordered list of MITs
+     */
     public Subject<List<MostImportantThing>> getOrderedMits() {
         return orderedMits;
     }
 
+
+    /**
+     * Move the non Null MostImportantThing to the next position (up) and save
+     */
     public void stepForward() {
         var mits = this.orderedMits.getValue();
         if (mits == null) return; // not ready yet
@@ -71,6 +93,10 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.save(newMits);
     }
 
+
+    /**
+     * Move the non Null MIT backwards (1 space back) and save
+     */
     public void stepBackward() {
         var mits = this.orderedMits.getValue();
         if (mits == null) return; // not ready yet
@@ -82,32 +108,54 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.save(newMits);
     }
 
+    /**
+     * Insert MostImportantThing to the bottom of the repository
+     * @param mit The MostImportantThing to append
+     */
     public void append(MostImportantThing mit) {
         mostImportantThingRepository.append(mit);
     }
 
+    /**
+     * Insert MostImportantThing to the top of the MITRepo
+     * @param mit The MostImportantThing to prepend
+     */
     public void prepend(MostImportantThing mit) {
         mostImportantThingRepository.prepend(mit);
     }
 
+    /**
+     * Remove the MostImportantThing in the repository with value id
+     * @param id The ID of the MostImportantThing to be removed
+     */
     public void remove(int id) {
         mostImportantThingRepository.remove(id);
     }
 
+    /**
+     * Mark the MostImportantThing with the value id as completed
+     * @param id The ID of the MostImportantThing to be marked completed
+     */
     public void toggleCompleted(int id) {
-        var mitSubject = mostImportantThingRepository.find(id);
-        MostImportantThing mit = mitSubject.getValue();
         mostImportantThingRepository.toggleCompleted(id);
     }
 
+    /**
+     * Create and add a new MostImportantThing to repository
+     * @param mit The MostImportantThing to add
+     */
     public void addNewMostImportantThing(MostImportantThing mit) {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
+
 
     public void removeCompletedTasks() {
         mostImportantThingRepository.removeCompletedTasks();
     }
 
+    /**
+     * clear all of the MostImportantThings from the repository
+     */
     public void clear() {
         mostImportantThingRepository.clear();
     }

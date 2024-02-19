@@ -14,13 +14,17 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
+/**
+ * Dialog Fragment for when the user is adding an MIT
+ */
 public class CreateMitDialogFragment extends DialogFragment {
     private FragmentDialogCreateMitBinding view;
     private MainViewModel activityModel;
 
-    CreateMitDialogFragment() {
-
-    }
+    /**
+     * Creates a new CreateMitDialogFragment instance
+     * @return new CreateMitDialogFragment instance
+     */
 
     public static CreateMitDialogFragment newInstance() {
         var fragment = new CreateMitDialogFragment();
@@ -29,6 +33,11 @@ public class CreateMitDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Creates fragment/initialization
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,13 @@ public class CreateMitDialogFragment extends DialogFragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
     }
 
+    /**
+     * Creates dialog displayed by fragment
+     * @param savedInstanceState The last saved instance state of the Fragment,
+     * or null if this is a freshly created Fragment.
+     *
+     * @return Dialog instance that's displayed by the fragment
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -51,6 +67,12 @@ public class CreateMitDialogFragment extends DialogFragment {
                 .create();
     }
 
+    /**
+     * When a positive button is clicked: add new MIT placeholder
+     * @param dialog dialog from click
+     * @param which button that was clicked
+     */
+
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
 
@@ -62,6 +84,11 @@ public class CreateMitDialogFragment extends DialogFragment {
         dialog.dismiss();
     }
 
+    /**
+     * When a negative button is clicked, cancel
+     * @param dialog dialog from click
+     * @param which button that was clicked
+     */
     public void onNegativeButtonClick(DialogInterface dialog, int which) {
         dialog.cancel();
     }

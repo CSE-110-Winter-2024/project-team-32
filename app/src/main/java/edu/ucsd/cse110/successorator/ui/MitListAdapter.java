@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -20,6 +21,15 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
     Consumer<Integer> onDeleteClick;
+
+    /**
+     * Constructor for the MitListAdapter.
+     *
+     * @param context The context in which the adapter is being used
+     * @param mits The list of MostImportantThing items to display
+     * @param onToggleCompletedClick Toggling completion function
+     * @param onDeleteClick Deletion function
+     */
     public MitListAdapter(Context context,
                           List<MostImportantThing> mits,
                           Consumer<Integer> onToggleCompletedClick,
@@ -35,6 +45,19 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         this.onDeleteClick = onDeleteClick;
     }
 
+    /**
+     * Gets the view at a position in the dataset
+     * @param position The position of the item within the adapter's data set of the item whose view
+     *        we want.
+     * @param convertView The old view to reuse, if possible. Note: You should check that this view
+     *        is non-null and of an appropriate type before using. If it is not possible to convert
+     *        this view to display the correct data, this method can create a new view.
+     *        Heterogeneous lists can specify their number of view types, so that this View is
+     *        always of the right type (see {@link #getViewTypeCount()} and
+     *        {@link #getItemViewType(int)}).
+     * @param parent The parent that this view will eventually be attached to
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -42,6 +65,8 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         // Get the mit for this position.
         var mit = getItem(position);
         assert mit != null;
+
+
 
         System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
 
@@ -55,7 +80,11 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             var layoutInflater = LayoutInflater.from(getContext());
             binding = ListItemMitBinding.inflate(layoutInflater, parent, false);
         }
+        //TextView date = binding.getRoot().findViewById(R.id.action_bar_menu_date);
+        //System.out.println("DATE is + " + date.getText());
 
+        //Delete button that was implemented on accident, but doesn't get in
+        //the way
         binding.cardDeleteButton.setOnClickListener(v -> {
             var id = mit.id();
             assert id != null;
@@ -63,7 +92,6 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         });
 
         binding.toggleCompletedButton.setOnClickListener(v -> {
-            //System.out.println("Finding ID");
             var id = mit.id();
             assert id != null;
             boolean completed = !mit.completed();
@@ -71,35 +99,32 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             onToggleCompletedClick.accept(id);
             var taskText = binding.mitTaskText;
             //This is the logic that changes the text to strikethrough if it's completed
-            //mit.setCompleted(true);
-            System.out.println("Completed is " + mit.completed());
             if (!completed) {
-                System.out.println("unstriking the text for id:" + mit.id());
+                //Set the text to not strikethrough
                 taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
             else {
-                System.out.println("striking the text! for the mit with id " + mit.id());
+                //Set the text to strikethrough
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-
         });
+
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
         var checkBox = binding.toggleCompletedButton;
         if (!mit.completed()) {
-            System.out.println("unstriking the text for id:" + mit.id());
+            //Set the text to not strikethrough
             taskText.setPaintFlags(taskText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             checkBox.setChecked(false);
         }
         else {
+            //Set the text to strikethrough
             checkBox.setChecked(true);
-            System.out.println("striking the text! for the mit with id " + mit.id());
             taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-
         // Populate the view with the mit's data.
-        binding.mitTaskText.setText(mit.task());//mit.task());
+        binding.mitTaskText.setText(mit.task());
 
         return binding.getRoot();
     }
@@ -107,11 +132,21 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     // The below methods aren't strictly necessary, usually.
     // but a lab said we need them
 
+    /**
+     * Determines if the IDs are stable over changes
+     * @return True if they are stable, else false
+     */
+
     @Override
     public boolean hasStableIds() {
         return true;
     }
 
+    /**
+     * Gets the item ID for the given position within the adapter
+     * @param position The position of the item within the adapter's data set whose row id we want.
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         var mit = getItem(position);

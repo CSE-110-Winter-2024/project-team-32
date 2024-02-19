@@ -26,7 +26,7 @@ import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 public class MainActivityTest {
 
     @Test
-    public void displaysBlankMessageText() {
+    public void testDisplaysBlankMessageText() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
 
             // Observe the scenario's lifecycle to wait until the activity is created.
@@ -48,7 +48,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void displaysBlankMsgWithNoList() {
+    public void testDisplaysBlankMsgWithNoList() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
 
             // Observe the scenario's lifecycle to wait until the activity is created.
