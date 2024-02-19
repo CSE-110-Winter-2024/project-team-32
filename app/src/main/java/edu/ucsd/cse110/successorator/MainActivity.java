@@ -1,27 +1,19 @@
 package edu.ucsd.cse110.successorator;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import androidx.room.Room;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
@@ -39,19 +31,16 @@ public class MainActivity extends AppCompatActivity {
     private TimeKeeper timeKeeper;
     private RoomMostImportantThingRepository roomMostImportantThings;
     private SuccessoratorDatabase db;
-
     private TextView dateTextView;
     private int incrementDateBy = 0;
-
     private MainViewModel activityModel;
-
 
     /**
      * Called when an activity is first created
-     * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,19 +61,12 @@ public class MainActivity extends AppCompatActivity {
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
         // Initialize the Successorator Room database
-        this.db = Room.databaseBuilder(getApplicationContext(),
-                SuccessoratorDatabase.class, "successorator_database").build();
+        this.db = Room.databaseBuilder(getApplicationContext(), SuccessoratorDatabase.class, "successorator_database").build();
 
         // Initialize RoomMostImportantThingRepository with the DAO from your database
         this.roomMostImportantThings = new RoomMostImportantThingRepository(db.mostImportantThingDao());
     }
 
-    /**
-     * Initializes contents of the menu
-     * @param menu The options menu in which you place your items.
-     *
-     * @return
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -99,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Initializes contents of the menu
+     *
+     * @param menu The options menu in which you place your items.
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         //When you make the options menu, add the date
@@ -110,12 +99,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * When an item from the menu item is clicked
-     * @param item The menu item that was selected.
-     *
-     * @return true if interaction was handled, else false
-     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         incrementDateBy++;
         var itemId = item.getItemId();

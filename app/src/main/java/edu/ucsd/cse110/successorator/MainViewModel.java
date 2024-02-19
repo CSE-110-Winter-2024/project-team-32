@@ -30,17 +30,15 @@ public class MainViewModel extends ViewModel {
     /**
      * initializes MainViewModel with it's dependencies
      */
-    public static final ViewModelInitializer<MainViewModel> initializer =
-            new ViewModelInitializer<>(
-                    MainViewModel.class,
-                    creationExtras -> {
-                        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
-                        assert app != null;
-                        return new MainViewModel(app.getMostImportantThingRepository());
-                    });
+    public static final ViewModelInitializer<MainViewModel> initializer = new ViewModelInitializer<>(MainViewModel.class, creationExtras -> {
+        var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
+        assert app != null;
+        return new MainViewModel(app.getMostImportantThingRepository());
+    });
 
     /**
      * Creates/initializes subjects and orders pre existing list
+     *
      * @param mostImportantThingRepository the repository containing all the MostImportantThings
      */
     public MainViewModel(MostImportantThingRepository mostImportantThingRepository) {
@@ -65,6 +63,7 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Retrieves the Subject tracking the current displayedTask
+     *
      * @return the Subject tracking the current displayedTask
      */
     public Subject<String> getDisplayedTask() {
@@ -73,7 +72,8 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Retrieves the Subject tracking ordered list of MITs
-     * @return SimpleSubject<List<MostImportantThing>>; The Subject tracking ordered list of MITs
+     *
+     * @return SimpleSubject<List < MostImportantThing>>; The Subject tracking ordered list of MITs
      */
     public Subject<List<MostImportantThing>> getOrderedMits() {
         return orderedMits;
@@ -110,6 +110,7 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Insert MostImportantThing to the bottom of the repository
+     *
      * @param mit The MostImportantThing to append
      */
     public void append(MostImportantThing mit) {
@@ -118,6 +119,7 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Insert MostImportantThing to the top of the MITRepo
+     *
      * @param mit The MostImportantThing to prepend
      */
     public void prepend(MostImportantThing mit) {
@@ -126,6 +128,7 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Remove the MostImportantThing in the repository with value id
+     *
      * @param id The ID of the MostImportantThing to be removed
      */
     public void remove(int id) {
@@ -134,6 +137,7 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Mark the MostImportantThing with the value id as completed
+     *
      * @param id The ID of the MostImportantThing to be marked completed
      */
     public void toggleCompleted(int id) {
@@ -142,12 +146,12 @@ public class MainViewModel extends ViewModel {
 
     /**
      * Create and add a new MostImportantThing to repository
+     *
      * @param mit The MostImportantThing to add
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
-
 
     public void removeCompletedTasks() {
         mostImportantThingRepository.removeCompletedTasks();
