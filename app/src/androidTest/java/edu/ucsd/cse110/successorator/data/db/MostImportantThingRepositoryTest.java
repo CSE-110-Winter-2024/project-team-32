@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.widget.TextClock;
@@ -184,10 +185,7 @@ public class MostImportantThingRepositoryTest {
         mit1.setCompleted(true);
         mit2.setCompleted(true);
         // defined sort orders shouldn't matter
-        this.mitRepo.prepend(mit0);
-        this.mitRepo.prepend(mit1);
-        this.mitRepo.prepend(mit2);
-        this.mitRepo.prepend(mit3);
+        this.prependAllMits();
 
         this.mitRepo.moveToTopOfFinished(mit3.id());
 
@@ -205,10 +203,7 @@ public class MostImportantThingRepositoryTest {
         mit0.setCompleted(true);
         mit1.setCompleted(true);
         // defined sort orders shouldn't matter
-        this.mitRepo.prepend(mit0);
-        this.mitRepo.prepend(mit1);
-        this.mitRepo.prepend(mit2);
-        this.mitRepo.prepend(mit3);
+        this.prependAllMits();
 
         this.mitRepo.moveToTopOfFinished(mit3.id());
 
@@ -232,10 +227,7 @@ public class MostImportantThingRepositoryTest {
     public void testMoveToTopOfFinishedNoFinished() {
         this.initializeMits();
         // defined sort orders shouldn't matter
-        this.mitRepo.prepend(mit0);
-        this.mitRepo.prepend(mit1);
-        this.mitRepo.prepend(mit2);
-        this.mitRepo.prepend(mit3);
+        this.prependAllMits();
 
         this.mitRepo.moveToTopOfFinished(mit3.id());
 
@@ -253,5 +245,51 @@ public class MostImportantThingRepositoryTest {
         expectedTasks = Arrays.asList("task1", "task0", "task3", "task2");
         assertEquals(expectedTasks, actualTasks);
 
+    }
+
+    @Test
+    public void testToggleCompletedNoCompleted() {
+        this.initializeMits();
+        this.prependAllMits();
+        this.mitRepo.toggleCompleted(mit3.id());
+
+        //mit3 should be completed
+        boolean actualCompleted = this.mitDao.find(mit3.id()).completed;
+        assertTrue(actualCompleted);
+
+        //mit3 should be reordered to the bottom of the list
+        List<String> actualTasks = getAllTasks();
+        List<String> expectedTasks = Arrays.asList("task2", "task1", "task0", "task3");
+
+    }
+
+    @Test
+    public void testClear() {
+        this.initializeMits();
+        this.prependAllMits();
+        this.mitRepo.clear();
+        assertEquals(0, this.mitDao.findAll().size());
+    }
+
+    @Test
+    public void testCount() {
+        this.initializeMits();
+        this.prependAllMits();
+        assertEquals(4, this.mitRepo.count());
+    }
+
+    @Test
+    public void testSaveList() {
+        this.initializeMits();
+        List<MostImportantThing> mitList = List.of(mit0, mit1, mit2, mit3);
+        this.mitRepo.save(mitList);
+        assertEquals(4, this.mitRepo.count());
+    }
+
+    @Test
+    public void testSave() {
+        this.initializeMits();
+        this.mitRepo.save(mit0);
+        assertEquals(1, this.mitRepo.count());
     }
 }
