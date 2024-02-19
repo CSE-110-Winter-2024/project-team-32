@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MostImportantThingRepositoryTest {
     private SuccessoratorDatabase db;
@@ -104,6 +105,23 @@ public class MostImportantThingRepositoryTest {
         this.mitRepo.remove(3);
 
         assertEquals(0, mitDao.count());
+    }
+
+    @Test
+    public void testDelete2() {
+        this.initializeMits();
+        // defined sort orders shouldn't matter
+        this.prependAllMits();
+
+        this.mitRepo.remove(0);
+        this.mitRepo.remove(2);
+
+        List<String> actualTasks = getAllTasks();
+
+        List<String> expectedTasks = Arrays.asList("task1", "task3");
+
+
+        assertEquals(actualTasks, expectedTasks);
     }
 
     @Test
@@ -292,4 +310,5 @@ public class MostImportantThingRepositoryTest {
         this.mitRepo.save(mit0);
         assertEquals(1, this.mitRepo.count());
     }
+
 }
