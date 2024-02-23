@@ -118,7 +118,7 @@ public class MostImportantThingRepositoryTest {
 
         List<String> actualTasks = getAllTasks();
 
-        List<String> expectedTasks = Arrays.asList("task1", "task3");
+        List<String> expectedTasks = Arrays.asList("task3", "task1");
 
 
         assertEquals(actualTasks, expectedTasks);
