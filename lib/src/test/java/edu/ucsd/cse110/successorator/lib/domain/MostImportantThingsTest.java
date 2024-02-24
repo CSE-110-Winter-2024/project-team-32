@@ -12,15 +12,15 @@ public class MostImportantThingsTest {
     @Test
     public void testRotateForward() {
         var mits = new ArrayList<>(List.of(
-                new MostImportantThing(1, "front1", 0L, 1, false),
-                new MostImportantThing(2, "front2", 1L, 2, false),
-                new MostImportantThing(3, "front3", 2L, 3, false)
+                new MostImportantThing(1, "front1", 0L, 1, false, "Home"),
+                new MostImportantThing(2, "front2", 1L, 2, false, "Home"),
+                new MostImportantThing(3, "front3", 2L, 3, false, "Home")
         ));
 
         var expected = new ArrayList<>(List.of(
-                new MostImportantThing(1, "front1", 0L, 3, false),
-                new MostImportantThing(2, "front2", 1L, 1, false),
-                new MostImportantThing(3, "front3", 2L, 2, false)
+                new MostImportantThing(1, "front1", 0L, 3, false, "Home"),
+                new MostImportantThing(2, "front2", 1L, 1, false, "Home"),
+                new MostImportantThing(3, "front3", 2L, 2, false, "Home")
         ));
 
         var actual = MostImportantThings.rotate(mits, -1);
@@ -30,15 +30,15 @@ public class MostImportantThingsTest {
     @Test
     public void testRotateBackward() {
         var mits = new ArrayList<>(List.of(
-                new MostImportantThing(1, "front1", 0L, 1, false),
-                new MostImportantThing(2, "front2", 1L, 2, false),
-                new MostImportantThing(3, "front3", 2L, 3, false)
+                new MostImportantThing(1, "front1", 0L, 1, false, "Home"),
+                new MostImportantThing(2, "front2", 1L, 2, false, "Home"),
+                new MostImportantThing(3, "front3", 2L, 3, false, "Home")
         ));
 
         var expected = new ArrayList<>(List.of(
-                new MostImportantThing(1, "front1", 0L, 2, false),
-                new MostImportantThing(2, "front2", 1L, 3, false),
-                new MostImportantThing(3, "front3", 2L, 1, false)
+                new MostImportantThing(1, "front1", 0L, 2, false, "Home"),
+                new MostImportantThing(2, "front2", 1L, 3, false, "Home"),
+                new MostImportantThing(3, "front3", 2L, 1, false, "Home")
         ));
 
         var actual = MostImportantThings.rotate(mits, 1);
