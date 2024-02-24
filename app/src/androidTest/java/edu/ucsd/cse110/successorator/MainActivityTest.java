@@ -12,7 +12,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.time.LocalDateTime;
+
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
+import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -69,4 +72,44 @@ public class MainActivityTest {
             scenario.moveToState(Lifecycle.State.STARTED);
         }
     }
+
+    class MockTimeKeeper implements TimeKeeper {
+        private LocalDateTime currentTime;
+
+        @Override
+        public LocalDateTime getDateTime() {
+            return currentTime;
+        }
+
+        @Override
+        public void setDateTime(LocalDateTime dateTime) {
+            this.currentTime = dateTime;
+        }
+    }
+
+    /*
+    @Test
+    public void callingAlarmCorrectly() {
+        try (var scenario = ActivityScenario.launch(MainActivity.class)) {
+
+            // Observe the scenario's lifecycle to wait until the activity is created.
+            scenario.onActivity(activity -> {
+                var rootView = activity.findViewById(R.id.root);
+                var binding = ActivityMainBinding.bind(rootView);
+
+                var expected = activity.getString(R.string.blank_message_text);
+                TextView actualTextView = binding.getRoot().getViewById(R.id.fragment_container).findViewById(R.id.blank_message_text);
+                var actual = actualTextView.getText().toString();
+                //getRoot().blankMessageText.getText();//       .getText();///placeholderText.getText();
+
+                assertEquals(expected, actual);
+            });
+
+            // Simulate moving to the started state (above will then be called).
+            scenario.moveToState(Lifecycle.State.STARTED);
+        }
+    }
+    */
+
+
 }
