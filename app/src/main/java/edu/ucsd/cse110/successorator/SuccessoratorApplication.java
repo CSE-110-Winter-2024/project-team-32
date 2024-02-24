@@ -32,7 +32,7 @@ public class SuccessoratorApplication extends Application {
                 .allowMainThreadQueries()
                 .build();
         // feed that database into this.MITRepo
-        this.mostImportantThingRepository = new RoomMostImportantThingRepository(database.mostImportantThingDao());
+        mostImportantThingRepository = new RoomMostImportantThingRepository(database.mostImportantThingDao());
 
         // populate the database with some initial data on the first run.
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);
@@ -40,7 +40,7 @@ public class SuccessoratorApplication extends Application {
         
         if (isFirstRun) { // by only checking if first run, we can trick it
             database.mostImportantThingDao().clear();
-            this.mostImportantThingRepository.save(InMemoryDataSource.DEFAULT_MITS);
+            mostImportantThingRepository.save(InMemoryDataSource.DEFAULT_MITS);
             //marks that first run has been ran
             sharedPreferences.edit()
                     .putBoolean("isFirstRun", false)
@@ -55,6 +55,6 @@ public class SuccessoratorApplication extends Application {
      * @return the MITRepo
      */
     public MostImportantThingRepository getMostImportantThingRepository() {
-        return this.mostImportantThingRepository;
+        return mostImportantThingRepository;
     }
 }

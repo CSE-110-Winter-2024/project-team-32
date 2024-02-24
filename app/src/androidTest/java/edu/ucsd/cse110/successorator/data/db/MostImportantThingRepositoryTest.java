@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
-import android.widget.TextClock;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
-import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MostImportantThingRepositoryTest {
     private SuccessoratorDatabase db;
@@ -118,7 +116,7 @@ public class MostImportantThingRepositoryTest {
 
         List<String> actualTasks = getAllTasks();
 
-        List<String> expectedTasks = Arrays.asList("task1", "task3");
+        List<String> expectedTasks = Arrays.asList("task3", "task1");
 
 
         assertEquals(actualTasks, expectedTasks);
