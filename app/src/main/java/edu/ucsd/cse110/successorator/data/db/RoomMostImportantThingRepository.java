@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.data.db;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import java.time.LocalDateTime;
@@ -246,6 +245,9 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     private List<Integer> filterTasksForRemoval(List<MostImportantThingEntity> elements, long cutoffTime) {
         List<Integer> tasksToRemove = new ArrayList<>();
         for (MostImportantThingEntity element : elements) {
+            System.out.println("Task: " + element.task);
+            System.out.println("Time Created: " + element.toMostImportantThing().timeCreated());
+            System.out.println("cutoffTime: " + cutoffTime);
             if (element.completed && element.toMostImportantThing().timeCreated() < cutoffTime) {
                 tasksToRemove.add(element.id);
             }
@@ -265,7 +267,9 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
     public void removeCompletedTasks(LocalDateTime time) {
         long cutoffTime = getReferenceTimeForRemoval(time);
-        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        var elements = mostImportantThingDao.findAll();
+        System.out.println("Dao: " + mostImportantThingDao);
+        System.out.println("this many found: " + elements.size());
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
 
         for (Integer taskId : tasksToRemove) {

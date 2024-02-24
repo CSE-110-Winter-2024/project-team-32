@@ -13,7 +13,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
  * Application class for Successorator; Initializes database and manages interactions/data on the first run
  */
 public class SuccessoratorApplication extends Application {
-    public MostImportantThingRepository mostImportantThingRepository;
+    public static MostImportantThingRepository mostImportantThingRepository;
     private InMemoryDataSource dataSource;
 
     /**

@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,11 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
@@ -61,10 +62,11 @@ public class MainActivity extends AppCompatActivity {
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
         // Initialize the Successorator Room database
-        this.db = Room.databaseBuilder(getApplicationContext(), SuccessoratorDatabase.class, "successorator_database").build();
+        // WAS MISTAKE! ALREADY MADE
+//        this.db = Room.databaseBuilder(getApplicationContext(), SuccessoratorDatabase.class, "successorator_database2").build();
 
         // Initialize RoomMostImportantThingRepository with the DAO from your database
-        this.roomMostImportantThings = new RoomMostImportantThingRepository(db.mostImportantThingDao());
+        this.roomMostImportantThings = (RoomMostImportantThingRepository) SuccessoratorApplication.mostImportantThingRepository;
     }
 
     @Override
@@ -72,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LocalDateTime lastTime = timeKeeper.getDateTime();
         LocalDateTime currentTime = LocalDateTime.now();
-        timeKeeper.setDateTime(currentTime);
+
+//        TODO - update menu
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
@@ -120,10 +123,13 @@ public class MainActivity extends AppCompatActivity {
     public void advanceDate(int incrementDateBy) {
         dateTextView = findViewById(R.id.action_bar_menu_date);
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         String date = dateFormat.format(c.getTime());
         dateTextView.setText(date);
+        new Thread(() -> roomMostImportantThings
+                .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
+                .start();
     }
 
 
