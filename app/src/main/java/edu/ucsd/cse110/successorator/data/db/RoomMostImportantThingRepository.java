@@ -1,10 +1,11 @@
 package edu.ucsd.cse110.successorator.data.db;
 
-import android.sax.Element;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -218,5 +219,61 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      */
     public int count() {
         return this.mostImportantThingDao.count();
+    }
+
+    private long getReferenceTimeForRemoval(LocalDateTime time) {
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.HOUR_OF_DAY, 2);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//        // Adjust to yesterday's 2 a.m. if current time is before 2 a.m.
+//        if (System.currentTimeMillis() < cal.getTimeInMillis()) {
+//            cal.add(Calendar.DATE, -1);
+//        }
+//        return cal.getTimeInMillis();
+        LocalDateTime referenceTime = time.withHour(2).withMinute(0).withSecond(0).withNano(0);
+
+        // Adjust to yesterday's 2 a.m. if current time is before today's 2 a.m.
+        if (time.toLocalTime().isBefore(LocalTime.of(2, 0))) {
+            referenceTime = referenceTime.minusDays(1);
+        }
+        return referenceTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    // Method to filter tasks that should be removed
+    private List<Integer> filterTasksForRemoval(List<MostImportantThingEntity> elements, long cutoffTime) {
+        List<Integer> tasksToRemove = new ArrayList<>();
+        for (MostImportantThingEntity element : elements) {
+            System.out.println("Task: " + element.task);
+            System.out.println("Time Created: " + element.toMostImportantThing().timeCreated());
+            System.out.println("cutoffTime: " + cutoffTime);
+            if (element.completed && element.toMostImportantThing().timeCreated() < cutoffTime) {
+                tasksToRemove.add(element.id);
+            }
+        }
+        return tasksToRemove;
+    }
+
+    // Focused task removal method
+    public void removeCompletedTasks() {
+        long cutoffTime = getReferenceTimeForRemoval(LocalDateTime.now());
+        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
+
+        for (Integer taskId : tasksToRemove) {
+            this.remove(taskId);
+        }
+    }
+    public void removeCompletedTasks(LocalDateTime time) {
+        long cutoffTime = getReferenceTimeForRemoval(time);
+        var elements = mostImportantThingDao.findAll();
+        System.out.println("Dao: " + mostImportantThingDao);
+        System.out.println("this many found: " + elements.size());
+        List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
+
+        for (Integer taskId : tasksToRemove) {
+            this.remove(taskId);
+        }
     }
 }
