@@ -5,7 +5,7 @@
     <item android:id="@+id/action_bar_menu_add_mit"
         android:title="AddMit"
         android:icon="@drawable/ic_add"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         app:iconTint="@color/white"
         app:showAsAction="always" />
 
@@ -19,8 +19,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_advance_date"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:title="action_bar_menu_advance_date"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bar_menu_swap_views"
+        android:title="Swap Views"
+        android:icon="@drawable/ic_swap"
+        android:orderInCategory="4"
+        app:iconTint="@color/white"
         app:showAsAction="always" />
 
 </menu>
