@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
-import edu.ucsd.cse110.successorator.databinding.FragmentTomorrowMitListBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TodayMitListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TomorrowMitListFragment extends Fragment {
+public class PendingMitListFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentTomorrowMitListBinding view;
+    private FragmentPendingMitListBinding view;
     private MitListAdapter adapter;
 
     /**
@@ -30,8 +30,8 @@ public class TomorrowMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TomorrowMitListFragment newInstance() {
-        TomorrowMitListFragment fragment = new TomorrowMitListFragment();
+    public static PendingMitListFragment newInstance() {
+        PendingMitListFragment fragment = new PendingMitListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -69,7 +69,7 @@ public class TomorrowMitListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = FragmentTomorrowMitListBinding.inflate(inflater, container, false);
+        view = FragmentPendingMitListBinding.inflate(inflater, container, false);
 
         setUpMvp();
 

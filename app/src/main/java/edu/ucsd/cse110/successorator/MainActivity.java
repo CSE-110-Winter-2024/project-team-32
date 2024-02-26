@@ -21,6 +21,8 @@ import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
 import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
+import edu.ucsd.cse110.successorator.ui.PendingMitListFragment;
+import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
@@ -57,10 +59,20 @@ public class MainActivity extends AppCompatActivity {
                        .commit();
                break;
            case PENDING_VIEW:
-
+               getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
+                       .commit();
+               break;
+           case RECURRING_VIEW:
+               getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
+                       .commit();
+               break;
+           default:
+               throw new IllegalArgumentException("Trying to switch to a non-existing state");
        }
-
-
     }
 
     /**
