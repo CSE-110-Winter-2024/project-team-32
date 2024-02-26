@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         LocalDateTime currentTime = LocalDateTime.now();
 
 //        TODO - update menu
+        System.out.println("Resumed the App!");
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
@@ -103,10 +104,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        incrementDateBy++;
+
         var itemId = item.getItemId();
 
         if (itemId == R.id.action_bar_menu_advance_date) {
+            incrementDateBy++;
             advanceDate(incrementDateBy);
         }
         if (itemId == R.id.action_bar_menu_add_mit) {
@@ -123,10 +125,13 @@ public class MainActivity extends AppCompatActivity {
     public void advanceDate(int incrementDateBy) {
         dateTextView = findViewById(R.id.action_bar_menu_date);
         Calendar c = Calendar.getInstance();
+//        String dateForTesting = dateTextView.getText().toString();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         String date = dateFormat.format(c.getTime());
         dateTextView.setText(date);
+//        System.out.println("Advancing date from " + dateForTesting + " to " + date);
+//        System.out.println("Advancing: IncrementDateBy is " + incrementDateBy);
         new Thread(() -> roomMostImportantThings
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
