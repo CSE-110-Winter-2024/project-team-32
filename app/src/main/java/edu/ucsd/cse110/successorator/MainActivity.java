@@ -51,21 +51,11 @@ public class MainActivity extends AppCompatActivity {
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         dateTextView = findViewById(R.id.action_bar_menu_advance_date);
 
-        //old code, commented out in github repo
-        //setContentView(view.getRoot());
-        //this.view = ActivityMainBinding.inflate(getLayoutInflater());
-        //setContentView(view.getRoot());
-
         setContentView(view.getRoot());
 
 //        scheduleAlarm(); // keeping for milestone 2, not needed now
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
-        // Initialize the Successorator Room database
-        // WAS MISTAKE! ALREADY MADE
-//        this.db = Room.databaseBuilder(getApplicationContext(), SuccessoratorDatabase.class, "successorator_database2").build();
-
-        // Initialize RoomMostImportantThingRepository with the DAO from your database
         this.roomMostImportantThings = (RoomMostImportantThingRepository) SuccessoratorApplication.mostImportantThingRepository;
     }
 

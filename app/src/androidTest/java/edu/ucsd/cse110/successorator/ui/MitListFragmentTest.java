@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.SuccessoratorApplication;
-import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
 
 @RunWith(AndroidJUnit4.class)
 /**
@@ -25,12 +25,12 @@ import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
  * created our app, it is unnecessary for the purposes of this class to test the
  * UI as such, so this somewhat broken code is unnecessary
  */
-public class MitListTest {
-    private FragmentScenario<MitList> scenario;
+public class MitListFragmentTest {
+    private FragmentScenario<MitListFragment> scenario;
 
     @Before
     public void setup() {
-        scenario = FragmentScenario.launchInContainer(MitList.class);
+        scenario = FragmentScenario.launchInContainer(MitListFragment.class);
 //        System.out.println("hhherea");
 //        Context context = getApplicationContext();
 //
@@ -59,7 +59,7 @@ public class MitListTest {
            //System.out.println("db count: " + application.getMostImportantThingRepository().count());
 
             var rootView = fragment.getView().findViewById(R.id.root);
-            var binding = FragmentMitListBinding.bind(rootView);
+            var binding = FragmentTodayMitListBinding.bind(rootView);
 
             // make sure list is empty
             int expectedCount = 0;
