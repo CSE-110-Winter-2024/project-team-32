@@ -21,13 +21,18 @@ import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
 import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
+import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
+import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
-
 /**
  * The MainActivity class of Succesorator that displays the user interface and
  * handles user interactions
  */
 public class MainActivity extends AppCompatActivity {
+    private static final int TODAY_VIEW = 0;
+    private static final int TOMORROW_VIEW = 1;
+    private static final int PENDING_VIEW = 2;
+    private static final int RECURRING_VIEW = 3;
     private ActivityMainBinding view;
     private TimeKeeper timeKeeper;
     private RoomMostImportantThingRepository roomMostImportantThings;
@@ -35,6 +40,28 @@ public class MainActivity extends AppCompatActivity {
     private TextView dateTextView;
     private int incrementDateBy = 0;
     private MainViewModel activityModel;
+    private int currentView;
+
+    private void swapFragments(int newFragment) {
+       switch (newFragment) {
+           case TODAY_VIEW:
+               getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
+                       .commit();
+               break;
+           case TOMORROW_VIEW:
+               getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
+                       .commit();
+               break;
+           case PENDING_VIEW:
+
+       }
+
+
+    }
 
     /**
      * Called when an activity is first created
@@ -45,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        this.currentView = TODAY_VIEW;
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_title);
 

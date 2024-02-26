@@ -17,10 +17,10 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MitListFragment#newInstance} factory method to
+ * Use the {@link TodayMitListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MitListFragment extends Fragment {
+public class TodayMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTodayMitListBinding view;
 
@@ -32,8 +32,8 @@ public class MitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static MitListFragment newInstance() {
-        MitListFragment fragment = new MitListFragment();
+    public static TodayMitListFragment newInstance() {
+        TodayMitListFragment fragment = new TodayMitListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

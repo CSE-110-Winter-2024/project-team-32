@@ -26,11 +26,11 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
  * UI as such, so this somewhat broken code is unnecessary
  */
 public class MitListFragmentTest {
-    private FragmentScenario<MitListFragment> scenario;
+    private FragmentScenario<TodayMitListFragment> scenario;
 
     @Before
     public void setup() {
-        scenario = FragmentScenario.launchInContainer(MitListFragment.class);
+        scenario = FragmentScenario.launchInContainer(TodayMitListFragment.class);
 //        System.out.println("hhherea");
 //        Context context = getApplicationContext();
 //
