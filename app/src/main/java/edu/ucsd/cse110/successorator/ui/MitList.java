@@ -14,7 +14,7 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +23,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
  */
 public class MitList extends Fragment {
     private MainViewModel activityModel;
-    private FragmentMitListBinding view;
+    private FragmentTodayMitListBinding view;
 
     private MitListAdapter adapter;
 
@@ -72,7 +72,7 @@ public class MitList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = FragmentMitListBinding.inflate(inflater, container, false);
+        view = FragmentTodayMitListBinding.inflate(inflater, container, false);
 
         setUpMvp();
 
