@@ -24,15 +24,23 @@ public interface MostImportantThingDao {
     @Query("SELECT * FROM most_important_things WHERE id = :id")
     MostImportantThingEntity find(int id);
 
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 0 AND is_pending = 0 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllMits();
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllPendings();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllRecurrings();
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     List<MostImportantThingEntity> findAll();
-
     @Query("SELECT * FROM most_important_things WHERE id=:id")
     LiveData<MostImportantThingEntity> findAsLiveData(int id);
 
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     LiveData<List<MostImportantThingEntity>> findAllAsLiveData();
-
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllPendingsAsLiveDate();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllRecurringsAsLiveData();
     // this will update when the corresponding database record does
     // this will be helpful!
     @Query("SELECT COUNT(*) FROM most_important_things")
@@ -87,4 +95,6 @@ public interface MostImportantThingDao {
     //Deletes all items from the database
     @Query("DELETE FROM most_important_things")
     void clear();
+
+    //grab every pending mit
 }

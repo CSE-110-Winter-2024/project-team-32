@@ -19,7 +19,7 @@ import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
  */
 public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
-
+    // TODO - THIS IS OLD, NEED TO MAKE WORK WITH THE NEW UPDATED DAO
     /**
      * Constructor for RoomMostImportantThingRepository
      * @param mostImportantThingDao The DAO for MostImportantThings
@@ -145,7 +145,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param id The ID of the mostImportantThing to move
      */
     public void moveToTopOfFinished(int id) {
-        var ElementList = this.mostImportantThingDao.findAll();
+        var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;
         //Find the Index of the first element where the next element is completed
@@ -178,7 +178,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
-        var ElementList = this.mostImportantThingDao.findAll();
+        var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;
         //Find index of the first element where the next element is completed
@@ -258,7 +258,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     // Focused task removal method
     public void removeCompletedTasks() {
         long cutoffTime = getReferenceTimeForRemoval(LocalDateTime.now());
-        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        List<MostImportantThingEntity> elements = mostImportantThingDao.findAllMits();
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
 
         for (Integer taskId : tasksToRemove) {
@@ -267,7 +267,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
     public void removeCompletedTasks(LocalDateTime time) {
         long cutoffTime = getReferenceTimeForRemoval(time);
-        var elements = mostImportantThingDao.findAll();
+        var elements = mostImportantThingDao.findAllMits();
         System.out.println("Dao: " + mostImportantThingDao);
         System.out.println("this many found: " + elements.size());
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);

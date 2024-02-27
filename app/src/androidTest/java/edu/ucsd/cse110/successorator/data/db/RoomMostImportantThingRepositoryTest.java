@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.data.db;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,8 +11,8 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
 public class RoomMostImportantThingRepositoryTest {
 
@@ -103,8 +104,20 @@ public class RoomMostImportantThingRepositoryTest {
         }
 
         @Override
-        public List<MostImportantThingEntity> findAll() {
+        public List<MostImportantThingEntity> findAllMits() {
             return entities;
+        }
+
+        public List<MostImportantThingEntity> findAllPendings() {
+            return null;
+        }
+
+        public List<MostImportantThingEntity> findAllRecurrings() {
+            return null;
+        }
+
+        public List<MostImportantThingEntity> findAll() {
+            return null;
         }
 
         @Override
@@ -114,6 +127,14 @@ public class RoomMostImportantThingRepositoryTest {
 
         @Override
         public LiveData<List<MostImportantThingEntity>> findAllAsLiveData() {
+            return null;
+        }
+
+        public LiveData<List<MostImportantThingEntity>> findAllPendingsAsLiveDate() {
+            return null;
+        }
+
+        public LiveData<List<MostImportantThingEntity>> findAllRecurringsAsLiveData() {
             return null;
         }
 

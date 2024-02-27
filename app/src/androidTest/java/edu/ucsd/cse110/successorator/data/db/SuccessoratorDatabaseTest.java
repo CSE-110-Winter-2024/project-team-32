@@ -69,7 +69,7 @@ public class SuccessoratorDatabaseTest {
     }
 
     private List<String> getAllTasks() {
-        return mitDao.findAll().stream()
+        return mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
                 .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class SuccessoratorDatabaseTest {
             this.mitDao.insert(mitEntity);
             expectedList.add(mitEntity);
         }
-        List<MostImportantThingEntity> actualList = mitDao.findAll();
+        List<MostImportantThingEntity> actualList = mitDao.findAllMits();
 
         assertEquals(expectedList.size(), mitDao.count());
 
@@ -126,7 +126,7 @@ public class SuccessoratorDatabaseTest {
                 new MostImportantThing(0, "task2", 0L, 3, false, "Home"));
         this.mitDao.insert(mit1);
 
-        assertEquals(1, this.mitDao.findAll().size());
+        assertEquals(1, this.mitDao.findAllMits().size());
     }
 
     @Test
@@ -203,7 +203,7 @@ public class SuccessoratorDatabaseTest {
         this.mitDao.toggleCompleted(1);
         this.mitDao.toggleCompleted(3);
 
-        List<MostImportantThing> actualTasks = mitDao.findAll().stream()
+        List<MostImportantThing> actualTasks = mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .collect(Collectors.toList());
         //MITs come out in reverse order since we used prepend
@@ -217,7 +217,7 @@ public class SuccessoratorDatabaseTest {
         this.mitDao.toggleCompleted(2);
         this.mitDao.toggleCompleted(3);
 
-        actualTasks = mitDao.findAll().stream()
+        actualTasks = mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .collect(Collectors.toList());
 
