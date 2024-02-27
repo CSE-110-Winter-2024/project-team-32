@@ -26,6 +26,7 @@ import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
+
 /**
  * The MainActivity class of Succesorator that displays the user interface and
  * handles user interactions
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int TOMORROW_VIEW = 1;
     private static final int PENDING_VIEW = 2;
     private static final int RECURRING_VIEW = 3;
+    private static int frag = 0;
     private ActivityMainBinding view;
     private TimeKeeper timeKeeper;
     private RoomMostImportantThingRepository roomMostImportantThings;
@@ -44,34 +46,44 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel activityModel;
     private int currentView;
 
+    /**
+     * Swaps from the current fragment to whatever fragment you pass in as an argument,
+     * according for static variables above
+     * @param newFragment
+     */
     private void swapFragments(int newFragment) {
-       switch (newFragment) {
-           case TODAY_VIEW:
-               getSupportFragmentManager()
+        System.out.println("Swapping fragments from " + currentView + " to " + newFragment);
+        switch (newFragment) {
+            case TODAY_VIEW:
+                getSupportFragmentManager()
                        .beginTransaction()
                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
                        .commit();
-               break;
-           case TOMORROW_VIEW:
-               getSupportFragmentManager()
+                this.currentView = TODAY_VIEW;
+                break;
+            case TOMORROW_VIEW:
+                getSupportFragmentManager()
                        .beginTransaction()
                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
                        .commit();
-               break;
-           case PENDING_VIEW:
-               getSupportFragmentManager()
+                this.currentView = TOMORROW_VIEW;
+                break;
+            case PENDING_VIEW:
+                getSupportFragmentManager()
                        .beginTransaction()
                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
                        .commit();
-               break;
-           case RECURRING_VIEW:
-               getSupportFragmentManager()
+                this.currentView = PENDING_VIEW;
+                break;
+            case RECURRING_VIEW:
+                getSupportFragmentManager()
                        .beginTransaction()
                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
                        .commit();
-               break;
-           default:
-               throw new IllegalArgumentException("Trying to switch to a non-existing state");
+                this.currentView = RECURRING_VIEW;
+                break;
+            default:
+                throw new IllegalArgumentException("Trying to switch to a non-existing state");
        }
     }
 
@@ -144,8 +156,12 @@ public class MainActivity extends AppCompatActivity {
             //Todo, make button initiate a Dialog
             var dialogFragment = CreateMitDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
-
         }
+        //For testing:
+        if (itemId == R.id.action_bar_menu_swap_views) {
+            swapFragments((++frag % 4));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

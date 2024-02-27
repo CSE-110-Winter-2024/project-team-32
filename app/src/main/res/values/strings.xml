@@ -9,4 +9,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mit_hint_text">Type your task here!</string>
+    <string name="today_fragment_label">Today</string>
+    <string name="tomorrow_fragment_label">Tomorrow</string>
+    <string name="pending_fragment_label">Pending</string>
+    <string name="recurring_fragment_label">Recurring</string>
 </resources>

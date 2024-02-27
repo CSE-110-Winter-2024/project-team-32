@@ -13,6 +13,7 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentRecurringMitListBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +22,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
  */
 public class RecurringMitListFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentPendingMitListBinding view;
+    private FragmentRecurringMitListBinding view;
     private MitListAdapter adapter;
 
     /**
@@ -69,7 +70,7 @@ public class RecurringMitListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = FragmentPendingMitListBinding.inflate(inflater, container, false);
+        view = FragmentRecurringMitListBinding.inflate(inflater, container, false);
 
         setUpMvp();
 
