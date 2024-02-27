@@ -36,7 +36,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     @Override
     public Subject<MostImportantThing> find(int id) {
-        var entityLiveData = mostImportantThingDao.findAsLiveData(id); //returning null!!
+        var entityLiveData = mostImportantThingDao.findAsLiveData(id);
         // this map takes a LiveData<X> and turns it into a LiveData<Y>
 
         var mostImportantThingLiveData = Transformations.map(entityLiveData, MostImportantThingEntity::toMostImportantThing);
