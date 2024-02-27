@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.ui;
 
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +13,16 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.FragmentMitListBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MitList#newInstance} factory method to
+ * Use the {@link TodayMitListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MitList extends Fragment {
+public class TodayMitListFragment extends Fragment {
     private MainViewModel activityModel;
-    private FragmentMitListBinding view;
+    private FragmentTodayMitListBinding view;
 
     private MitListAdapter adapter;
 
@@ -33,8 +32,8 @@ public class MitList extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static MitList newInstance() {
-        MitList fragment = new MitList();
+    public static TodayMitListFragment newInstance() {
+        TodayMitListFragment fragment = new TodayMitListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -72,7 +71,7 @@ public class MitList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = FragmentMitListBinding.inflate(inflater, container, false);
+        view = FragmentTodayMitListBinding.inflate(inflater, container, false);
 
         setUpMvp();
 
