@@ -9,6 +9,7 @@ public class PendingMostImportantThing implements RepositoryObject {
     public Integer id() {
         return this.id;
     }
+
     /**
      * Constructor to be fed a mit object with a placeholder time.
      * @param mit MIT with placeholder time, will be replaced so doesn't matter

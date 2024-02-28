@@ -14,6 +14,10 @@ public class RecurringMostImportantThing {
         return this.id;
     }
 
+    public MostImportantThing mit() {
+        return this.mit;
+    }
+
     /**
      * Constructs the Recurring mit
      * @param mit Should be a fully populated MIT with the creation date being the first recurring

@@ -108,8 +108,7 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         return binding.getRoot();
     }
 
-    // The below methods aren't strictly necessary, usually.
-    // but a lab said we need them
+
 
     public static String formatRecurrencePeriod(RecurringMostImportantThing recurringMit) {
         String recurText = recurringMit.recurPeriod;
@@ -215,6 +214,11 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
      * Determines if the IDs are stable over changes
      * @return True if they are stable, else false
      */
+
+
+    // The below methods aren't strictly necessary, usually.
+    // but a lab said we need them
+
 
     @Override
     public boolean hasStableIds() {
