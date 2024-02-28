@@ -10,7 +10,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -93,7 +97,46 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
         // Populate the view with the mit's data.
+        //LocalDateTime mitCreationDate = LocalDateTime.of(recurringMit.mit.timeCreated())
         binding.mitTaskText.setText(recurringMit.mit.task());
+        String recurText = recurringMit.recurPeriod;
+        if (recurringMit.recurPeriod.equals("Weekly")) {
+            //Calculate the day of week the task was made on
+            Date date = new Date(recurringMit.mit.timeCreated());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+                    String dayOfWeekString;
+            switch (dayOfWeek) {
+                case 0:
+                    dayOfWeekString = "Sunday";
+                    break;
+                case 1:
+                    dayOfWeekString = "Monday";
+                    break;
+                case 2:
+                    dayOfWeekString = "Tuesday";
+                    break;
+                case 3:
+                    dayOfWeekString = "Wednesday";
+                    break;
+                case 4:
+                    dayOfWeekString = "Thursday";
+                    break;
+                case 5:
+                    dayOfWeekString = "Friday";
+                    break;
+                case 6:
+                    dayOfWeekString = "Saturday";
+                    break;
+                default:
+                    dayOfWeekString = "Invalid Day";
+                    break;
+            }
+            //Use DayOfWeek to get the string for day instead of integer
+            recurText = recurText + " on " + dayOfWeekString;
+        }
+        binding.mitRecurringDateText.setText(recurText);
 
         return binding.getRoot();
     }
