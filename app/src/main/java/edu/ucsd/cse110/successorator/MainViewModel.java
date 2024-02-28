@@ -67,15 +67,15 @@ public class MainViewModel extends ViewModel {
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
         });
-//        mostImportantThingRepository.findAllNormal().observe(mits -> {
-//            System.out.println("list of mits changed / got first loaded");
-//            if (mits == null) return; // not ready yet, ignore
-//            System.out.println("mits wasn't null, setting value now");
-//            var newOrderedMits = mits.stream() // begin streaming block
-//                    .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
-//                    .collect(Collectors.toList()); // ends the streaming block by producing a list
-//            this.orderedMits.setValue(newOrderedMits);
-//        });
+        mostImportantThingRepository.findAllPending().observe(pendingMits -> {
+            System.out.println("list of mits changed / got first loaded");
+            if (pendingMits == null) return; // not ready yet, ignore
+            System.out.println("mits wasn't null, setting value now");
+            var newOrderedPendingMits = pendingMits.stream() // begin streaming block
+                    //.sorted(Comparator.comparingInt(PendingMostImportantThing::mit.sortOrder)) // sorts it based on comparingSortOrder
+                    .collect(Collectors.toList()); // ends the streaming block by producing a list
+            this.orderedPendingMits.setValue(newOrderedPendingMits);
+        });
 
 
     }
