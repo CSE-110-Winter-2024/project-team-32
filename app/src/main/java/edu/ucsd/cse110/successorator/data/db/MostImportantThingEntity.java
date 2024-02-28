@@ -65,6 +65,6 @@ public class MostImportantThingEntity {
      * @return The converted MostImportantThing object
      */
     public @NonNull MostImportantThing toMostImportantThing() {
-        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed);
+        return new MostImportantThing(this.id, this.task, this.timeCreated, this.sortOrder, this.completed, "Home");
     }
 }

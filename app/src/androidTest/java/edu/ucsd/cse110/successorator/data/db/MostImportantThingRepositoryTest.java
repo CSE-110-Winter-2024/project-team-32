@@ -38,10 +38,10 @@ public class MostImportantThingRepositoryTest {
     }
 
     private void initializeMits() {
-        mit0 = new MostImportantThing(0, "task0", 0L, 0, false);
-        mit1 = new MostImportantThing(1, "task1", 0L, 2, false);
-        mit2 = new MostImportantThing(2, "task2", 0L, 3, false);
-        mit3 = new MostImportantThing(3, "task3", 0L, 5, false);
+        mit0 = new MostImportantThing(0, "task0", 0L, 0, false, "Home");
+        mit1 = new MostImportantThing(1, "task1", 0L, 2, false, "Home");
+        mit2 = new MostImportantThing(2, "task2", 0L, 3, false, "Home");
+        mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Home");
     }
 
     private void prependAllMits() {
@@ -163,7 +163,7 @@ public class MostImportantThingRepositoryTest {
         this.mit2.setCompleted(true);
         this.mit3.setCompleted(true);
         this.prependAllMits();
-        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false);
+        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false, "Home");
         this.mitRepo.addNewMostImportantThing(mit4);
         List<String> actualTasks = getAllTasks();
         List<String> expectedTasks = Arrays.asList("task4", "task3", "task2", "task1", "task0");
@@ -174,7 +174,7 @@ public class MostImportantThingRepositoryTest {
     public void testAddNewMitNoFinished() {
         this.initializeMits();
         this.prependAllMits();
-        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false);
+        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false, "Home");
         this.mitRepo.addNewMostImportantThing(mit4);
         List<String> actualTasks = getAllTasks();
         List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0", "task4");
@@ -187,7 +187,7 @@ public class MostImportantThingRepositoryTest {
         this.mit0.setCompleted(true);
         this.mit1.setCompleted(true);
         this.prependAllMits();
-        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false);
+        MostImportantThing mit4 = new MostImportantThing(10, "task4", 0L, 5, false, "Home");
         this.mitRepo.addNewMostImportantThing(mit4);
         List<String> actualTasks = getAllTasks();
         List<String> expectedTasks = Arrays.asList("task3", "task2", "task4", "task1", "task0");
