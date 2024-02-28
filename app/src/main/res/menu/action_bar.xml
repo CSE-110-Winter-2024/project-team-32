@@ -22,12 +22,31 @@
         android:orderInCategory="2"
         android:title="action_bar_menu_advance_date"
         app:showAsAction="always" />
+<!--Depricated, before we made drop down menu-->
+<!--    <item android:id="@+id/action_bar_menu_swap_views"-->
+<!--        android:title="Swap Views"-->
+<!--        android:icon="@drawable/ic_swap"-->
+<!--        android:orderInCategory="4"-->
+<!--        app:iconTint="@color/white"-->
+<!--        app:showAsAction="always" />-->
 
-    <item android:id="@+id/action_bar_menu_swap_views"
-        android:title="Swap Views"
-        android:icon="@drawable/ic_swap"
-        android:orderInCategory="4"
-        app:iconTint="@color/white"
-        app:showAsAction="always" />
+   <item
+        android:id="@+id/menu_dropdown"
+        android:title="Change View">
+<!--            Trying to throw an error, but the code works? Looks good to me! -->
+<!--       Chalking this one up to Android being Android-->
+            <item
+                android:id="@+id/go_to_today_view_button"
+                android:title="Today"/>
+            <item
+                android:id="@+id/go_to_tomorrow_view_button"
+                android:title="Tomorrow"/>
+            <item
+                android:id="@+id/go_to_pending_view_button"
+                android:title="Pending"/>
+            <item
+                android:id="@+id/go_to_recurring_view_button"
+                android:title="Recurring"/>
+    </item>
 
 </menu>

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -157,13 +159,63 @@ public class MainActivity extends AppCompatActivity {
             var dialogFragment = CreateMitDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
         }
-        //For testing:
-        if (itemId == R.id.action_bar_menu_swap_views) {
-            swapFragments((++frag % 4));
+        //Depricated, before we made dropdown menu - For testing:
+//        if (itemId == R.id.action_bar_menu_swap_views) {
+//            swapFragments((++frag % 4));
+//        }
+
+        else if (itemId == R.id.go_to_today_view_button) {
+            System.out.println("Trying to go to Today view");
+            swapFragments(TODAY_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_tomorrow_view_button) {
+            System.out.println("Trying to go to Tomorrow view");
+            swapFragments(TOMORROW_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_pending_view_button) {
+            System.out.println("Trying to go to Pending view");
+            swapFragments(PENDING_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_recurring_view_button) {
+            System.out.println("Trying to go to Recurring view");
+            swapFragments(RECURRING_VIEW);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+//    private void showPopupMenu(View view) {
+//        PopupMenu popupMenu = new PopupMenu(this, view);
+//        popupMenu.getMenuInflater().inflate(R.menu.action_bar, popupMenu.getMenu());
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                // Handle dropdown menu item clicks here
+//                int menuItemId = item.getItemId();
+//                if (menuItemId == R.id.go_to_today_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_tomorrow_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_pending_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_recurring_view_button) {
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//        popupMenu.show();
+//    }
 
     //only advances the date by 1 day
     //restarting the app will reset to current day
