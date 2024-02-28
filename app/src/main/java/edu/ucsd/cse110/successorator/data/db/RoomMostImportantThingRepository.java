@@ -137,8 +137,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
-     * Prepends a pending mostImportantThing
-     * @param pendingMostImportantThing The mostImportantThing to append
+     * Prepends a pendingMostImportantThing
+     * @param pendingMostImportantThing The pendingMostImportantThing to append
      */
     @Override
     public void prepend(PendingMostImportantThing pendingMostImportantThing) {
@@ -146,8 +146,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
-     * Prepends a recurring mostImportantThing
-     * @param recurringMostImportantThing The mostImportantThing to append
+     * Prepends a recurringMostImportantThing
+     * @param recurringMostImportantThing The recurringMostImportantThing to append
      */
     @Override
     public void prepend(RecurringMostImportantThing recurringMostImportantThing) {
@@ -164,8 +164,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
-     * Appends a pending mostImportantThing
-     * @param pendingMostImportantThing The mostImportantThing to append
+     * Appends a pendingMostImportantThing
+     * @param pendingMostImportantThing The pendingMostImportantThing to append
      */
     @Override
     public void append(PendingMostImportantThing pendingMostImportantThing) {
@@ -173,8 +173,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
-     * Appends a recurring mostImportantThing
-     * @param recurringMostImportantThing The mostImportantThing to append
+     * Appends a recurringMostImportantThing
+     * @param recurringMostImportantThing The recurringMostImportantThing to append
      */
     @Override
     public void append(RecurringMostImportantThing recurringMostImportantThing) {

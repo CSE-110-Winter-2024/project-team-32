@@ -64,7 +64,6 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
         var pendingMit = getItem(position);
         assert pendingMit != null;
 
-
         System.out.println("PENDING GETVIEW WAS CALLED FOR ID " + pendingMit.id());
 
         // Check if a view is being reused...
@@ -92,7 +91,6 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
         var taskText = binding.mitTaskText;
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(pendingMit.mit.task());
-
         return binding.getRoot();
     }
 

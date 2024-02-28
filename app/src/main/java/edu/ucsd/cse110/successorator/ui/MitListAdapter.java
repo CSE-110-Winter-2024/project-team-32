@@ -65,9 +65,6 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         // Get the mit for this position.
         var mit = getItem(position);
         assert mit != null;
-
-
-
         System.out.println("GETVIEW WAS CALLED FOR ID " + mit.id() +  " which has completed value of " + mit.completed());
 
         // Check if a view is being reused...

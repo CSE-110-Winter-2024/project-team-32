@@ -97,9 +97,21 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
 
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
+
+        //Formate the recurrence period into the proper string
+        String recurText = formatRecurrencePeriod(recurringMit);
+
         // Populate the view with the mit's data.
-        //LocalDateTime mitCreationDate = LocalDateTime.of(recurringMit.mit.timeCreated())
         binding.mitTaskText.setText(recurringMit.mit.task());
+        binding.mitRecurringDateText.setText(recurText);
+
+        return binding.getRoot();
+    }
+
+    // The below methods aren't strictly necessary, usually.
+    // but a lab said we need them
+
+    public static String formatRecurrencePeriod(RecurringMostImportantThing recurringMit) {
         String recurText = recurringMit.recurPeriod;
         if (recurringMit.recurPeriod.equals("Weekly")) {
             //Calculate the day of week the task was made on
@@ -129,14 +141,9 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             String dateInYear = format.format(date);
             recurText = recurText + " on " + dateInYear;
         }
-
-        binding.mitRecurringDateText.setText(recurText);
-
-        return binding.getRoot();
+        return recurText;
     }
 
-    // The below methods aren't strictly necessary, usually.
-    // but a lab said we need them
 
     /**
      * Helper method to convert a date to the day of week it represents
