@@ -50,15 +50,15 @@ public class SuccessoratorDatabaseTest {
      */
     private void initializeMitEntities() {
         mit0 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(0, "task0", 0L, 0, false));
+                new MostImportantThing(0, "task0", 0L, 0, false, "Home"));
 
         mit1 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(1, "task1", 0L, 2, false));
+                new MostImportantThing(1, "task1", 0L, 2, false, "Home"));
         mit2 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(2, "task2", 0L, 3, false));
+                new MostImportantThing(2, "task2", 0L, 3, false, "Home"));
 
         mit3 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(3, "task3", 0L, 5, false));
+                new MostImportantThing(3, "task3", 0L, 5, false, "Home"));
     }
 
     private void prependAllMitEntities() {
@@ -83,12 +83,12 @@ public class SuccessoratorDatabaseTest {
         MostImportantThing actual;
         MostImportantThing expected;
         for (int i = 0; i < 10; i++) {
-            var mit = new MostImportantThing(i, "task1", 0L, 0, false);
+            var mit = new MostImportantThing(i, "task1", 0L, 0, false, "Home");
             var mitEntity = MostImportantThingEntity.fromMostImportantThing(mit);
             this.mitDao.insert(mitEntity);
             actual = mitDao.find(i).toMostImportantThing();
 
-            expected = new MostImportantThing(i, "task1", 0L, 0, false);
+            expected = new MostImportantThing(i, "task1", 0L, 0, false, "Home");
             assertEquals(expected, actual);
         }
     }
@@ -100,7 +100,7 @@ public class SuccessoratorDatabaseTest {
     public void testInsertAndFindAll() {
         List<MostImportantThingEntity> expectedList = new ArrayList<>();
         for (int i=0; i<10; i++) {
-            var mit = new MostImportantThing(i, "task1", 0L, 0, false);
+            var mit = new MostImportantThing(i, "task1", 0L, 0, false, "Home");
             var mitEntity = MostImportantThingEntity.fromMostImportantThing(mit);
             this.mitDao.insert(mitEntity);
             expectedList.add(mitEntity);
@@ -123,7 +123,7 @@ public class SuccessoratorDatabaseTest {
         this.initializeMitEntities();
         this.mitDao.insert(mit0);
         mit1 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(0, "task2", 0L, 3, false));
+                new MostImportantThing(0, "task2", 0L, 3, false, "Home"));
         this.mitDao.insert(mit1);
 
         assertEquals(1, this.mitDao.findAll().size());
@@ -141,11 +141,11 @@ public class SuccessoratorDatabaseTest {
         // upsert the max and min
         this.mitDao.insert(
                 MostImportantThingEntity.fromMostImportantThing(
-                        new MostImportantThing(0, "task1", 0L, 1, false))
+                        new MostImportantThing(0, "task1", 0L, 1, false, "Home"))
         );
         this.mitDao.insert(
                 MostImportantThingEntity.fromMostImportantThing(
-                        new MostImportantThing(3, "task1", 0L, 4, false))
+                        new MostImportantThing(3, "task1", 0L, 4, false, "Home"))
         );
         assertEquals(4, this.mitDao.getMaxSortOrder());
         assertEquals(1, this.mitDao.getMinSortOrder());
