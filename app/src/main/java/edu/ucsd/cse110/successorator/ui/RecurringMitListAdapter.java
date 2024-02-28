@@ -130,8 +130,6 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             recurText = recurText + " on " + dateInYear;
         }
 
-
-
         binding.mitRecurringDateText.setText(recurText);
 
         return binding.getRoot();
