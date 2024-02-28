@@ -8,12 +8,17 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,7 +96,24 @@ public class TodayMitListFragment extends Fragment {
                 return;
             }
             adapter.clear();
-            adapter.addAll(new ArrayList<>(mits));
+            //sort through MITs and only add the ones that are tomorrow
+            List<MostImportantThing> mitsToAdd = new ArrayList<>();
+            for (var mit : mits) {
+                //Set cal's time to when the mit was created
+                //Subtract a day in milliseconds - 86400000
+                Date dateCreatedMinusOneDay = new Date(mit.timeCreated());
+                Date currDate = new Date();
+
+                Instant instant1 = dateCreatedMinusOneDay.toInstant()
+                        .truncatedTo(ChronoUnit.DAYS);
+                Instant instant2 = currDate.toInstant()
+                        .truncatedTo(ChronoUnit.DAYS);
+                //If it was created for any day before today, display it
+                if (instant1.compareTo(instant2) <= 0) {
+                    mitsToAdd.add(mit);
+                }
+            }
+            adapter.addAll(mitsToAdd);
             adapter.notifyDataSetChanged();
 
 

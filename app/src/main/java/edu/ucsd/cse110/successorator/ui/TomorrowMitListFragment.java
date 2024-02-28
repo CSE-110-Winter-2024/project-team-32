@@ -96,16 +96,13 @@ public class TomorrowMitListFragment extends Fragment {
                 return;
             }
             adapter.clear();
-            //TODO - sort through MITs and only add the ones that are tomorrow
+            //sort through MITs and only add the ones that are tomorrow
             List<MostImportantThing> mitsToAdd = new ArrayList<>();
             for (var mit : mits) {
                 //Set cal's time to when the mit was created
                 //Subtract a day in milliseconds - 86400000
                 Date dateCreatedMinusOneDay = new Date(mit.timeCreated() - TimeUnit.DAYS.toMillis(1));
                 Date currDate = new Date();
-
-//                Calendar cal = Calendar.getInstance();
-//                cal.setTime(dateCreated);
 
                 Instant instant1 = dateCreatedMinusOneDay.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
