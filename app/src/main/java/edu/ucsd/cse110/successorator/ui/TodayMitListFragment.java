@@ -23,7 +23,6 @@ import edu.ucsd.cse110.successorator.databinding.FragmentTodayMitListBinding;
 public class TodayMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTodayMitListBinding view;
-
     private MitListAdapter adapter;
 
     /**

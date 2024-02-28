@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.ui.MitListAdapter;
@@ -24,6 +26,8 @@ public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final MostImportantThingRepository mostImportantThingRepository; //Repo containing all MITs
     private final SimpleSubject<List<MostImportantThing>> orderedMits;//List keeping track of MIT order
+    private final SimpleSubject<List<PendingMostImportantThing>> orderedPendingMits;
+    private final SimpleSubject<List<RecurringMostImportantThing>> orderedRecurringMits;
     private final SimpleSubject<String> displayedTask;
     private MitListAdapter adapter;
 
@@ -46,10 +50,12 @@ public class MainViewModel extends ViewModel {
 
         // Create the observable subjects.
         this.orderedMits = new SimpleSubject<>();
+        this.orderedPendingMits = new SimpleSubject<>();
+        this.orderedRecurringMits = new SimpleSubject<>();
         this.displayedTask = new SimpleSubject<>();
 
         // When the list of mits changes (or is first loaded), reset the ordering.
-        mostImportantThingRepository.findAll().observe(mits -> {
+        mostImportantThingRepository.findAllNormal().observe(mits -> {
             System.out.println("list of mits changed / got first loaded");
             if (mits == null) return; // not ready yet, ignore
             System.out.println("mits wasn't null, setting value now");
@@ -58,6 +64,16 @@ public class MainViewModel extends ViewModel {
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
         });
+//        mostImportantThingRepository.findAllNormal().observe(mits -> {
+//            System.out.println("list of mits changed / got first loaded");
+//            if (mits == null) return; // not ready yet, ignore
+//            System.out.println("mits wasn't null, setting value now");
+//            var newOrderedMits = mits.stream() // begin streaming block
+//                    .sorted(Comparator.comparingInt(MostImportantThing::sortOrder)) // sorts it based on comparingSortOrder
+//                    .collect(Collectors.toList()); // ends the streaming block by producing a list
+//            this.orderedMits.setValue(newOrderedMits);
+//        });
+
 
     }
 
@@ -77,6 +93,14 @@ public class MainViewModel extends ViewModel {
      */
     public Subject<List<MostImportantThing>> getOrderedMits() {
         return orderedMits;
+    }
+
+    public Subject<List<PendingMostImportantThing>> getOrderedPendingMits() {
+        return this.orderedPendingMits;
+    }
+
+    public Subject<List<RecurringMostImportantThing>> getOrderedRecurringMits() {
+        return this.orderedRecurringMits;
     }
 
 

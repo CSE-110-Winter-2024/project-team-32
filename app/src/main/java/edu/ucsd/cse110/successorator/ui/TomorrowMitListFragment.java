@@ -81,18 +81,18 @@ public class TomorrowMitListFragment extends Fragment {
      */
     private void setUpMvp() {
         // init adapter
-        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
+        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted, activityModel::remove);
 
         //Observers that display the MITs, or the default message if there are no MITs
         this.activityModel.getOrderedMits().observe(mits -> {
             if (mits == null) {
-                System.out.println("MainActivity got null mits");
+                System.out.println("MainActivity got null mits tomorrow");
                 return;
             }
             adapter.clear();
+            //TODO - sort through MITs and only add the ones that are tomorrow
             adapter.addAll(new ArrayList<>(mits));
             adapter.notifyDataSetChanged();
-
         });
 
         this.view.mitList.setAdapter(adapter);

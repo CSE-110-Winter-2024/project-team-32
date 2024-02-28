@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
 
@@ -43,16 +45,61 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
+//    /**
+//     * Finds all MostImportantThings
+//     * @return A Subject List of all the MostImportantThings
+//     */
+//    @Override
+//    public Subject<List<MostImportantThing>> findAll() {
+//        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
+//        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+//            return entities.stream()
+//                    .map(MostImportantThingEntity::toMostImportantThing)
+//                    .collect(Collectors.toList());
+//        });
+//        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+//    }
+
     /**
-     * Finds all MostImportantThings
+     * Finds all MostImportantThings that are not pending or recurring
      * @return A Subject List of all the MostImportantThings
      */
     @Override
-    public Subject<List<MostImportantThing>> findAll() {
-        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
+    public Subject<List<MostImportantThing>> findAllNormal() {
+        var entitiesLiveData = mostImportantThingDao.findAllNormalAsLiveData();
         var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
             return entities.stream()
                     .map(MostImportantThingEntity::toMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
+     * Finds all PendingMostImportantThings
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<PendingMostImportantThing>> findAllPending() {
+        var entitiesLiveData = mostImportantThingDao.findAllPendingAsLiveData();
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toPendingMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
+     * Finds all RecurringMostImportantThings
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<RecurringMostImportantThing>> findAllRecurring() {
+        var entitiesLiveData = mostImportantThingDao.findAllRecurringAsLiveData();
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toRecurringMostImportantThing)
                     .collect(Collectors.toList());
         });
         return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);

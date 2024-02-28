@@ -13,7 +13,11 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public interface MostImportantThingRepository {
     Subject<MostImportantThing> find(int id);
 
-    Subject<List<MostImportantThing>> findAll();
+    Subject<List<MostImportantThing>> findAllNormal();
+
+    Subject<List<PendingMostImportantThing>> findAllPending();
+
+    Subject<List<RecurringMostImportantThing>> findAllRecurring();
 
     void save(MostImportantThing mostImportantThing);
 

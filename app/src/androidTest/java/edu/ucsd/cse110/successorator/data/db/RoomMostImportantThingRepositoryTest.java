@@ -108,6 +108,21 @@ public class RoomMostImportantThingRepositoryTest {
             return entities;
         }
 
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllNormalAsLiveData() {
+            return null;
+        }
+
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData() {
+            return null;
+        }
+
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData() {
+            return null;
+        }
+
         public List<MostImportantThingEntity> findAllPendings() {
             return null;
         }
@@ -115,7 +130,6 @@ public class RoomMostImportantThingRepositoryTest {
         public List<MostImportantThingEntity> findAllRecurrings() {
             return null;
         }
-
         public List<MostImportantThingEntity> findAll() {
             return null;
         }
@@ -130,7 +144,7 @@ public class RoomMostImportantThingRepositoryTest {
             return null;
         }
 
-        public LiveData<List<MostImportantThingEntity>> findAllPendingsAsLiveDate() {
+        public LiveData<List<MostImportantThingEntity>> findAllPendingsAsLiveData() {
             return null;
         }
 

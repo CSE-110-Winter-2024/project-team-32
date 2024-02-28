@@ -3,6 +3,7 @@ package edu.ucsd.cse110.successorator.data.db;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
@@ -72,6 +73,7 @@ public class MostImportantThingEntity {
      * @param completed whether or not the task is completed
      * @param workContext the work context the entity should have
      */
+    @Ignore
     MostImportantThingEntity(Integer id,
                              @NonNull String task,
                              @NonNull Long timeCreated,
