@@ -22,7 +22,7 @@
         android:id="@+id/mit_recurring_date_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
