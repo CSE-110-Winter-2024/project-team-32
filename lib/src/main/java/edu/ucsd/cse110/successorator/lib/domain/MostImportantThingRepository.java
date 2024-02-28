@@ -26,8 +26,12 @@ public interface MostImportantThingRepository {
     void remove(int id);
 
     void append(MostImportantThing mostImportantThing);
+    void append(PendingMostImportantThing pendingMostImportantThing);
+    void append(RecurringMostImportantThing recurringMostImportantThing);
 
     void prepend(MostImportantThing mostImportantThing);
+    void prepend(PendingMostImportantThing pendingMostImportantThing);
+    void prepend(RecurringMostImportantThing recurringMostImportantThing);
 
     void clear();
 

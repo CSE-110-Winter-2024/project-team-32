@@ -45,6 +45,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
+    // OUTDATED - used to be the default, renamed to findAllNormal(), kept in case we want to find every entity for some reason
 //    /**
 //     * Finds all MostImportantThings
 //     * @return A Subject List of all the MostImportantThings
@@ -136,12 +137,48 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Prepends a pending mostImportantThing
+     * @param pendingMostImportantThing The mostImportantThing to append
+     */
+    @Override
+    public void prepend(PendingMostImportantThing pendingMostImportantThing) {
+        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(pendingMostImportantThing));
+    }
+
+    /**
+     * Prepends a recurring mostImportantThing
+     * @param recurringMostImportantThing The mostImportantThing to append
+     */
+    @Override
+    public void prepend(RecurringMostImportantThing recurringMostImportantThing) {
+        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(recurringMostImportantThing));
+    }
+
+    /**
      * Appends a mostImportantThing
      * @param mostImportantThing The mostImportantThing to append
      */
     @Override
     public void append(MostImportantThing mostImportantThing) {
         mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
+    }
+
+    /**
+     * Appends a pending mostImportantThing
+     * @param pendingMostImportantThing The mostImportantThing to append
+     */
+    @Override
+    public void append(PendingMostImportantThing pendingMostImportantThing) {
+        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(pendingMostImportantThing));
+    }
+
+    /**
+     * Appends a recurring mostImportantThing
+     * @param recurringMostImportantThing The mostImportantThing to append
+     */
+    @Override
+    public void append(RecurringMostImportantThing recurringMostImportantThing) {
+        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(recurringMostImportantThing));
     }
 
     /**
