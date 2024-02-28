@@ -57,7 +57,7 @@ public class MainViewModel extends ViewModel {
         //FOR TESTING, just add one pending item - it'll only add one cause the id will just override every time :)
         this.mostImportantThingRepository.append(new PendingMostImportantThing(new MostImportantThing(100,"Pending Test MIT",System.currentTimeMillis(),-1,false,"Home")));
         //FOR TESTING, just add one recurring item - it'll only add one cause the id will just overrid every time :)
-        this.mostImportantThingRepository.append(new RecurringMostImportantThing(new MostImportantThing(105,"Recurring Test MIT",System.currentTimeMillis(),-1,false,"Home"), "Weekly"));
+        this.mostImportantThingRepository.append(new RecurringMostImportantThing(new MostImportantThing(105,"Recurring Test MIT",System.currentTimeMillis(),-1,false,"Home"), "Yearly"));
 
         // When the list of mits changes (or is first loaded), reset the ordering.
         mostImportantThingRepository.findAllNormal().observe(mits -> {
