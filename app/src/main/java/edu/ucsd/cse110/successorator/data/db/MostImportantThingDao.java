@@ -65,7 +65,10 @@ public interface MostImportantThingDao {
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
                 mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder + 1,
-                mostImportantThing.completed
+                mostImportantThing.completed,
+                mostImportantThing.isPending,
+                mostImportantThing.isRecurring,
+                mostImportantThing.recurPeriod
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -79,7 +82,10 @@ public interface MostImportantThingDao {
                 mostImportantThing.id,
                 mostImportantThing.task, mostImportantThing.timeCreated,
                 getMinSortOrder() - 1,
-                mostImportantThing.completed
+                mostImportantThing.completed,
+                mostImportantThing.isPending,
+                mostImportantThing.isRecurring,
+                mostImportantThing.recurPeriod
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }

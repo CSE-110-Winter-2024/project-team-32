@@ -65,6 +65,35 @@ public class MostImportantThingEntity {
         this.isPending = false;
         this.recurPeriod = "";
     }
+
+    /**
+     * Constructor for creating a mostImportantThingEntity, with a work context
+     * of "Home"
+     * @param task - the text this MIT should have
+     * @param timeCreated - creation time in ms from epoch
+     * @param sortOrder - the sort order int
+     * @param completed whether or not the task is completed
+     */
+    @Ignore
+    MostImportantThingEntity(Integer id,
+                             @NonNull String task,
+                             @NonNull Long timeCreated,
+                             int sortOrder,
+                             boolean completed,
+                             boolean isPending,
+                             boolean isRecurring,
+                             String recurPeriod) {
+        this.id = id;
+        this.task = task;
+        this.timeCreated = timeCreated;
+        this.sortOrder = sortOrder;
+        this.completed = completed;
+        this.workContext = "Home";
+        this.isRecurring = isRecurring;
+        this.isPending = isPending;
+        this.recurPeriod = recurPeriod;
+    }
+
     /**
      * Constructor for creating a mostImportantThingEntity with specified work context
      * @param task - the text this MIT should have

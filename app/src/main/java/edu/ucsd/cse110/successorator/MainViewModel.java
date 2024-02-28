@@ -54,6 +54,9 @@ public class MainViewModel extends ViewModel {
         this.orderedRecurringMits = new SimpleSubject<>();
         this.displayedTask = new SimpleSubject<>();
 
+        //FOR TESTING, just add one pending item
+        this.mostImportantThingRepository.append(new PendingMostImportantThing(new MostImportantThing(100,"TesterPending",System.currentTimeMillis(),-1,false,"Home")));
+
         // When the list of mits changes (or is first loaded), reset the ordering.
         mostImportantThingRepository.findAllNormal().observe(mits -> {
             System.out.println("list of mits changed / got first loaded");
