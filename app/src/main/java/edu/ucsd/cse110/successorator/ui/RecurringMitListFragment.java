@@ -23,7 +23,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentRecurringMitListBinding
 public class RecurringMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurringMitListBinding view;
-    private MitListAdapter adapter;
+    private RecurringMitListAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,16 +82,16 @@ public class RecurringMitListFragment extends Fragment {
      */
     private void setUpMvp() {
         // init adapter
-        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
+        this.adapter = new RecurringMitListAdapter(this.getContext(), List.of(),activityModel::remove);
 
         //Observers that display the MITs, or the default message if there are no MITs
-        this.activityModel.getOrderedMits().observe(mits -> {
-            if (mits == null) {
-                System.out.println("MainActivity got null mits");
+        this.activityModel.getOrderedRecurringMits().observe(recurringMits -> {
+            if (recurringMits == null) {
+                System.out.println("MainActivity got null recurringMits");
                 return;
             }
             adapter.clear();
-            adapter.addAll(new ArrayList<>(mits));
+            adapter.addAll(new ArrayList<>(recurringMits));
             adapter.notifyDataSetChanged();
 
         });

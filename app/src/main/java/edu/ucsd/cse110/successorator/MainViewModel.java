@@ -72,10 +72,23 @@ public class MainViewModel extends ViewModel {
             if (pendingMits == null) return; // not ready yet, ignore
             System.out.println("mits wasn't null, setting value now");
             var newOrderedPendingMits = pendingMits.stream() // begin streaming block
+                    //FOR RIGHT NOW, THEY ARE NOT SORTED SINCE THE INT WE WANT TO SORT IS INSIDE THE MIT INSTANCE VARIABLE INSIDE THE PENDINGMIT
                     //.sorted(Comparator.comparingInt(PendingMostImportantThing::mit.sortOrder)) // sorts it based on comparingSortOrder
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedPendingMits.setValue(newOrderedPendingMits);
         });
+        mostImportantThingRepository.findAllRecurring().observe(recurringMits -> {
+            System.out.println("list of mits changed / got first loaded");
+            if (recurringMits == null) return; // not ready yet, ignore
+            System.out.println("mits wasn't null, setting value now");
+            var newOrderedRecurringMits = recurringMits.stream() // begin streaming block
+                    //FOR RIGHT NOW, THEY ARE NOT SORTED SINCE THE INT WE WANT TO SORT IS INSIDE THE MIT INSTANCE VARIABLE INSIDE THE PENDINGMIT
+                    //.sorted(Comparator.comparingInt(PendingMostImportantThing::mit.sortOrder)) // sorts it based on comparingSortOrder
+                    .collect(Collectors.toList()); // ends the streaming block by producing a list
+            this.orderedRecurringMits.setValue(newOrderedRecurringMits);
+        });
+
+
 
 
     }
