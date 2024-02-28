@@ -54,6 +54,7 @@ is for a bug fix. You can check an item by replacing the [ ] with [x].
   - [ ] The changes include tests that prove the fix is effective or that the feature fully works.
   - [ ] The changes generate no new failed tests, build errors, or warnings.
 
+- [ ] **All commits have the task they were for in the commit message**
 # Pending Items
 
 Is there anything else that needs to be done before this PR can be merged? 
