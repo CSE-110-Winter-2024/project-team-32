@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         LocalDateTime lastTime = timeKeeper.getDateTime();
         LocalDateTime currentTime = LocalDateTime.now();
 
-//        TODO - update menu
         System.out.println("Resumed the App!");
         dateTextView = findViewById(R.id.action_bar_menu_date);
         if (dateTextView != null) {
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             incrementDateBy = 0;
         }
 
+        //TODO - update the fragment displays when you resume the app, in case the time has shifted, we want tomorrow's to become todays, etc.
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
