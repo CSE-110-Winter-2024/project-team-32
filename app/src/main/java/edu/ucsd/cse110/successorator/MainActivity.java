@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private int incrementDateBy = 0;
     private MainViewModel activityModel;
     private int currentView;
+    //NEW VARIABLE - represents the 'current date' of the app, which is sort
+    //of the mocked date. When you press the advance day button, this updates,
+    //The today and tomorrow fragment use this to calculate what should be shown
+    //When you reload the app, it gets reset to the true current day
     private Date currDate;
 
     /**
