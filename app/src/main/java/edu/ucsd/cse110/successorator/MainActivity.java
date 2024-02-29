@@ -130,7 +130,10 @@ public class MainActivity extends AppCompatActivity {
             incrementDateBy = 0;
         }
 
-        //TODO - update the fragment displays when you resume the app, in case the time has shifted, we want tomorrow's to become todays, etc.
+        //When you resume, swap the fragment to the current fragment, just to
+        //update the list in case the time has changed
+        swapFragments(currentView);
+
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
