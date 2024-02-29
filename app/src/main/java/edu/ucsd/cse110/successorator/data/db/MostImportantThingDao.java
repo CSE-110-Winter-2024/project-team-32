@@ -24,15 +24,24 @@ public interface MostImportantThingDao {
     @Query("SELECT * FROM most_important_things WHERE id = :id")
     MostImportantThingEntity find(int id);
 
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 0 AND is_pending = 0 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllMits();
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllPendings();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllRecurrings();
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     List<MostImportantThingEntity> findAll();
-
     @Query("SELECT * FROM most_important_things WHERE id=:id")
     LiveData<MostImportantThingEntity> findAsLiveData(int id);
-
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     LiveData<List<MostImportantThingEntity>> findAllAsLiveData();
-
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 0 AND is_recurring = 0 ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllNormalAsLiveData();
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData();
     // this will update when the corresponding database record does
     // this will be helpful!
     @Query("SELECT COUNT(*) FROM most_important_things")
@@ -56,7 +65,10 @@ public interface MostImportantThingDao {
         var newMostImportantThing = new MostImportantThingEntity(
                 mostImportantThing.id,
                 mostImportantThing.task, mostImportantThing.timeCreated, maxSortOrder + 1,
-                mostImportantThing.completed
+                mostImportantThing.completed,
+                mostImportantThing.isPending,
+                mostImportantThing.isRecurring,
+                mostImportantThing.recurPeriod
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -70,7 +82,10 @@ public interface MostImportantThingDao {
                 mostImportantThing.id,
                 mostImportantThing.task, mostImportantThing.timeCreated,
                 getMinSortOrder() - 1,
-                mostImportantThing.completed
+                mostImportantThing.completed,
+                mostImportantThing.isPending,
+                mostImportantThing.isRecurring,
+                mostImportantThing.recurPeriod
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -87,4 +102,6 @@ public interface MostImportantThingDao {
     //Deletes all items from the database
     @Query("DELETE FROM most_important_things")
     void clear();
+
+    //grab every pending mit
 }

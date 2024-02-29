@@ -7,11 +7,14 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThings;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.ui.MitListAdapter;
@@ -24,6 +27,8 @@ public class MainViewModel extends ViewModel {
     // Domain state (true "Model" state)
     private final MostImportantThingRepository mostImportantThingRepository; //Repo containing all MITs
     private final SimpleSubject<List<MostImportantThing>> orderedMits;//List keeping track of MIT order
+    private final SimpleSubject<List<PendingMostImportantThing>> orderedPendingMits;
+    private final SimpleSubject<List<RecurringMostImportantThing>> orderedRecurringMits;
     private final SimpleSubject<String> displayedTask;
     private MitListAdapter adapter;
 
@@ -46,10 +51,20 @@ public class MainViewModel extends ViewModel {
 
         // Create the observable subjects.
         this.orderedMits = new SimpleSubject<>();
+        this.orderedPendingMits = new SimpleSubject<>();
+        this.orderedRecurringMits = new SimpleSubject<>();
         this.displayedTask = new SimpleSubject<>();
 
+        //FOR TESTING, just add one pending item - it'll only add one cause the id will just override every time :)
+        this.mostImportantThingRepository.append(new PendingMostImportantThing(new MostImportantThing(100,"Pending Test MIT",System.currentTimeMillis(),-1,false,"Home")));
+        //FOR TESTING, just add one recurring item - it'll only add one cause the id will just overrid every time :)
+        this.mostImportantThingRepository.append(new RecurringMostImportantThing(new MostImportantThing(105,"Recurring Test Mit",System.currentTimeMillis(),-1,false,"Home"), "Yearly"));
+        //FOR TESTING, just add one item for tomorrow -it'll only add once cause the id will just override every time :)
+        this.mostImportantThingRepository.append(new MostImportantThing(110,"Tomorrow Test Mit",System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1),-1,false,"Home"));
+
+
         // When the list of mits changes (or is first loaded), reset the ordering.
-        mostImportantThingRepository.findAll().observe(mits -> {
+        mostImportantThingRepository.findAllNormal().observe(mits -> {
             System.out.println("list of mits changed / got first loaded");
             if (mits == null) return; // not ready yet, ignore
             System.out.println("mits wasn't null, setting value now");
@@ -58,6 +73,29 @@ public class MainViewModel extends ViewModel {
                     .collect(Collectors.toList()); // ends the streaming block by producing a list
             this.orderedMits.setValue(newOrderedMits);
         });
+        mostImportantThingRepository.findAllPending().observe(pendingMits -> {
+            System.out.println("list of mits changed / got first loaded");
+            if (pendingMits == null) return; // not ready yet, ignore
+            System.out.println("mits wasn't null, setting value now");
+            var newOrderedPendingMits = pendingMits.stream() // begin streaming block
+                    //FOR RIGHT NOW, THEY ARE NOT SORTED SINCE THE INT WE WANT TO SORT IS INSIDE THE MIT INSTANCE VARIABLE INSIDE THE PENDINGMIT
+                    //.sorted(Comparator.comparingInt(PendingMostImportantThing::mit.sortOrder)) // sorts it based on comparingSortOrder
+                    .collect(Collectors.toList()); // ends the streaming block by producing a list
+            this.orderedPendingMits.setValue(newOrderedPendingMits);
+        });
+        mostImportantThingRepository.findAllRecurring().observe(recurringMits -> {
+            System.out.println("list of mits changed / got first loaded");
+            if (recurringMits == null) return; // not ready yet, ignore
+            System.out.println("mits wasn't null, setting value now");
+            var newOrderedRecurringMits = recurringMits.stream() // begin streaming block
+                    //FOR RIGHT NOW, THEY ARE NOT SORTED SINCE THE INT WE WANT TO SORT IS INSIDE THE MIT INSTANCE VARIABLE INSIDE THE RECURRINGMIT
+                    //.sorted(Comparator.comparingInt(PendingMostImportantThing::mit.sortOrder)) // sorts it based on comparingSortOrder
+                    .collect(Collectors.toList()); // ends the streaming block by producing a list
+            this.orderedRecurringMits.setValue(newOrderedRecurringMits);
+        });
+
+
+
 
     }
 
@@ -77,6 +115,14 @@ public class MainViewModel extends ViewModel {
      */
     public Subject<List<MostImportantThing>> getOrderedMits() {
         return orderedMits;
+    }
+
+    public Subject<List<PendingMostImportantThing>> getOrderedPendingMits() {
+        return this.orderedPendingMits;
+    }
+
+    public Subject<List<RecurringMostImportantThing>> getOrderedRecurringMits() {
+        return this.orderedRecurringMits;
     }
 
 

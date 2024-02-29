@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
 
@@ -19,7 +21,7 @@ import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
  */
 public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
-
+    // TODO - THIS IS OLD, NEED TO MAKE WORK WITH THE NEW UPDATED DAO
     /**
      * Constructor for RoomMostImportantThingRepository
      * @param mostImportantThingDao The DAO for MostImportantThings
@@ -43,16 +45,62 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
+    // OUTDATED - used to be the default, renamed to findAllNormal(), kept in case we want to find every entity for some reason
+//    /**
+//     * Finds all MostImportantThings
+//     * @return A Subject List of all the MostImportantThings
+//     */
+//    @Override
+//    public Subject<List<MostImportantThing>> findAll() {
+//        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
+//        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+//            return entities.stream()
+//                    .map(MostImportantThingEntity::toMostImportantThing)
+//                    .collect(Collectors.toList());
+//        });
+//        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+//    }
+
     /**
-     * Finds all MostImportantThings
+     * Finds all MostImportantThings that are not pending or recurring
      * @return A Subject List of all the MostImportantThings
      */
     @Override
-    public Subject<List<MostImportantThing>> findAll() {
-        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
+    public Subject<List<MostImportantThing>> findAllNormal() {
+        var entitiesLiveData = mostImportantThingDao.findAllNormalAsLiveData();
         var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
             return entities.stream()
                     .map(MostImportantThingEntity::toMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
+     * Finds all PendingMostImportantThings
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<PendingMostImportantThing>> findAllPending() {
+        var entitiesLiveData = mostImportantThingDao.findAllPendingAsLiveData();
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toPendingMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
+     * Finds all RecurringMostImportantThings
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<RecurringMostImportantThing>> findAllRecurring() {
+        var entitiesLiveData = mostImportantThingDao.findAllRecurringAsLiveData();
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toRecurringMostImportantThing)
                     .collect(Collectors.toList());
         });
         return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
@@ -89,12 +137,48 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Prepends a pendingMostImportantThing
+     * @param pendingMostImportantThing The pendingMostImportantThing to append
+     */
+    @Override
+    public void prepend(PendingMostImportantThing pendingMostImportantThing) {
+        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(pendingMostImportantThing));
+    }
+
+    /**
+     * Prepends a recurringMostImportantThing
+     * @param recurringMostImportantThing The recurringMostImportantThing to append
+     */
+    @Override
+    public void prepend(RecurringMostImportantThing recurringMostImportantThing) {
+        mostImportantThingDao.prepend(MostImportantThingEntity.fromMostImportantThing(recurringMostImportantThing));
+    }
+
+    /**
      * Appends a mostImportantThing
      * @param mostImportantThing The mostImportantThing to append
      */
     @Override
     public void append(MostImportantThing mostImportantThing) {
         mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mostImportantThing));
+    }
+
+    /**
+     * Appends a pendingMostImportantThing
+     * @param pendingMostImportantThing The pendingMostImportantThing to append
+     */
+    @Override
+    public void append(PendingMostImportantThing pendingMostImportantThing) {
+        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(pendingMostImportantThing));
+    }
+
+    /**
+     * Appends a recurringMostImportantThing
+     * @param recurringMostImportantThing The recurringMostImportantThing to append
+     */
+    @Override
+    public void append(RecurringMostImportantThing recurringMostImportantThing) {
+        mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(recurringMostImportantThing));
     }
 
     /**
@@ -145,7 +229,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param id The ID of the mostImportantThing to move
      */
     public void moveToTopOfFinished(int id) {
-        var ElementList = this.mostImportantThingDao.findAll();
+        var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;
         //Find the Index of the first element where the next element is completed
@@ -178,7 +262,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
-        var ElementList = this.mostImportantThingDao.findAll();
+        var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;
         //Find index of the first element where the next element is completed
@@ -258,7 +342,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     // Focused task removal method
     public void removeCompletedTasks() {
         long cutoffTime = getReferenceTimeForRemoval(LocalDateTime.now());
-        List<MostImportantThingEntity> elements = mostImportantThingDao.findAll();
+        List<MostImportantThingEntity> elements = mostImportantThingDao.findAllMits();
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);
 
         for (Integer taskId : tasksToRemove) {
@@ -267,7 +351,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
     public void removeCompletedTasks(LocalDateTime time) {
         long cutoffTime = getReferenceTimeForRemoval(time);
-        var elements = mostImportantThingDao.findAll();
+        var elements = mostImportantThingDao.findAllMits();
         System.out.println("Dao: " + mostImportantThingDao);
         System.out.println("this many found: " + elements.size());
         List<Integer> tasksToRemove = filterTasksForRemoval(elements, cutoffTime);

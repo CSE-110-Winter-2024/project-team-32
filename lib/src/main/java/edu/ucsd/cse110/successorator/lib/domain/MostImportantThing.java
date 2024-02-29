@@ -9,7 +9,7 @@ import java.util.Objects;
  * Class which defines a MIT, stores the id, task, timeCreated, sortOrder,
  * and whether or not it has been completed
  */
-public class MostImportantThing implements IMostImportantThing {
+public class MostImportantThing implements RepositoryObject {
     private final @Nullable Integer id;
     private final @NonNull String task;
     private final @NonNull Long timeCreated;
@@ -41,19 +41,15 @@ public class MostImportantThing implements IMostImportantThing {
         this.workContext = workContext;
     }
 
-    @Override
     public @Nullable Integer id() {
         return this.id;
     }
-    @Override
     public @NonNull String task() {
         return this.task;
     }
-    @Override
     public @NonNull Long timeCreated() {
         return this.timeCreated;
     }
-    @Override
     public @NonNull Boolean completed() {
         return this.completed;
     }
@@ -63,7 +59,6 @@ public class MostImportantThing implements IMostImportantThing {
         return this.workContext;
     }
 
-    @Override
     public int sortOrder() {
         return this.sortOrder;
     }
@@ -73,7 +68,6 @@ public class MostImportantThing implements IMostImportantThing {
      * @param id new id
      * @return identical MostImportantThing but with changed id
      */
-    @Override
     public MostImportantThing withId(int id) {
         return new MostImportantThing(id, this.task, this.timeCreated, this.sortOrder, this.completed, this.workContext);
     }
@@ -83,7 +77,6 @@ public class MostImportantThing implements IMostImportantThing {
      * @param completed the new completed status
      * @return a new MostImportantThing with the new completed status set
      */
-    @Override
     public MostImportantThing withCompleted(boolean completed) {
         return new  MostImportantThing(this.id,
                 this.task,
@@ -97,7 +90,6 @@ public class MostImportantThing implements IMostImportantThing {
      * @param sortOrder new sort order
      * @return identical MostImportantThing but with changed sort order
      */
-    @Override
     public MostImportantThing withSortOrder(int sortOrder) {
         return new MostImportantThing(this.id, this.task, this.timeCreated, sortOrder, this.completed, this.workContext);
     }
@@ -110,7 +102,6 @@ public class MostImportantThing implements IMostImportantThing {
      * @param b the completed value to be set
      */
     // TODO - this probably violates SRP
-    @Override
     public void setCompleted(Boolean b) {
         this.completed = b;
     }

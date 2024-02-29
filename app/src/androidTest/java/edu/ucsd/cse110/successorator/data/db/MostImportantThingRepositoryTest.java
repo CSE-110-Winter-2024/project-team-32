@@ -52,7 +52,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     private List<String> getAllTasks() {
-        return mitDao.findAll().stream()
+        return mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
                 .collect(Collectors.toList());
@@ -284,7 +284,7 @@ public class MostImportantThingRepositoryTest {
         this.initializeMits();
         this.prependAllMits();
         this.mitRepo.clear();
-        assertEquals(0, this.mitDao.findAll().size());
+        assertEquals(0, this.mitDao.findAllMits().size());
     }
 
     @Test

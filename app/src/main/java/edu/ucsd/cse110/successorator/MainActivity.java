@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,10 @@ import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
 import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
+import edu.ucsd.cse110.successorator.ui.PendingMitListFragment;
+import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
+import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
+import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
 
 /**
@@ -28,6 +34,11 @@ import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
  * handles user interactions
  */
 public class MainActivity extends AppCompatActivity {
+    private static final int TODAY_VIEW = 0;
+    private static final int TOMORROW_VIEW = 1;
+    private static final int PENDING_VIEW = 2;
+    private static final int RECURRING_VIEW = 3;
+    private static int frag = 0;
     private ActivityMainBinding view;
     private TimeKeeper timeKeeper;
     private RoomMostImportantThingRepository roomMostImportantThings;
@@ -35,6 +46,48 @@ public class MainActivity extends AppCompatActivity {
     private TextView dateTextView;
     private int incrementDateBy = 0;
     private MainViewModel activityModel;
+    private int currentView;
+
+    /**
+     * Swaps from the current fragment to whatever fragment you pass in as an argument,
+     * according for static variables above
+     * @param newFragment
+     */
+    private void swapFragments(int newFragment) {
+        System.out.println("Swapping fragments from " + currentView + " to " + newFragment);
+        switch (newFragment) {
+            case TODAY_VIEW:
+                getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
+                       .commit();
+                this.currentView = TODAY_VIEW;
+                break;
+            case TOMORROW_VIEW:
+                getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
+                       .commit();
+                this.currentView = TOMORROW_VIEW;
+                break;
+            case PENDING_VIEW:
+                getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
+                       .commit();
+                this.currentView = PENDING_VIEW;
+                break;
+            case RECURRING_VIEW:
+                getSupportFragmentManager()
+                       .beginTransaction()
+                       .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
+                       .commit();
+                this.currentView = RECURRING_VIEW;
+                break;
+            default:
+                throw new IllegalArgumentException("Trying to switch to a non-existing state");
+       }
+    }
 
     /**
      * Called when an activity is first created
@@ -45,27 +98,19 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        this.currentView = TODAY_VIEW;
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_title);
 
         this.view = ActivityMainBinding.inflate(getLayoutInflater());//, null, false);
         dateTextView = findViewById(R.id.action_bar_menu_advance_date);
 
-        //old code, commented out in github repo
-        //setContentView(view.getRoot());
-        //this.view = ActivityMainBinding.inflate(getLayoutInflater());
-        //setContentView(view.getRoot());
-
         setContentView(view.getRoot());
 
 //        scheduleAlarm(); // keeping for milestone 2, not needed now
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
-        // Initialize the Successorator Room database
-        // WAS MISTAKE! ALREADY MADE
-//        this.db = Room.databaseBuilder(getApplicationContext(), SuccessoratorDatabase.class, "successorator_database2").build();
-
-        // Initialize RoomMostImportantThingRepository with the DAO from your database
         this.roomMostImportantThings = (RoomMostImportantThingRepository) SuccessoratorApplication.mostImportantThingRepository;
     }
 
@@ -115,10 +160,64 @@ public class MainActivity extends AppCompatActivity {
             //Todo, make button initiate a Dialog
             var dialogFragment = CreateMitDialogFragment.newInstance();
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
-
         }
+        //Depricated, before we made dropdown menu - For testing:
+//        if (itemId == R.id.action_bar_menu_swap_views) {
+//            swapFragments((++frag % 4));
+//        }
+
+        else if (itemId == R.id.go_to_today_view_button) {
+            System.out.println("Trying to go to Today view");
+            swapFragments(TODAY_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_tomorrow_view_button) {
+            System.out.println("Trying to go to Tomorrow view");
+            swapFragments(TOMORROW_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_pending_view_button) {
+            System.out.println("Trying to go to Pending view");
+            swapFragments(PENDING_VIEW);
+        }
+
+        else if (itemId == R.id.go_to_recurring_view_button) {
+            System.out.println("Trying to go to Recurring view");
+            swapFragments(RECURRING_VIEW);
+        }
+
         return super.onOptionsItemSelected(item);
     }
+
+//    private void showPopupMenu(View view) {
+//        PopupMenu popupMenu = new PopupMenu(this, view);
+//        popupMenu.getMenuInflater().inflate(R.menu.action_bar, popupMenu.getMenu());
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                // Handle dropdown menu item clicks here
+//                int menuItemId = item.getItemId();
+//                if (menuItemId == R.id.go_to_today_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_tomorrow_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_pending_view_button) {
+//
+//                    return true;
+//                }
+//                else if (menuItemId == R.id.go_to_recurring_view_button) {
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//        popupMenu.show();
+//    }
 
     //only advances the date by 1 day
     //restarting the app will reset to current day

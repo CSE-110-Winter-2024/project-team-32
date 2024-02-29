@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 
 /**
@@ -32,7 +35,11 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class SuccessoratorDatabaseTest {
     private SuccessoratorDatabase db;
     private MostImportantThingDao mitDao;
+    //Normal MITs
     private MostImportantThingEntity mit0, mit1, mit2, mit3;
+    //Pending MITs
+    private MostImportantThingEntity pendingMit0, pendingMit1, pendingMit2, pendingMit3;
+    private MostImportantThingEntity recurringMit0, recurringMit1, recurringMit2, recurringMit3;
 
     @Before
     public void createDb() {
@@ -59,6 +66,34 @@ public class SuccessoratorDatabaseTest {
 
         mit3 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(3, "task3", 0L, 5, false, "Home"));
+        pendingMit0 = MostImportantThingEntity.fromMostImportantThing(
+                new PendingMostImportantThing(
+                        new MostImportantThing(4, "task4", 0L, 0, false, "Home")));
+        pendingMit1 = MostImportantThingEntity.fromMostImportantThing(
+                new PendingMostImportantThing(
+                        new MostImportantThing(5, "task5", 0L, 0, false, "Home")));
+        pendingMit2 = MostImportantThingEntity.fromMostImportantThing(
+                new PendingMostImportantThing(
+                        new MostImportantThing(6, "task6", 0L, 0, false, "Home")));
+        pendingMit3 = MostImportantThingEntity.fromMostImportantThing(
+                new PendingMostImportantThing(
+                        new MostImportantThing(7, "task7", 0L, 0, false, "Home")));
+        recurringMit0 = MostImportantThingEntity.fromMostImportantThing(
+                new RecurringMostImportantThing(
+                        new MostImportantThing(8, "task8", 0L, 0, false, "Home"),
+                        "Daily"));
+        recurringMit1 = MostImportantThingEntity.fromMostImportantThing(
+                new RecurringMostImportantThing(
+                        new MostImportantThing(9, "task9", 0L, 0, false, "Home"),
+                        "Weekly"));
+        recurringMit2 = MostImportantThingEntity.fromMostImportantThing(
+                new RecurringMostImportantThing(
+                        new MostImportantThing(10, "task10", 0L, 0, false, "Home"),
+                        "Monthly"));
+        recurringMit3 = MostImportantThingEntity.fromMostImportantThing(
+                new RecurringMostImportantThing(
+                        new MostImportantThing(11, "task11", 0L, 0, false, "Home"),
+                        "Yearly"));
     }
 
     private void prependAllMitEntities() {
@@ -68,8 +103,23 @@ public class SuccessoratorDatabaseTest {
         this.mitDao.prepend(mit3);
     }
 
+    private void appendAllMitsOfAllKinds() {
+        this.mitDao.append(mit0);
+        this.mitDao.append(mit1);
+        this.mitDao.append(mit2);
+        this.mitDao.append(mit3);
+        this.mitDao.append(pendingMit0);
+        this.mitDao.append(pendingMit1);
+        this.mitDao.append(pendingMit2);
+        this.mitDao.append(pendingMit3);
+        this.mitDao.append(recurringMit0);
+        this.mitDao.append(recurringMit1);
+        this.mitDao.append(recurringMit2);
+        this.mitDao.append(recurringMit3);
+    }
+
     private List<String> getAllTasks() {
-        return mitDao.findAll().stream()
+        return mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
                 .collect(Collectors.toList());
@@ -105,7 +155,7 @@ public class SuccessoratorDatabaseTest {
             this.mitDao.insert(mitEntity);
             expectedList.add(mitEntity);
         }
-        List<MostImportantThingEntity> actualList = mitDao.findAll();
+        List<MostImportantThingEntity> actualList = mitDao.findAllMits();
 
         assertEquals(expectedList.size(), mitDao.count());
 
@@ -126,7 +176,7 @@ public class SuccessoratorDatabaseTest {
                 new MostImportantThing(0, "task2", 0L, 3, false, "Home"));
         this.mitDao.insert(mit1);
 
-        assertEquals(1, this.mitDao.findAll().size());
+        assertEquals(1, this.mitDao.findAllMits().size());
     }
 
     @Test
@@ -203,7 +253,7 @@ public class SuccessoratorDatabaseTest {
         this.mitDao.toggleCompleted(1);
         this.mitDao.toggleCompleted(3);
 
-        List<MostImportantThing> actualTasks = mitDao.findAll().stream()
+        List<MostImportantThing> actualTasks = mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .collect(Collectors.toList());
         //MITs come out in reverse order since we used prepend
@@ -217,7 +267,7 @@ public class SuccessoratorDatabaseTest {
         this.mitDao.toggleCompleted(2);
         this.mitDao.toggleCompleted(3);
 
-        actualTasks = mitDao.findAll().stream()
+        actualTasks = mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .collect(Collectors.toList());
 
@@ -225,6 +275,46 @@ public class SuccessoratorDatabaseTest {
         assertTrue(actualTasks.get(1).completed());
         assertFalse(actualTasks.get(2).completed());
         assertTrue(actualTasks.get(3).completed());
+    }
+
+    /**
+     * Tests finding specifically the pending MITs from the database
+     */
+    @Test
+    public void testFindAllPending() {
+        this.initializeMitEntities();
+        // defined sort orders shouldn't matter
+        this.appendAllMitsOfAllKinds();
+
+        List<PendingMostImportantThing> actualPendingMits = mitDao.findAllPendings().stream()
+                .map(MostImportantThingEntity::toPendingMostImportantThing)
+                .collect(Collectors.toList());
+
+        assertEquals(4, actualPendingMits.size());
+        //Did it this way cause .map was being finicky
+        for (int i = 0; i < 4; i++) {
+            assertEquals("task" + (i + 4),actualPendingMits.get(i).mit.task());
+        }
+
+    }
+
+    /**
+     * Tests finding specifically the recurring MITs from the database
+     */
+    @Test
+    public void testFindAllRecurring() {
+        this.initializeMitEntities();
+        // defined sort orders shouldn't matter
+        this.appendAllMitsOfAllKinds();
+        List<RecurringMostImportantThing> actualRecurringMits = mitDao.findAllRecurrings().stream()
+                .map(MostImportantThingEntity::toRecurringMostImportantThing)
+                //.map(RecurringMostImportantThing::id)
+                .collect(Collectors.toList());
+        assertEquals(4,actualRecurringMits.size());
+        //Did it this way cause .map was being finicky
+        for (int i = 0; i < 4; i++) {
+            assertEquals("task" + (i + 8),actualRecurringMits.get(i).mit.task());
+        }
     }
 
 }

@@ -1,12 +1,24 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
 
+import androidx.annotation.Nullable;
+
 import java.time.LocalDateTime;
 
 public class RecurringMostImportantThing {
-    MostImportantThing mit;
-    String recurPeriod;
-     /**
+    public MostImportantThing mit;
+    public String recurPeriod;
+    private final @Nullable Integer id;
+
+    public Integer id() {
+        return this.id;
+    }
+
+    public MostImportantThing mit() {
+        return this.mit;
+    }
+
+    /**
      * Constructs the Recurring mit
      * @param mit Should be a fully populated MIT with the creation date being the first recurring
      *            date
@@ -25,6 +37,8 @@ public class RecurringMostImportantThing {
             throw new IllegalArgumentException("Invalid Recurrence Period");
         }
         this.recurPeriod = recurPeriod;
+        this.id = mit.id();
+
     }
     public boolean isRecurringDate(LocalDateTime date) {
         return false;

@@ -1,8 +1,14 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-public class PendingMostImportantThing {
-    MostImportantThing mit;
+import androidx.annotation.Nullable;
 
+public class PendingMostImportantThing implements RepositoryObject {
+    public MostImportantThing mit;
+    private final @Nullable Integer id;
+
+    public Integer id() {
+        return this.id;
+    }
 
     /**
      * Constructor to be fed a mit object with a placeholder time.
@@ -10,6 +16,7 @@ public class PendingMostImportantThing {
      */
     public PendingMostImportantThing(MostImportantThing mit) {
         this.mit = mit;
+        this.id = mit.id();
     }
     public MostImportantThing convertToMit(Long timeCreated) {
         return this.mit.withTimeCreated(timeCreated);
@@ -17,5 +24,8 @@ public class PendingMostImportantThing {
 
     public RecurringMostImportantThing convertToRecurring(Long timeCreated, String recurPeriod) {
         return new RecurringMostImportantThing(this.convertToMit(timeCreated), recurPeriod);
+    }
+    public MostImportantThing mit() {
+        return this.mit;
     }
 }
