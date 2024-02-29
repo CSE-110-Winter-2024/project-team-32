@@ -122,6 +122,15 @@ public class MainActivity extends AppCompatActivity {
 
 //        TODO - update menu
         System.out.println("Resumed the App!");
+        dateTextView = findViewById(R.id.action_bar_menu_date);
+        if (dateTextView != null) {
+            Calendar c = Calendar.getInstance();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+            String date = dateFormat.format(c.getTime());
+            dateTextView.setText(date);
+            incrementDateBy = 0;
+        }
+
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
