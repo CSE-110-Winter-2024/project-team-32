@@ -45,21 +45,6 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
-    // OUTDATED - used to be the default, renamed to findAllNormal(), kept in case we want to find every entity for some reason
-//    /**
-//     * Finds all MostImportantThings
-//     * @return A Subject List of all the MostImportantThings
-//     */
-//    @Override
-//    public Subject<List<MostImportantThing>> findAll() {
-//        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
-//        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
-//            return entities.stream()
-//                    .map(MostImportantThingEntity::toMostImportantThing)
-//                    .collect(Collectors.toList());
-//        });
-//        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
-//    }
 
     /**
      * Finds all MostImportantThings that are not pending or recurring
@@ -295,6 +280,48 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
 
         }
+    }
+
+    /**
+     * Adds a new MostImportantThing to the repository
+     * @param mit The MostImportantThing being added
+     */
+    public void addNewRecurringMostImportantThing(RecurringMostImportantThing mit) {
+        var ElementList = this.mostImportantThingDao.findAllRecurrings();
+        int numElems = ElementList.size();
+        int insertIdx = 0;
+
+        this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        //Find index of the first element where the next element is completed
+//        for (int i = 0; i < numElems; i++) {
+//            if (ElementList.get(i).completed) {
+//                break;
+//            }
+//            insertIdx++;
+//        }
+//        //If there are no elements in the list
+//        if (numElems == 0) {
+//            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+//        }
+//        //If there are only completed MITs in the list
+//        else if (insertIdx == 0) {
+//            //Add to the front of the list
+//            this.mostImportantThingDao.shiftSortOrders(this.mostImportantThingDao.getMinSortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+//            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMinSortOrder() - 1)));
+//        }
+//        //If there are only uncompleted MITs in the list
+//        else if (insertIdx == numElems) {
+//            //Add to the bottom of the list
+//            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+//        }
+//        //There are uncompleted and completed MITs
+//        else {
+//            //Shift all completed MITs down, insert new one before them
+//            int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
+//            this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+//            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+//
+//        }
     }
 
     /**

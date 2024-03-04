@@ -21,6 +21,7 @@ import java.util.Calendar;
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
 import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.ui.PendingMitListFragment;
@@ -28,6 +29,7 @@ import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
+import edu.ucsd.cse110.successorator.ui.dialog.CreateRecurringMitDialogFragment;
 
 /**
  * The MainActivity class of Succesorator that displays the user interface and
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Swaps from the current fragment to whatever fragment you pass in as an argument,
      * according for static variables above
+     *
      * @param newFragment
      */
     private void swapFragments(int newFragment) {
@@ -58,35 +61,35 @@ public class MainActivity extends AppCompatActivity {
         switch (newFragment) {
             case TODAY_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
+                        .commit();
                 this.currentView = TODAY_VIEW;
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
+                        .commit();
                 this.currentView = TOMORROW_VIEW;
                 break;
             case PENDING_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
+                        .commit();
                 this.currentView = PENDING_VIEW;
                 break;
             case RECURRING_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
+                        .commit();
                 this.currentView = RECURRING_VIEW;
                 break;
             default:
                 throw new IllegalArgumentException("Trying to switch to a non-existing state");
-       }
+        }
     }
 
     /**
@@ -157,31 +160,23 @@ public class MainActivity extends AppCompatActivity {
             advanceDate(incrementDateBy);
         }
         if (itemId == R.id.action_bar_menu_add_mit) {
-            //Todo, make button initiate a Dialog
-            var dialogFragment = CreateMitDialogFragment.newInstance();
-            dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
-        }
-        //Depricated, before we made dropdown menu - For testing:
-//        if (itemId == R.id.action_bar_menu_swap_views) {
-//            swapFragments((++frag % 4));
-//        }
-
-        else if (itemId == R.id.go_to_today_view_button) {
+            if (currentView == RECURRING_VIEW) {
+                var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
+                dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
+            } else {
+                var dialogFragment = CreateMitDialogFragment.newInstance();
+                dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
+            }
+        } else if (itemId == R.id.go_to_today_view_button) {
             System.out.println("Trying to go to Today view");
             swapFragments(TODAY_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_tomorrow_view_button) {
+        } else if (itemId == R.id.go_to_tomorrow_view_button) {
             System.out.println("Trying to go to Tomorrow view");
             swapFragments(TOMORROW_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_pending_view_button) {
+        } else if (itemId == R.id.go_to_pending_view_button) {
             System.out.println("Trying to go to Pending view");
             swapFragments(PENDING_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_recurring_view_button) {
+        } else if (itemId == R.id.go_to_recurring_view_button) {
             System.out.println("Trying to go to Recurring view");
             swapFragments(RECURRING_VIEW);
         }
@@ -189,35 +184,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void showPopupMenu(View view) {
-//        PopupMenu popupMenu = new PopupMenu(this, view);
-//        popupMenu.getMenuInflater().inflate(R.menu.action_bar, popupMenu.getMenu());
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                // Handle dropdown menu item clicks here
-//                int menuItemId = item.getItemId();
-//                if (menuItemId == R.id.go_to_today_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_tomorrow_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_pending_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_recurring_view_button) {
-//
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//        popupMenu.show();
-//    }
 
     //only advances the date by 1 day
     //restarting the app will reset to current day
@@ -229,30 +195,9 @@ public class MainActivity extends AppCompatActivity {
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         String date = dateFormat.format(c.getTime());
         dateTextView.setText(date);
-//        System.out.println("Advancing date from " + dateForTesting + " to " + date);
-//        System.out.println("Advancing: IncrementDateBy is " + incrementDateBy);
         new Thread(() -> roomMostImportantThings
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
     }
-
-
-//    private void scheduleAlarm() {
-//        scheduleAlarm(System.currentTimeMillis(), 2, 0);
-//    }
-//
-//    private void scheduleAlarm(Long systemTime, int hour, int minute) {
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        Intent intent = new Intent(this, AlarmReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        // Set the alarm to start at 2 am every day
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(systemTime);
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
-//
-//        // Repeat the alarm every day
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//    }
 }
+

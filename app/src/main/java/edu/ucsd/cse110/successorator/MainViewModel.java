@@ -199,6 +199,10 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
 
+    public void addNewRecurringMostImportantThing(RecurringMostImportantThing recurringMit) {
+        mostImportantThingRepository.addNewRecurringMostImportantThing(recurringMit);
+    }
+
     public void removeCompletedTasks() {
         mostImportantThingRepository.removeCompletedTasks();
     }
