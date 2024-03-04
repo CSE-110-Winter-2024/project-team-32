@@ -138,6 +138,6 @@ public class MostImportantThing implements IMostImportantThing {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, task, timeCreated, completed, sortOrder);
+        return Objects.hash(id, task, timeCreated, completed, sortOrder, workContext);
     }
 }
