@@ -199,6 +199,11 @@ public class MainViewModel extends ViewModel {
         mostImportantThingRepository.addNewMostImportantThing(mit);
     }
 
+    /**
+     * Create and add a new recurring MostImportantThing to repository
+     *
+     * @param recurringMit The recurring MostImportantThing to add
+     */
     public void addNewRecurringMostImportantThing(RecurringMostImportantThing recurringMit) {
         mostImportantThingRepository.addNewRecurringMostImportantThing(recurringMit);
     }

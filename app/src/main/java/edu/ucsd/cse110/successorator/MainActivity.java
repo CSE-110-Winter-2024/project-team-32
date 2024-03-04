@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
         this.roomMostImportantThings = (RoomMostImportantThingRepository) SuccessoratorApplication.mostImportantThingRepository;
+        //updates/adds recurring mits
+        roomMostImportantThings.updateRecurringMits();
     }
 
     @Override
@@ -132,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(() -> roomMostImportantThings.removeCompletedTasks(twoAmToday)).start();
             }
         }
+        //updates/adds recurring mits
+        roomMostImportantThings.updateRecurringMits();
     }
 
     /**
