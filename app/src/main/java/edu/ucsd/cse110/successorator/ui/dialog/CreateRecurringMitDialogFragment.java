@@ -100,7 +100,7 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
             var recurringMit = new RecurringMostImportantThing(mit, "Yearly");
             activityModel.addNewRecurringMostImportantThing(recurringMit);
         }
-
+        this.activityModel.getMostImportantThingRepository().updateRecurringMits();
         dialog.dismiss();
     }
 
