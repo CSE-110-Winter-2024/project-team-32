@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class RoomMostImportantThingRepositoryTest {
@@ -22,7 +23,7 @@ public class RoomMostImportantThingRepositoryTest {
     @Before
     public void setUp() {
         mockDao = new MockMostImportantThingDao();
-        repository = new RoomMostImportantThingRepository(mockDao);
+        repository = new RoomMostImportantThingRepository(mockDao, new Date());
     }
 
     @Test

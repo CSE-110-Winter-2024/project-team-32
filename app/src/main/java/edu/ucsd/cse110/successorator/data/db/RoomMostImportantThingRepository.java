@@ -26,13 +26,15 @@ import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
  */
 public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
+    private Date currDate;
     // TODO - THIS IS OLD, NEED TO MAKE WORK WITH THE NEW UPDATED DAO
     /**
      * Constructor for RoomMostImportantThingRepository
      * @param mostImportantThingDao The DAO for MostImportantThings
      */
-    public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao) {
+    public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao, Date currDate) {
         this.mostImportantThingDao = mostImportantThingDao;
+        this.currDate = currDate;
     }
 
     /**
@@ -303,8 +305,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public void updateRecurringMits() {
         System.out.println("TestUpdate Updating recurring mits called!");
         var recurringMITs = mostImportantThingDao.findAllRecurrings();
-        Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
-        Date today = new Date();
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        Date today = currDate;
         System.out.println("TestUpdate there are " + recurringMITs.size() + " recurrings!");
         for (var recurringMIT : recurringMITs) {
             RecurringMostImportantThing recurring = recurringMIT.toRecurringMostImportantThing();
@@ -314,53 +316,54 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     if (!containsNormalMITInTomorrow(recurringMIT)) {
                         //If it doesn't have it, check if you need to add it
                         System.out.println("TestUpdate adding to today daily!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!containsNormalMIT(recurringMIT)) {
                         System.out.println("TestUpdate adding to tomorrow dai!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis(), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Weekly":
                     if (!containsNormalMITInTomorrow(recurringMIT) && sameDayOfWeek(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in today!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!containsNormalMIT(recurringMIT) && sameDayOfWeek(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in tomorrow!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis(), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Monthly":
                     if (!containsNormalMITInTomorrow(recurringMIT) && sameDayOfMonth(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in today!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!containsNormalMIT(recurringMIT) && sameDayOfMonth(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in tomorrow!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis(), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Yearly":
                     if (!containsNormalMITInTomorrow(recurringMIT) && sameDayOfYear(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
                         System.out.println("TestUpdate doesn't contain in today!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!containsNormalMIT(recurringMIT) && sameDayOfYear(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in tomorrow!");
-                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, System.currentTimeMillis(), -1, recurringMIT.completed, recurringMIT.workContext));
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 default:
                     break;
             }
         }
+        this.removeDuplicates();
     }
 
     /**
@@ -481,7 +484,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public List<MostImportantThingEntity> findAllToday() {
         var entityList = this.mostImportantThingDao.findAllMits();
         List<MostImportantThingEntity> outputList = new ArrayList<>();
-        Date today = new Date();
+        Date today = currDate;
         //Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
         for (var entity : entityList) {
             var entityTime = entity.timeCreated;
@@ -496,7 +499,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     public List<MostImportantThingEntity> findAllTomorrow() {
         var entityList = this.mostImportantThingDao.findAllMits();
         List<MostImportantThingEntity> outputList = new ArrayList<>();
-        Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
         //Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
         for (var entity : entityList) {
             var entityTime = entity.timeCreated;
@@ -519,6 +522,49 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             return true;
         }
         return false;
+    }
+
+    public boolean inSameTodaySlashTomorrowFragment(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        Date today = currDate;
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        if ((sameDayOfYear(tomorrow,calOne.getTime()) && sameDayOfYear(tomorrow, calTwo.getTime()))
+                || ((sameDayOfYear(today, calOne.getTime()) || calOne.getTime().before(today)) && (sameDayOfYear(today, calTwo.getTime()) || calTwo.getTime().before(today)))) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setCurrDate(Date currDate) {
+        this.currDate = currDate;
+    }
+
+    public void removeDuplicates() {
+        System.out.println("found removeDuplictaes called");
+        var entityList = this.mostImportantThingDao.findAllMits();
+        int currIdx = 0;
+        System.out.println("found there are " + entityList.size() + " mits in the databse");
+        for (int j = 0; j < entityList.size(); j++) {
+            var entity = entityList.get(currIdx);
+            for (int i = j; i < entityList.size(); i++) {
+                System.out.println("found comparing"  + entity.task + " on " + new Date(entity.timeCreated) + " to " + entityList.get(i).task + " on " + new Date(entityList.get(i).timeCreated));
+                var otherEntity = entityList.get(i);
+                if (i != currIdx
+                        && entity.task.equals(otherEntity.task)
+                        && entity.workContext.equals(otherEntity.workContext)
+                        && inSameTodaySlashTomorrowFragment(new Date(entity.timeCreated), new Date(otherEntity.timeCreated))) {
+                    System.out.println("Found a duplicate!");
+                    System.out.println("Found duplicate is " + entity.task);
+                    this.mostImportantThingDao.delete(entityList.get(i).id);
+                    entityList.remove(i);
+                    i--;
+                    j--;
+                }
+            }
+        }
     }
 
 }

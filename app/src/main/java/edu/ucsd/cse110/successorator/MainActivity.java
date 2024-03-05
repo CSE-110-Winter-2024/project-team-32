@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void swapFragments(int newFragment) {
         System.out.println("Swapping fragments from " + currentView + " to " + newFragment);
+
         switch (newFragment) {
             case TODAY_VIEW:
                 getSupportFragmentManager()
@@ -74,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
+                        .commit();
                 this.currentView = TOMORROW_VIEW;
                 break;
             case PENDING_VIEW:
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             default:
                 throw new IllegalArgumentException("Trying to switch to a non-existing state");
         }
+        roomMostImportantThings.removeDuplicates();
     }
 
     /**
@@ -179,14 +181,19 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.action_bar_menu_advance_date) {
             incrementDateBy++;
             advanceDate(incrementDateBy);
+            roomMostImportantThings.setCurrDate(currDate);
+            roomMostImportantThings.updateRecurringMits();
+            //this.activityModel.getMostImportantThingRepository().updateRecurringMits();
         }
         if (itemId == R.id.action_bar_menu_add_mit) {
             if (currentView == RECURRING_VIEW) {
                 var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
+                swapFragments(currentView);
             } else {
                 var dialogFragment = CreateMitDialogFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
+                swapFragments(currentView);
             }
         } else if (itemId == R.id.go_to_today_view_button) {
             System.out.println("Trying to go to Today view");
@@ -207,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
     //only advances the date by 1 day
     //restarting the app will reset to current day
     public void advanceDate(int incrementDateBy) {
+
         dateTextView = findViewById(R.id.action_bar_menu_date);
         Calendar c = Calendar.getInstance();
 //        String dateForTesting = dateTextView.getText().toString();
@@ -219,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
         //Update the view, THIS IS WHAT WILL END UP SHIFTING TOMORROW TASKS TO TODAY
+        this.roomMostImportantThings.removeDuplicates();
         swapFragments(this.currentView);
     }
 

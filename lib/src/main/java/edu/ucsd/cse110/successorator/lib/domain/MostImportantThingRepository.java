@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -48,5 +49,9 @@ public interface MostImportantThingRepository {
     void toggleCompleted(int id);
     int count();
 
-    public void removeCompletedTasks();
+    void removeCompletedTasks();
+
+    void setCurrDate(Date currDate);
+
+    void removeDuplicates();
 }

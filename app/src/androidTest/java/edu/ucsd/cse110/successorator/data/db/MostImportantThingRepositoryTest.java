@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class MostImportantThingRepositoryTest {
         Context context = ApplicationProvider.getApplicationContext();
         this.db = Room.inMemoryDatabaseBuilder(context, SuccessoratorDatabase.class).build();
         this.mitDao = this.db.mostImportantThingDao();
-        this.mitRepo = new RoomMostImportantThingRepository(mitDao);
+        this.mitRepo = new RoomMostImportantThingRepository(mitDao, new Date());
     }
     @After
     public void closeDb() throws IOException {
