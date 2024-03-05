@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             default:
                 throw new IllegalArgumentException("Trying to switch to a non-existing state");
         }
-        roomMostImportantThings.removeDuplicates();
+//        roomMostImportantThings.removeDuplicates();
     }
 
     /**
@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //updates/adds recurring mits
         roomMostImportantThings.updateRecurringMits();
+        swapFragments(currentView);
     }
 
     /**
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
         //Update the view, THIS IS WHAT WILL END UP SHIFTING TOMORROW TASKS TO TODAY
-        this.roomMostImportantThings.removeDuplicates();
+//        this.roomMostImportantThings.removeDuplicates();
         swapFragments(this.currentView);
     }
 

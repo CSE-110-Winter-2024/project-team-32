@@ -114,7 +114,19 @@ public class TodayMitListFragment extends Fragment {
                         .truncatedTo(ChronoUnit.DAYS);
                 //If it was created for any day before today, display it
                 if (instant1.compareTo(instant2) <= 0) {
-                    mitsToAdd.add(mit);
+                    //Go through and make sure it's not a duplicate
+                    boolean isDuplicate = false;
+                    for (MostImportantThing currMit : mitsToAdd) {
+                        if (mit.task().equals(currMit.task())
+                            && mit.workContext().equals(currMit.workContext())) {
+                           isDuplicate = true;
+                           this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                           break;
+                        }
+                    }
+                    if (!isDuplicate) {
+                        mitsToAdd.add(mit);
+                    }
                 }
             }
             adapter.addAll(mitsToAdd);
