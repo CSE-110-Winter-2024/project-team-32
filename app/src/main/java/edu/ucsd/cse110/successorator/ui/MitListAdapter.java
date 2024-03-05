@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
     Consumer<Integer> onToggleCompletedClick; // for the future when we want to delete mits
     Consumer<Integer> onDeleteClick;
+    Date currDate;
 
     /**
      * Constructor for the MitListAdapter.
@@ -43,6 +45,7 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         super(context, 0, new ArrayList<>(mits));
         this.onToggleCompletedClick = onToggleCompletedClick;
         this.onDeleteClick = onDeleteClick;
+        this.currDate = currDate;
     }
 
     /**

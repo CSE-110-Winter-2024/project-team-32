@@ -29,6 +29,7 @@ public class TodayMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTodayMitListBinding view;
     private MitListAdapter adapter;
+    private Date currDate;
 
     /**
      * Use this factory method to create a new instance of
@@ -36,8 +37,9 @@ public class TodayMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TodayMitListFragment newInstance() {
+    public static TodayMitListFragment newInstance(Date currDate) {
         TodayMitListFragment fragment = new TodayMitListFragment();
+        fragment.setDate(currDate);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -87,7 +89,7 @@ public class TodayMitListFragment extends Fragment {
      */
     private void setUpMvp() {
         // init adapter
-        this.adapter = new MitListAdapter(this.getContext(), List.of(),activityModel::toggleCompleted,activityModel::remove);
+        this.adapter = new MitListAdapter(this.getContext(), List.of(), activityModel::toggleCompleted,activityModel::remove);
 
         //Observers that display the MITs, or the default message if there are no MITs
         this.activityModel.getOrderedMits().observe(mits -> {
@@ -100,13 +102,15 @@ public class TodayMitListFragment extends Fragment {
             List<MostImportantThing> mitsToAdd = new ArrayList<>();
             for (var mit : mits) {
                 //Set cal's time to when the mit was created
-                //Subtract a day in milliseconds - 86400000
                 Date dateCreatedMinusOneDay = new Date(mit.timeCreated());
-                Date currDate = new Date();
-
+                Date refDate = new Date();
+                if (this.currDate != null) {
+                    refDate = this.currDate;
+                }
+                System.out.println("refDate for Today" + refDate);
                 Instant instant1 = dateCreatedMinusOneDay.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
-                Instant instant2 = currDate.toInstant()
+                Instant instant2 = refDate.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
                 //If it was created for any day before today, display it
                 if (instant1.compareTo(instant2) <= 0) {
@@ -129,6 +133,10 @@ public class TodayMitListFragment extends Fragment {
 
         });
         this.view.mitList.setAdapter(adapter);
+    }
+
+    public void setDate(Date date) {
+        this.currDate = date;
     }
 
 }

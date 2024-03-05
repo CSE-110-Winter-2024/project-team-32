@@ -30,14 +30,17 @@ public class TomorrowMitListFragment extends Fragment {
     private FragmentTomorrowMitListBinding view;
     private MitListAdapter adapter;
 
+    private Date currDate;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TomorrowMitListFragment newInstance() {
+    public static TomorrowMitListFragment newInstance(Date currDate) {
         TomorrowMitListFragment fragment = new TomorrowMitListFragment();
+        fragment.setDate(currDate);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -102,11 +105,17 @@ public class TomorrowMitListFragment extends Fragment {
                 //Set cal's time to when the mit was created
                 //Subtract a day in milliseconds - 86400000
                 Date dateCreatedMinusOneDay = new Date(mit.timeCreated() - TimeUnit.DAYS.toMillis(1));
-                Date currDate = new Date();
-
+                Date refDate;
+                if (currDate != null) {
+                    refDate = this.currDate;
+                }
+                else {
+                    refDate = new Date();
+                }
+                System.out.println("refDate for tomorrow " + refDate);
                 Instant instant1 = dateCreatedMinusOneDay.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
-                Instant instant2 = currDate.toInstant()
+                Instant instant2 = refDate.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
                 if (instant1.equals(instant2)) {
                     mitsToAdd.add(mit);
@@ -117,6 +126,10 @@ public class TomorrowMitListFragment extends Fragment {
         });
 
         this.view.mitList.setAdapter(adapter);
+    }
+
+    public void setDate(Date date) {
+        this.currDate = date;
     }
 
 }
