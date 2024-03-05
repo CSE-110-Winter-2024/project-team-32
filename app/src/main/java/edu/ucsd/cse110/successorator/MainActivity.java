@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     private int incrementDateBy = 0;
     private MainViewModel activityModel;
     private int currentView;
+    //NEW VARIABLE - represents the 'current date' of the app, which is sort
+    //of the mocked date. When you press the advance day button, this updates,
+    //The today and tomorrow fragment use this to calculate what should be shown
+    //When you reload the app, it gets reset to the true current day
+    private Date currDate;
 
     /**
      * Swaps from the current fragment to whatever fragment you pass in as an argument,
@@ -59,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
             case TODAY_VIEW:
                 getSupportFragmentManager()
                        .beginTransaction()
-                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance())
+                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate))
                        .commit();
                 this.currentView = TODAY_VIEW;
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
                        .beginTransaction()
-                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance())
+                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
                        .commit();
                 this.currentView = TOMORROW_VIEW;
                 break;
@@ -120,8 +126,19 @@ public class MainActivity extends AppCompatActivity {
         LocalDateTime lastTime = timeKeeper.getDateTime();
         LocalDateTime currentTime = LocalDateTime.now();
 
-//        TODO - update menu
         System.out.println("Resumed the App!");
+        dateTextView = findViewById(R.id.action_bar_menu_date);
+        if (dateTextView != null) {
+            Calendar c = Calendar.getInstance();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+            String date = dateFormat.format(c.getTime());
+            dateTextView.setText(date);
+            incrementDateBy = 0;
+        }
+        //When you resume, swap the fragment to the current fragment, just to
+        //update the list in case the time has changed
+        this.currDate = new Date();
+        swapFragments(currentView);
 
         if (lastTime != null) {
             LocalDateTime twoAmToday = LocalDateTime.of(currentTime.toLocalDate(), LocalTime.of(2, 0));
@@ -189,36 +206,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void showPopupMenu(View view) {
-//        PopupMenu popupMenu = new PopupMenu(this, view);
-//        popupMenu.getMenuInflater().inflate(R.menu.action_bar, popupMenu.getMenu());
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                // Handle dropdown menu item clicks here
-//                int menuItemId = item.getItemId();
-//                if (menuItemId == R.id.go_to_today_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_tomorrow_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_pending_view_button) {
-//
-//                    return true;
-//                }
-//                else if (menuItemId == R.id.go_to_recurring_view_button) {
-//
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//        popupMenu.show();
-//    }
-
     //only advances the date by 1 day
     //restarting the app will reset to current day
     public void advanceDate(int incrementDateBy) {
@@ -227,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
 //        String dateForTesting = dateTextView.getText().toString();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
+        this.currDate = c.getTime();
         String date = dateFormat.format(c.getTime());
         dateTextView.setText(date);
 //        System.out.println("Advancing date from " + dateForTesting + " to " + date);
@@ -234,7 +222,11 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> roomMostImportantThings
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
+        //Update the view, THIS IS WHAT WILL END UP SHIFTING TOMORROW TASKS TO TODAY
+        swapFragments(this.currentView);
     }
+
+
 
 
 //    private void scheduleAlarm() {
