@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (itemId == R.id.action_bar_menu_add_mit) {
             //Todo, make button initiate a Dialog
-            var dialogFragment = CreateMitDialogFragment.newInstance();
+            var dialogFragment = CreateMitDialogFragment.newInstance(currentView);
             dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
         }
         //Depricated, before we made dropdown menu - For testing:

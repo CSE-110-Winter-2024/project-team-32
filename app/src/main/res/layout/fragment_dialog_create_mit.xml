@@ -18,4 +18,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RadioGroup
+        android:id="@+id/context_button_group"
+        android:layout_width="339dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mit_edit_text">
+
+        <RadioButton
+            android:id="@+id/context_button_work"
+            android:layout_width="79dp"
+            android:layout_height="wrap_content"
+            android:buttonTint="#04A2B6"
+            android:text="@string/context_button_work_text" />
+
+        <RadioButton
+            android:id="@+id/context_button_school"
+            android:layout_width="87dp"
+            android:layout_height="wrap_content"
+            android:buttonTint="#9C27B0"
+            android:text="@string/context_button_school_text" />
+
+        <RadioButton
+            android:id="@+id/context_button_errand"
+            android:layout_width="93dp"
+            android:layout_height="wrap_content"
+            android:buttonTint="#4CAF50"
+            android:text="@string/context_button_errand_text" />
+
+        <RadioButton
+            android:id="@+id/context_button_home"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:buttonTint="#FFC107"
+            android:checked="false"
+            android:text="@string/context_button_home_text" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/contextExplanation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/context_explanation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/context_button_group" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

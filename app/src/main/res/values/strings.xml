@@ -13,4 +13,9 @@
     <string name="tomorrow_fragment_label">Tomorrow</string>
     <string name="pending_fragment_label">Pending</string>
     <string name="recurring_fragment_label">Recurring</string>
+    <string name="context_button_work_text">Work</string>
+    <string name="context_button_errand_text">Errand</string>
+    <string name="context_button_home_text">Home</string>
+    <string name="context_button_school_text">School</string>
+    <string name="context_explanation">Choose the Context of your Task!</string>
 </resources>

@@ -119,7 +119,7 @@ public class MostImportantThing implements RepositoryObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MostImportantThing that = (MostImportantThing) o;
-        return sortOrder == that.sortOrder && Objects.equals(id, that.id) && Objects.equals(task, that.task) && Objects.equals(timeCreated, that.timeCreated) && Objects.equals(completed, that.completed);
+        return sortOrder == that.sortOrder && Objects.equals(id, that.id) && Objects.equals(task, that.task) && Objects.equals(timeCreated, that.timeCreated) && Objects.equals(completed, that.completed) && Objects.equals(workContext, that.workContext);
     }
 
     /**
@@ -129,6 +129,6 @@ public class MostImportantThing implements RepositoryObject {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, task, timeCreated, completed, sortOrder);
+        return Objects.hash(id, task, timeCreated, completed, sortOrder, workContext);
     }
 }

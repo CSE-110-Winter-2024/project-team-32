@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import edu.ucsd.cse110.successorator.lib.domain.MITContext;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
