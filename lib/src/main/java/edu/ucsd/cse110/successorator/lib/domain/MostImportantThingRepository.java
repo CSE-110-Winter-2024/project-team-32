@@ -53,5 +53,4 @@ public interface MostImportantThingRepository {
 
     void setCurrDate(Date currDate);
 
-//    void removeDuplicates();
 }

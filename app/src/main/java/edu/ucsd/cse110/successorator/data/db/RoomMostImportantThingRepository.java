@@ -553,28 +553,4 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         this.currDate = currDate;
     }
 
-//    public void removeDuplicates() {
-//        System.out.println("found removeDuplictaes called");
-//        var entityList = this.mostImportantThingDao.findAllMits();
-//        System.out.println("found there are " + entityList.size() + " mits in the databse");
-//        ArrayList<Integer> indicesToRemove = new ArrayList<>();
-//        for (int j = 0; j < entityList.size(); j++) {
-//            var entity = entityList.get(j);
-//            for (int i = j; i < entityList.size(); i++) {
-//                System.out.println("found comparing" + entity.task + " on " + new Date(entity.timeCreated) + " to " + entityList.get(i).task + " on " + new Date(entityList.get(i).timeCreated));
-//                var otherEntity = entityList.get(i);
-//                if (i != j
-//                        && entity.task.equals(otherEntity.task)
-//                        && entity.workContext.equals(otherEntity.workContext)
-//                        && inSameTodaySlashTomorrowFragment(new Date(entity.timeCreated), new Date(otherEntity.timeCreated))) {
-//                    System.out.println("Found a duplicate!");
-//                    System.out.println("Found duplicate is " + entity.task);
-//                    indicesToRemove.add(i);
-//                }
-//            }
-//        }
-//        for (int i = indicesToRemove.size() - 1; i >= 0; i--) {
-//            this.mostImportantThingDao.delete(entityList.get(indicesToRemove.get(i)).id);
-//        }
-//    }
 }
