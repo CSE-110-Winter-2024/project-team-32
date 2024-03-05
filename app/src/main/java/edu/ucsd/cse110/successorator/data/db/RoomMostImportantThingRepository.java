@@ -321,7 +321,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             refCal.setTime(new Date(today.getTime() + TimeUnit.DAYS.toMillis(1)));
             boolean recurrDatePastTomorrow = (recurrCal.get(Calendar.DAY_OF_YEAR) > refCal.get(Calendar.DAY_OF_YEAR)
                     && recurrCal.get(Calendar.YEAR) >= refCal.get(Calendar.YEAR));
-
+            System.out.println("recurrDatePastToday is " + recurrDatePastToday + " and recurrDatePastTomorrow is " + recurrDatePastTomorrow);
             switch (recurringMIT.recurPeriod) {
                 case "Daily":
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT)) {
@@ -347,6 +347,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     }
                     break;
                 case "Monthly":
+                    System.out.println("Testing if should add a monthly MIT");
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfMonth(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in today!");
@@ -454,6 +455,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         calOne.setTime(dateOne);
         Calendar calTwo = Calendar.getInstance();
         calTwo.setTime(dateTwo);
+        System.out.println("sameDayOfMonth is " + (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)));
+        System.out.println("dateOne is " + calOne.get(Calendar.DAY_OF_MONTH) + " and dateTwo is " + calTwo.get(Calendar.DAY_OF_MONTH));
         return (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH));
     }
 

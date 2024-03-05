@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class MostImportantThingRepositoryTest {
     private SuccessoratorDatabase db;
@@ -43,6 +44,13 @@ public class MostImportantThingRepositoryTest {
         mit1 = new MostImportantThing(1, "task1", 0L, 2, false, "Home");
         mit2 = new MostImportantThing(2, "task2", 0L, 3, false, "Home");
         mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Home");
+    }
+
+    private void initializeMitsWithCurrentTime() {
+        mit0 = new MostImportantThing(0, "task0", System.currentTimeMillis(), 0, false, "Home");
+        mit1 = new MostImportantThing(1, "task1", System.currentTimeMillis(), 2, false, "Home");
+        mit2 = new MostImportantThing(2, "task2", System.currentTimeMillis(), 3, false, "Home");
+        mit3 = new MostImportantThing(3, "task3", System.currentTimeMillis(), 5, false, "Home");
     }
 
     private void prependAllMits() {
@@ -308,6 +316,54 @@ public class MostImportantThingRepositoryTest {
         this.initializeMits();
         this.mitRepo.save(mit0);
         assertEquals(1, this.mitRepo.count());
+    }
+
+    @Test
+    public void testUpdateRecurringMitsDaily() {
+        this.initializeMitsWithCurrentTime();
+        RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Daily");
+        this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
+        this.mitRepo.updateRecurringMits();
+        List<String> actualTasks = getAllTasks();
+        //Should be two copies of mit0 in the database, one for today and one for tomorrow
+        List<String> expectedTasks = Arrays.asList("task0", "task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testUpdateRecurringMitsWeekly() {
+        this.initializeMitsWithCurrentTime();
+        RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Weekly");
+        this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
+        this.mitRepo.updateRecurringMits();
+        List<String> actualTasks = getAllTasks();
+        //Should be two copies of mit0 in the database, one for today and one for tomorrow
+        List<String> expectedTasks = Arrays.asList("task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testUpdateRecurringMitsMonthly() {
+        this.initializeMitsWithCurrentTime();
+        RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Monthly");
+        this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
+        this.mitRepo.updateRecurringMits();
+        List<String> actualTasks = getAllTasks();
+        //Should be two copies of mit0 in the database, one for today and one for tomorrow
+        List<String> expectedTasks = Arrays.asList("task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testUpdateRecurringMitsYearly() {
+        this.initializeMitsWithCurrentTime();
+        RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Yearly");
+        this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
+        this.mitRepo.updateRecurringMits();
+        List<String> actualTasks = getAllTasks();
+        //Should be two copies of mit0 in the database, one for today and one for tomorrow
+        List<String> expectedTasks = Arrays.asList("task0");
+        assertEquals(expectedTasks, actualTasks);
     }
 
 }
