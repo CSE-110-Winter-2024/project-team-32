@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.room.Room;
 
+import java.util.Date;
+
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
@@ -32,7 +34,7 @@ public class SuccessoratorApplication extends Application {
                 .allowMainThreadQueries()
                 .build();
         // feed that database into this.MITRepo
-        mostImportantThingRepository = new RoomMostImportantThingRepository(database.mostImportantThingDao());
+        mostImportantThingRepository = new RoomMostImportantThingRepository(database.mostImportantThingDao(), new Date());
 
         // populate the database with some initial data on the first run.
         var sharedPreferences = getSharedPreferences("successorator", MODE_PRIVATE);

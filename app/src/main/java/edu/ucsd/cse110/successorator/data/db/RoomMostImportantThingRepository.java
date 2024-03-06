@@ -2,11 +2,16 @@ package edu.ucsd.cse110.successorator.data.db;
 
 import androidx.lifecycle.Transformations;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
@@ -21,13 +26,15 @@ import edu.ucsd.cse110.successorator.util.LiveDataSubjectAdapter;
  */
 public class RoomMostImportantThingRepository implements MostImportantThingRepository {
     private final MostImportantThingDao mostImportantThingDao;
+    private Date currDate;
     // TODO - THIS IS OLD, NEED TO MAKE WORK WITH THE NEW UPDATED DAO
     /**
      * Constructor for RoomMostImportantThingRepository
      * @param mostImportantThingDao The DAO for MostImportantThings
      */
-    public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao) {
+    public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao, Date currDate) {
         this.mostImportantThingDao = mostImportantThingDao;
+        this.currDate = currDate;
     }
 
     /**
@@ -45,21 +52,6 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return new LiveDataSubjectAdapter<>(mostImportantThingLiveData);
     }
 
-    // OUTDATED - used to be the default, renamed to findAllNormal(), kept in case we want to find every entity for some reason
-//    /**
-//     * Finds all MostImportantThings
-//     * @return A Subject List of all the MostImportantThings
-//     */
-//    @Override
-//    public Subject<List<MostImportantThing>> findAll() {
-//        var entitiesLiveData = mostImportantThingDao.findAllAsLiveData();
-//        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
-//            return entities.stream()
-//                    .map(MostImportantThingEntity::toMostImportantThing)
-//                    .collect(Collectors.toList());
-//        });
-//        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
-//    }
 
     /**
      * Finds all MostImportantThings that are not pending or recurring
@@ -298,6 +290,95 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Adds a new MostImportantThing to the repository
+     * @param mit The MostImportantThing being added
+     */
+    public void addNewRecurringMostImportantThing(RecurringMostImportantThing mit) {
+        this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        //**** For now just adding the new recurringMIT to the end ********
+    }
+
+    /**
+     * Adds a recurring MIT to tomorrow's view if tomorrow's date is the scheduled date
+     * Will not add to tomorrow's view if already present
+     */
+    public void updateRecurringMits() {
+        System.out.println("TestUpdate Updating recurring mits called!");
+        var recurringMITs = mostImportantThingDao.findAllRecurrings();
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        Date today = currDate;
+        System.out.println("TestUpdate there are " + recurringMITs.size() + " recurrings!");
+        for (var recurringMIT : recurringMITs) {
+            RecurringMostImportantThing recurring = recurringMIT.toRecurringMostImportantThing();
+            Date recurringDate = new Date(recurring.mit.timeCreated());
+            Calendar recurrCal = Calendar.getInstance();
+            recurrCal.setTime(recurringDate);
+            Calendar refCal = Calendar.getInstance();
+            refCal.setTime(today);
+            boolean recurrDatePastToday = (recurrCal.get(Calendar.DAY_OF_YEAR) > refCal.get(Calendar.DAY_OF_YEAR)
+                    && recurrCal.get(Calendar.YEAR) >= refCal.get(Calendar.YEAR));
+            //Update refCal to be tomorrow
+            refCal.setTime(new Date(today.getTime() + TimeUnit.DAYS.toMillis(1)));
+            boolean recurrDatePastTomorrow = (recurrCal.get(Calendar.DAY_OF_YEAR) > refCal.get(Calendar.DAY_OF_YEAR)
+                    && recurrCal.get(Calendar.YEAR) >= refCal.get(Calendar.YEAR));
+            System.out.println("recurrDatePastToday is " + recurrDatePastToday + " and recurrDatePastTomorrow is " + recurrDatePastTomorrow);
+            switch (recurringMIT.recurPeriod) {
+                case "Daily":
+                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT)) {
+                        //If it doesn't have it, check if you need to add it
+                        System.out.println("TestUpdate adding to today daily!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    if ( !recurrDatePastToday && !containsNormalMIT(recurringMIT)) {
+                        System.out.println("TestUpdate adding to tomorrow dai!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    break;
+                case "Weekly":
+                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfWeek(tomorrow, recurringDate)) {
+                        //If it doesn't have it in tomorrow, check if you need to add it
+                        System.out.println("TestUpdate Doesn't contain in today!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfWeek(today, recurringDate)) {
+                        //If id doesn't have it in today, check if you need to add it
+                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    break;
+                case "Monthly":
+                    System.out.println("Testing if should add a monthly MIT");
+                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfMonth(tomorrow, recurringDate)) {
+                        //If it doesn't have it in tomorrow, check if you need to add it
+                        System.out.println("TestUpdate Doesn't contain in today!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfMonth(today, recurringDate)) {
+                        //If id doesn't have it in today, check if you need to add it
+                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    break;
+                case "Yearly":
+                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfYear(tomorrow, recurringDate)) {
+                        //If it doesn't have it in tomorrow, check if you need to add it
+                        System.out.println("TestUpdate doesn't contain in today!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfYear(today, recurringDate)) {
+                        //If id doesn't have it in today, check if you need to add it
+                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+//        this.removeDuplicates();
+    }
+
+    /**
      * Count of the number of things in the repository
      * @return The count of the mostImportantThings
      */
@@ -360,4 +441,119 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.remove(taskId);
         }
     }
+
+    private boolean sameDayOfWeek(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        return (calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
+    }
+
+    private boolean sameDayOfMonth(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        System.out.println("sameDayOfMonth is " + (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)));
+        System.out.println("dateOne is " + calOne.get(Calendar.DAY_OF_MONTH) + " and dateTwo is " + calTwo.get(Calendar.DAY_OF_MONTH));
+        return (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private boolean sameDayOfYear(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        return (calOne.get(Calendar.DAY_OF_YEAR) == calTwo.get(Calendar.DAY_OF_YEAR));
+    }
+
+    private boolean containsNormalMIT(MostImportantThingEntity mitEntity) {
+        var allMitEntities = this.findAllToday();
+        for (var entity : allMitEntities) {
+            if (!entity.isPending
+                    && !entity.isRecurring
+                    && (entity.workContext.equals(mitEntity.workContext))
+                    && (entity.task.equals(mitEntity.task))) {
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    private boolean containsNormalMITInTomorrow(MostImportantThingEntity mitEntity) {
+        var allMitEntities = this.findAllTomorrow();
+        for (var entity : allMitEntities) {
+            if (!entity.isPending
+                    && !entity.isRecurring
+                    && (entity.workContext.equals(mitEntity.workContext))
+                    && (entity.task.equals(mitEntity.task))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<MostImportantThingEntity> findAllToday() {
+        var entityList = this.mostImportantThingDao.findAllMits();
+        List<MostImportantThingEntity> outputList = new ArrayList<>();
+        Date today = currDate;
+        //Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+        for (var entity : entityList) {
+            var entityTime = entity.timeCreated;
+            Date entityDate = new Date(entityTime);
+            if (sameExactDay(entityDate, today)) {
+               outputList.add(entity);
+            }
+        }
+        return outputList;
+    }
+
+    public List<MostImportantThingEntity> findAllTomorrow() {
+        var entityList = this.mostImportantThingDao.findAllMits();
+        List<MostImportantThingEntity> outputList = new ArrayList<>();
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        //Date tomorrow = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+        for (var entity : entityList) {
+            var entityTime = entity.timeCreated;
+            Date entityDate = new Date(entityTime);
+            if (sameExactDay(entityDate, tomorrow)) {
+                outputList.add(entity);
+            }
+        }
+        return outputList;
+    }
+
+    public boolean sameExactDay(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        if (calOne.get(Calendar.YEAR) == calTwo.get(Calendar.YEAR)
+            && calOne.get(Calendar.MONTH) == calTwo.get(Calendar.MONTH)
+            && calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean inSameTodaySlashTomorrowFragment(Date dateOne, Date dateTwo) {
+        Calendar calOne = Calendar.getInstance();
+        calOne.setTime(dateOne);
+        Calendar calTwo = Calendar.getInstance();
+        calTwo.setTime(dateTwo);
+        Date today = currDate;
+        Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        if ((sameDayOfYear(tomorrow,calOne.getTime()) && sameDayOfYear(tomorrow, calTwo.getTime()))
+                || ((sameDayOfYear(today, calOne.getTime()) || calOne.getTime().before(today)) && (sameDayOfYear(today, calTwo.getTime()) || calTwo.getTime().before(today)))) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setCurrDate(Date currDate) {
+        this.currDate = currDate;
+    }
+
 }
