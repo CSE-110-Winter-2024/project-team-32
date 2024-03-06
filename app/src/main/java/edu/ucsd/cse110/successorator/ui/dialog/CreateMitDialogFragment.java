@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Calendar;
+
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
@@ -21,14 +23,16 @@ public class CreateMitDialogFragment extends DialogFragment {
     private FragmentDialogCreateMitBinding view;
     private MainViewModel activityModel;
 
+    private int currentView;
     /**
      * Creates a new CreateMitDialogFragment instance
      * @return new CreateMitDialogFragment instance
      */
 
-    public static CreateMitDialogFragment newInstance() {
+    public static CreateMitDialogFragment newInstance(int currentView) {
         var fragment = new CreateMitDialogFragment();
         Bundle args = new Bundle();
+        args.putInt("currentView", currentView);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,7 +45,9 @@ public class CreateMitDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            currentView = getArguments().getInt("currentView", 0); // Default to 0 (TODAY_VIEW)
+        }
         var modelOwner = requireActivity();
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
         var modelProvider = new ViewModelProvider(modelOwner, modelFactory);
@@ -75,9 +81,14 @@ public class CreateMitDialogFragment extends DialogFragment {
 
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
+        long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
 
-        var mit = new MostImportantThing(null, mitText,System.currentTimeMillis(),-1, false, "Home");
-
+        if (currentView == 1) { // Corresponds to TOMORROW_VIEW
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1); // Add one day for tomorrow's tasks
+            taskTime = calendar.getTimeInMillis();
+        }
+        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
         //System.out.println("Trying to append an item via the UI");
         activityModel.addNewMostImportantThing(mit);
 
