@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
                 swapFragments(currentView);
             } else {
-                var dialogFragment = CreateMitDialogFragment.newInstance();
+                var dialogFragment = CreateMitDialogFragment.newInstance(currentView);
                 dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
                 swapFragments(currentView);
             }
