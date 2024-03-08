@@ -102,13 +102,28 @@ public class CreateMitDialogFragment extends DialogFragment {
         var mitText = view.mitEditText.getText().toString();
         long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
 
+        var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
+        String context = "Default";
+        if (checkedContextButton == R.id.home_radio_button) {
+            context = "Home";
+        }
+        else if (checkedContextButton == R.id.work_radio_button) {
+            context = "Work";
+        }
+        else if (checkedContextButton == R.id.school_radio_button) {
+            context = "School";
+        }
+        else if (checkedContextButton == R.id.errands_radio_button) {
+            context = "Errands";
+        }
+
         var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
         if (currentView == 1) { // Corresponds to TOMORROW_VIEW
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1); // Add one day for tomorrow's tasks
             taskTime = calendar.getTimeInMillis();
         }
-        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
+        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, context);
         if (checkedButton == R.id.one_time_radio_button) {
             this.activityModel.addNewMostImportantThing(mit);
         }
