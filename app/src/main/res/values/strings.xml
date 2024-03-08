@@ -13,4 +13,9 @@
     <string name="tomorrow_fragment_label">Tomorrow</string>
     <string name="pending_fragment_label">Pending</string>
     <string name="recurring_fragment_label">Recurring</string>
+    <string name="one_time">one-time</string>
+    <string name="daily">daily</string>
+    <string name="weekly">weekly</string>
+    <string name="monthly">monthly on</string>
+    <string name="yearly">yearly on</string>
 </resources>
