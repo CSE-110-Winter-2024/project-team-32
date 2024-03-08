@@ -106,15 +106,19 @@ public class CreateMitDialogFragment extends DialogFragment {
         String context = "Default";
         if (checkedContextButton == R.id.home_radio_button) {
             context = "Home";
+            System.out.println("home radio was selected");
         }
         else if (checkedContextButton == R.id.work_radio_button) {
             context = "Work";
+            System.out.println("work radio was selected");
         }
         else if (checkedContextButton == R.id.school_radio_button) {
             context = "School";
+            System.out.println("school radio was selected");
         }
         else if (checkedContextButton == R.id.errands_radio_button) {
             context = "Errands";
+            System.out.println("errands radio was selected");
         }
 
         var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
@@ -139,13 +143,7 @@ public class CreateMitDialogFragment extends DialogFragment {
         else if (checkedButton == R.id.yearly_radio_button) {
             this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Yearly"));
         }
-
-        //System.out.println("Trying to append an item via the UI");
-        activityModel.addNewMostImportantThing(mit);
-
-
-
-
+        System.out.println("Trying to append an item via the UI");
         dialog.dismiss();
     }
 
