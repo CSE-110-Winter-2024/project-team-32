@@ -124,13 +124,6 @@ public class CreateMitDialogFragment extends DialogFragment {
         else if (checkedButton == R.id.yearly_radio_button) {
             this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Yearly"));
         }
-
-        //System.out.println("Trying to append an item via the UI");
-        activityModel.addNewMostImportantThing(mit);
-
-
-
-
         dialog.dismiss();
     }
 
