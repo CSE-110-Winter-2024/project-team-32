@@ -67,6 +67,20 @@ public class MostImportantThingRepositoryTest {
                 .collect(Collectors.toList());
     }
 
+    private List<String> getAllRecurringTasks() {
+        return mitDao.findAllRecurrings().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getAllRecurPeriods() {
+        return mitDao.findAllRecurrings().stream()
+                .map(MostImportantThingEntity::toRecurringMostImportantThing)
+                .map(RecurringMostImportantThing::recurPeriod)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Tests inserting and then finding 10 MITs with different ids
      */
@@ -201,6 +215,66 @@ public class MostImportantThingRepositoryTest {
         List<String> actualTasks = getAllTasks();
         List<String> expectedTasks = Arrays.asList("task3", "task2", "task4", "task1", "task0");
         assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testAddNewRecurringMitEmpty() {
+        this.initializeMits();
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit0, "Daily"));
+        List<String> actualTasks = getAllRecurringTasks();
+        List<String> actualRecurPeriods = getAllRecurPeriods();
+        List<String> expectedTasks = Arrays.asList("task0");
+        List<String> expectedRecurPeriods = Arrays.asList("Daily");
+        assertEquals(expectedTasks, actualTasks);
+        assertEquals(expectedRecurPeriods, actualRecurPeriods);
+    }
+
+    @Test
+    public void testAddNewRecurringMitNonEmptyDaily() {
+        this.initializeMits();
+        this.prependAllMits();
+        MostImportantThing mit4 = new MostImportantThing(4, "task4", 0L, 0, false, "Home");
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit4, "Daily"));
+        List<String> actualTasks = getAllTasks();
+        List<String> actualRecurPeriods = getAllRecurPeriods();
+        //There should be TWO task4s, since there is one MIT for today and one for Tomorrow
+        List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0", "task4", "task4");
+        List<String> expectedRecurPeriods = Arrays.asList("Daily");
+        assertEquals(expectedTasks, actualTasks);
+        assertEquals(expectedRecurPeriods, actualRecurPeriods);
+    }
+
+    @Test
+    public void testAddNewRecurringMitNonEmptyWeekly() {
+        this.initializeMitsWithCurrentTime();
+        this.prependAllMits();
+        MostImportantThing mit4 = new MostImportantThing(4, "task4", System.currentTimeMillis(), 0, false, "Home");
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit4, "Weekly"));
+        List<String> actualTasks = getAllTasks();
+        List<String> actualRecurPeriods = getAllRecurPeriods();
+        //There should be ONE task4, since there is one MIT for today, none for tomorrow since it's weekly
+        List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0", "task4");
+        List<String> expectedRecurPeriods = Arrays.asList("Weekly");
+        assertEquals(expectedTasks, actualTasks);
+        assertEquals(expectedRecurPeriods, actualRecurPeriods);
+    }
+
+    @Test
+    public void testAddNewRecurringMitNonEmptyDailyThenWeekly() {
+        this.initializeMitsWithCurrentTime();
+        this.prependAllMits();
+        MostImportantThing mit4 = new MostImportantThing(4, "task4", System.currentTimeMillis(), 0, false, "Home");
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit4, "Daily"));
+        MostImportantThing mit5 = new MostImportantThing(5, "task5", System.currentTimeMillis(), 0, false, "Home");
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit5, "Weekly"));
+
+        List<String> actualTasks = getAllTasks();
+        List<String> actualRecurPeriods = getAllRecurPeriods();
+        //There should be TWO task4s since it's daily, and ONE task5 since it's weekly
+        List<String> expectedTasks = Arrays.asList("task3", "task2", "task1", "task0", "task4", "task4", "task5");
+        List<String> expectedRecurPeriods = Arrays.asList("Daily", "Weekly");
+        assertEquals(expectedTasks, actualTasks);
+        assertEquals(expectedRecurPeriods, actualRecurPeriods);
     }
 
     @Test
@@ -365,5 +439,4 @@ public class MostImportantThingRepositoryTest {
         List<String> expectedTasks = Arrays.asList("task0");
         assertEquals(expectedTasks, actualTasks);
     }
-
 }
