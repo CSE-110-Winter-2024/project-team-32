@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Calendar;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 /**
  * Dialog Fragment for when the user is adding an MIT
@@ -83,14 +85,34 @@ public class CreateMitDialogFragment extends DialogFragment {
         var mitText = view.mitEditText.getText().toString();
         long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
 
+        var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
         if (currentView == 1) { // Corresponds to TOMORROW_VIEW
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1); // Add one day for tomorrow's tasks
             taskTime = calendar.getTimeInMillis();
         }
         var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
+        if (checkedButton == R.id.one_time_radio_button) {
+            this.activityModel.addNewMostImportantThing(mit);
+        }
+        else if (checkedButton == R.id.daily_radio_button) {
+            //this.activityModel
+        }
+        else if (checkedButton == R.id.weekly_radio_button) {
+
+        }
+        else if (checkedButton == R.id.monthly_radio_button) {
+
+        }
+        else if (checkedButton == R.id.yearly_radio_button) {
+
+        }
+
         //System.out.println("Trying to append an item via the UI");
         activityModel.addNewMostImportantThing(mit);
+
+
+
 
         dialog.dismiss();
     }
