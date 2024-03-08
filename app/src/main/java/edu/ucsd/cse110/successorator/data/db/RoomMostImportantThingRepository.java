@@ -299,6 +299,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         //**** For now just adding the new recurringMIT to the end ********
     }
 
+    public void addNewPendingMostImportantThing(PendingMostImportantThing pendingMit) {
+        this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(pendingMit));
+        //For now just adding the new pendingMit to the end
+    }
+
     /**
      * Adds a recurring MIT to tomorrow's view if tomorrow's date is the scheduled date
      * Will not add to tomorrow's view if already present
