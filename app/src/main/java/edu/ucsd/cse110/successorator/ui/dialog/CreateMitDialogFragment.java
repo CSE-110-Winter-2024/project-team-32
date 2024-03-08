@@ -96,16 +96,16 @@ public class CreateMitDialogFragment extends DialogFragment {
             this.activityModel.addNewMostImportantThing(mit);
         }
         else if (checkedButton == R.id.daily_radio_button) {
-            //this.activityModel
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Daily"));
         }
         else if (checkedButton == R.id.weekly_radio_button) {
-
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Weekly"));
         }
         else if (checkedButton == R.id.monthly_radio_button) {
-
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Monthly"));
         }
         else if (checkedButton == R.id.yearly_radio_button) {
-
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Yearly"));
         }
 
         //System.out.println("Trying to append an item via the UI");

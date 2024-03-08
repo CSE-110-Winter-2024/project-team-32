@@ -295,6 +295,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      */
     public void addNewRecurringMostImportantThing(RecurringMostImportantThing mit) {
         this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        this.updateRecurringMits();
         //**** For now just adding the new recurringMIT to the end ********
     }
 
