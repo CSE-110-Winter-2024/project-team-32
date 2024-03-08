@@ -157,7 +157,7 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             default:
                 throw new IllegalStateException("Invalid state for mit");
         }
-
+        binding.contextDisplay.setBackground(background);
         //Required to re-update the background to being circular
         binding.contextDisplay.setBackground(background);
 

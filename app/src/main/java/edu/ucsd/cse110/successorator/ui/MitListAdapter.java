@@ -160,6 +160,13 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
             default:
                 throw new IllegalStateException("Invalid state for mit");
         }
+
+        //If it's completed override and make it gray
+        if (mit.completed()) {
+            colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.checkedOffColor));
+            binding.contextDisplay.setBackgroundTintList(colorStateList);
+        }
+
         //Required to re-update the background to being circular
         binding.contextDisplay.setBackground(background);
 
