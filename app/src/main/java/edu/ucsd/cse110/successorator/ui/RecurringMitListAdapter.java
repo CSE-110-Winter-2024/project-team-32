@@ -3,6 +3,9 @@ package edu.ucsd.cse110.successorator.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +100,9 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(recurringMit.mit.task());
         binding.mitRecurringDateText.setText(recurText);
+        //Get the background before it's erased by setBackgroundColor
+        Drawable background = binding.contextDisplay.getBackground();
+        ColorStateList colorStateList;
 
         // activate an on click listener for the constraint layout, so we can
         // press and hold to delete
@@ -125,20 +131,35 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
 
         switch (recurringMit.mit.workContext()) {
             case "Home":
+                System.out.println("Setting color for home!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.homeColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
                 binding.contextDisplay.setText("H");
                 break;
             case "Work":
+                System.out.println("Setting color for work!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.workColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
                 binding.contextDisplay.setText("W");
                 break;
             case "School":
+                System.out.println("Setting color for school!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.schoolColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
                 binding.contextDisplay.setText("S");
                 break;
             case "Errands":
+                System.out.println("Setting color for errands!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.errandsColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
                 binding.contextDisplay.setText("E");
                 break;
             default:
                 throw new IllegalStateException("Invalid state for mit");
         }
+
+        //Required to re-update the background to being circular
+        binding.contextDisplay.setBackground(background);
 
         return binding.getRoot();
     }
