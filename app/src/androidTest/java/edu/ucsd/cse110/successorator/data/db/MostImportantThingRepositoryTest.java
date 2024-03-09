@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import android.content.Context;
 
 import androidx.room.Room;
+import androidx.room.util.RelationUtil;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class MostImportantThingRepositoryTest {
@@ -46,6 +48,13 @@ public class MostImportantThingRepositoryTest {
         mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Home");
     }
 
+    private void initializeMitsWithVariousContexts() {
+        mit0 = new MostImportantThing(0, "task0", 0L, 0, false, "Home");
+        mit1 = new MostImportantThing(1, "task1", 0L, 2, false, "Work");
+        mit2 = new MostImportantThing(2, "task2", 0L, 3, false, "School");
+        mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Errands");
+    }
+
     private void initializeMitsWithCurrentTime() {
         mit0 = new MostImportantThing(0, "task0", System.currentTimeMillis(), 0, false, "Home");
         mit1 = new MostImportantThing(1, "task1", System.currentTimeMillis(), 2, false, "Home");
@@ -64,6 +73,13 @@ public class MostImportantThingRepositoryTest {
         return mitDao.findAllMits().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getAllContexts() {
+        return mitDao.findAll().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::workContext)
                 .collect(Collectors.toList());
     }
 
@@ -365,5 +381,18 @@ public class MostImportantThingRepositoryTest {
         List<String> expectedTasks = Arrays.asList("task0");
         assertEquals(expectedTasks, actualTasks);
     }
+
+    @Test
+    public void testAddNewMitWithContexts() {
+        this.initializeMitsWithVariousContexts();
+        this.mitRepo.addNewMostImportantThing(mit0);
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit1));
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit2, "Daily"));
+        List<String> actualContexts = getAllContexts();
+        //One for home, one for work, then 3 for School - 1 for recurring, 2 for the tasks that it spawns
+        List<String> expectedContexts = Arrays.asList("Home","Work","School","School","School");
+        assertEquals(expectedContexts, actualContexts);
+    }
+
 
 }
