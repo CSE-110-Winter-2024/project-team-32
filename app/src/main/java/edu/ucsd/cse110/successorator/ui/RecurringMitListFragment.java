@@ -1,7 +1,5 @@
 package edu.ucsd.cse110.successorator.ui;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,31 +94,6 @@ public class RecurringMitListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println("i detected a click");
-            }
-        });
-        mitListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Delete Recurring Task");
-                builder.setMessage("Are you sure you want to delete this recurring task?");
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO - ADD DELETION LOGIC
-                        // let adapter know that the dataset changed
-                        ((RecurringMitListAdapter) mitListView.getAdapter()).notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-                return true;
             }
         });
     }
