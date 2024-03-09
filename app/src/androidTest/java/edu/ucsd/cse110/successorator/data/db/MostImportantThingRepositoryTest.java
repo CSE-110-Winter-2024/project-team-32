@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class MostImportantThingRepositoryTest {
@@ -67,12 +68,15 @@ public class MostImportantThingRepositoryTest {
                 .collect(Collectors.toList());
     }
 
-    private List<String> getAllRecurringTasks() {
-        return mitDao.findAllRecurrings().stream()
+
+
+    private List<String> getAllPendingTasks() {
+        return mitDao.findAllPendings().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
                 .collect(Collectors.toList());
     }
+
 
     private List<String> getAllRecurPeriods() {
         return mitDao.findAllRecurrings().stream()
@@ -218,6 +222,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
+
     public void testAddNewRecurringMitEmpty() {
         this.initializeMits();
         this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit0, "Daily"));
@@ -275,6 +280,24 @@ public class MostImportantThingRepositoryTest {
         List<String> expectedRecurPeriods = Arrays.asList("Daily", "Weekly");
         assertEquals(expectedTasks, actualTasks);
         assertEquals(expectedRecurPeriods, actualRecurPeriods);
+
+      public void testAddNewPendingMitEmpty() {
+        this.initializeMits();
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
+        List<String> actualTasks = getAllPendingTasks();
+        List<String> expectedTasks = Arrays.asList("task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testAddNewPendingMitNonEmpty() {
+        this.initializeMits();
+        this.prependAllMits();
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit3));
+        List<String> actualTasks = getAllPendingTasks();
+        List<String> expectedTasks = Arrays.asList("task0","task3");
+        assertEquals(expectedTasks, actualTasks);
     }
 
     @Test
