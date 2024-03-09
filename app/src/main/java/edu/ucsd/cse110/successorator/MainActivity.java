@@ -30,6 +30,7 @@ import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
+import edu.ucsd.cse110.successorator.ui.dialog.CreatePendingMitDialogFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateRecurringMitDialogFragment;
 
 /**
@@ -189,7 +190,12 @@ public class MainActivity extends AppCompatActivity {
                 var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
                 swapFragments(currentView);
-            } else {
+            } else if (currentView == PENDING_VIEW) {
+                var dialogFragment = CreatePendingMitDialogFragment.newInstance(currentView);
+                dialogFragment.show(getSupportFragmentManager(), "CreatePendingMitDialogFragment");
+                swapFragments(currentView);
+            }
+            else {
                 var dialogFragment = CreateMitDialogFragment.newInstance(currentView);
                 dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
                 swapFragments(currentView);

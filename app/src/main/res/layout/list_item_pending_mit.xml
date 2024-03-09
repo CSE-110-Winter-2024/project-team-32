@@ -14,7 +14,7 @@
         android:paddingStart="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/card_delete_button"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/context_display"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -29,6 +29,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?android:attr/textColorSecondary" />
+
+    <TextView
+        android:id="@+id/context_display"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:textSize="10pt"
+        android:text="H"
+        android:gravity="center"
+        android:background="@drawable/ic_context_background"
+        android:backgroundTint="@color/defaultContextColor"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

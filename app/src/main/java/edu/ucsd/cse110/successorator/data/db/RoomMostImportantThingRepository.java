@@ -254,6 +254,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
+        System.out.println("mit has context " + mit.workContext());
         var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;
@@ -295,7 +296,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      */
     public void addNewRecurringMostImportantThing(RecurringMostImportantThing mit) {
         this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+        this.updateRecurringMits();
         //**** For now just adding the new recurringMIT to the end ********
+    }
+
+    public void addNewPendingMostImportantThing(PendingMostImportantThing pendingMit) {
+        this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(pendingMit));
+        //For now just adding the new pendingMit to the end
     }
 
     /**

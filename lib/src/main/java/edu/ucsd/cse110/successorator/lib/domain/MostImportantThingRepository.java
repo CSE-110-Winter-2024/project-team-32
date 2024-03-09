@@ -44,6 +44,7 @@ public interface MostImportantThingRepository {
 
     void addNewRecurringMostImportantThing(RecurringMostImportantThing recurringMit);
 
+    void addNewPendingMostImportantThing(PendingMostImportantThing pendingMit);
     void updateRecurringMits();
 
     void toggleCompleted(int id);

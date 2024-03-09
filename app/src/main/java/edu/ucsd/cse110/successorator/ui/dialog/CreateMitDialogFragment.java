@@ -1,5 +1,8 @@
 package edu.ucsd.cse110.successorator.ui.dialog;
 
+import static edu.ucsd.cse110.successorator.ui.RecurringMitListAdapter.convToDayOfWeek;
+import static edu.ucsd.cse110.successorator.ui.RecurringMitListAdapter.convToNthOccurenceInMonth;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,11 +13,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 /**
  * Dialog Fragment for when the user is adding an MIT
@@ -65,6 +73,17 @@ public class CreateMitDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         this.view = FragmentDialogCreateMitBinding.inflate(getLayoutInflater());
+        Date currTime = new Date(); // Default to current time for TODAY_VIEW
+        if (currentView == 1) { // Corresponds to Tomorrow view
+            currTime = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+        }
+        String weeklyText = "Weekly " + formatReccurencePeriod("Weekly", currTime);
+        this.view.weeklyRadioButton.setText(weeklyText);
+        String monthlyText = "Monthly " + formatReccurencePeriod("Monthly", currTime);
+        this.view.monthlyRadioButton.setText(monthlyText);
+        String yearlyText = "Yearly " + formatReccurencePeriod("Yearly", currTime);
+        this.view.yearlyRadioButton.setText(yearlyText);
+
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Enter your new task!")
                 .setView(view.getRoot())
@@ -83,15 +102,48 @@ public class CreateMitDialogFragment extends DialogFragment {
         var mitText = view.mitEditText.getText().toString();
         long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
 
+        var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
+        String context = "Default";
+        if (checkedContextButton == R.id.home_radio_button) {
+            context = "Home";
+            System.out.println("home radio was selected");
+        }
+        else if (checkedContextButton == R.id.work_radio_button) {
+            context = "Work";
+            System.out.println("work radio was selected");
+        }
+        else if (checkedContextButton == R.id.school_radio_button) {
+            context = "School";
+            System.out.println("school radio was selected");
+        }
+        else if (checkedContextButton == R.id.errands_radio_button) {
+            context = "Errands";
+            System.out.println("errands radio was selected");
+        }
+
+        var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
         if (currentView == 1) { // Corresponds to TOMORROW_VIEW
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1); // Add one day for tomorrow's tasks
             taskTime = calendar.getTimeInMillis();
         }
-        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
-        //System.out.println("Trying to append an item via the UI");
-        activityModel.addNewMostImportantThing(mit);
-
+        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, context);
+        if (checkedButton == R.id.one_time_radio_button) {
+            this.activityModel.addNewMostImportantThing(mit);
+        }
+        else if (checkedButton == R.id.daily_radio_button) {
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Daily"));
+        }
+        else if (checkedButton == R.id.weekly_radio_button) {
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Weekly"));
+        }
+        else if (checkedButton == R.id.monthly_radio_button) {
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Monthly"));
+        }
+        else if (checkedButton == R.id.yearly_radio_button) {
+            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Yearly"));
+        }
+        System.out.println("Trying to append an item via the UI");
         dialog.dismiss();
     }
 
@@ -102,6 +154,36 @@ public class CreateMitDialogFragment extends DialogFragment {
      */
     public void onNegativeButtonClick(DialogInterface dialog, int which) {
         dialog.cancel();
+    }
+
+    private String formatReccurencePeriod(String recurPeriod, Date date) {
+        String recurText = "";
+        if (recurPeriod.equals("Weekly")) {
+            //Calculate the day of week the task was made on
+            String dayOfWeekString = convToDayOfWeek(date);
+            //Use DayOfWeek to get the string for day instead of integer
+            recurText = recurText + " on " + dayOfWeekString;
+        }
+        else if (recurPeriod.equals("Monthly")) {
+            String dayOfWeekString = convToDayOfWeek(date);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+            //Calculate which occurrence of the day it is in the month
+            //e.g. 1st Tuesday, 2nd Tuesday, 3rd Tuesday
+            int occurrenceOfDay = (dayOfMonth / 7);
+            //Convert from 0, 1, 2, to 1st, 2nd, 3rd
+            String occurrenceOfDayString = convToNthOccurenceInMonth(occurrenceOfDay);
+
+            recurText = recurText + " " + occurrenceOfDayString + " " + dayOfWeekString;
+
+        }
+        else if (recurPeriod.equals("Yearly")) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd");
+            String dateInYear = format.format(date);
+            recurText = recurText + " on " + dateInYear;
+        }
+        return recurText;
     }
 
 }
