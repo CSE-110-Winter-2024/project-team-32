@@ -18,4 +18,8 @@
     <string name="weekly">weekly</string>
     <string name="monthly">monthly on</string>
     <string name="yearly">yearly on</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="school">School</string>
+    <string name="errands">Errands</string>
 </resources>

@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateRecurringMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
@@ -81,7 +82,23 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
         var mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
         Calendar cal = Calendar.getInstance();
         cal.set(mitYear, mitMonth - 1, mitDay);
-        var mit = new MostImportantThing(null, mitText,cal.getTimeInMillis(),-1, false, "Home");
+
+        var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
+        String context = "Default";
+        if (checkedContextButton == R.id.home_radio_button) {
+            context = "Home";
+        }
+        else if (checkedContextButton == R.id.work_radio_button) {
+            context = "Work";
+        }
+        else if (checkedContextButton == R.id.school_radio_button) {
+            context = "School";
+        }
+        else if (checkedContextButton == R.id.errands_radio_button) {
+            context = "Errands";
+        }
+
+        var mit = new MostImportantThing(null, mitText,cal.getTimeInMillis(),-1, false, context);
 
         //if want daily reminders
         if (view.recurringMitDailyRadiobutton.isChecked()) {

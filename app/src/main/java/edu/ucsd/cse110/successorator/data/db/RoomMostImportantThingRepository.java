@@ -254,6 +254,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
+        System.out.println("mit has context " + mit.workContext());
         var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
         int insertIdx = 0;

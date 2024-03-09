@@ -93,7 +93,23 @@ public class CreatePendingMitDialogFragment extends DialogFragment {
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
         long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
-        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
+
+        var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
+        String context = "Default";
+        if (checkedContextButton == R.id.home_radio_button) {
+            context = "Home";
+        }
+        else if (checkedContextButton == R.id.work_radio_button) {
+            context = "Work";
+        }
+        else if (checkedContextButton == R.id.school_radio_button) {
+            context = "School";
+        }
+        else if (checkedContextButton == R.id.errands_radio_button) {
+            context = "Errands";
+        }
+
+        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, context);
         activityModel.addNewPendingMostImportantThing(new PendingMostImportantThing(mit));
 
         dialog.dismiss();
