@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class MostImportantThingRepositoryTest {
@@ -62,6 +63,13 @@ public class MostImportantThingRepositoryTest {
 
     private List<String> getAllTasks() {
         return mitDao.findAllMits().stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getAllPendingTasks() {
+        return mitDao.findAllPendings().stream()
                 .map(MostImportantThingEntity::toMostImportantThing)
                 .map(MostImportantThing::task)
                 .collect(Collectors.toList());
@@ -200,6 +208,26 @@ public class MostImportantThingRepositoryTest {
         this.mitRepo.addNewMostImportantThing(mit4);
         List<String> actualTasks = getAllTasks();
         List<String> expectedTasks = Arrays.asList("task3", "task2", "task4", "task1", "task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testAddNewPendingMitEmpty() {
+        this.initializeMits();
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
+        List<String> actualTasks = getAllPendingTasks();
+        List<String> expectedTasks = Arrays.asList("task0");
+        assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testAddNewPendingMitNonEmpty() {
+        this.initializeMits();
+        this.prependAllMits();
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit3));
+        List<String> actualTasks = getAllPendingTasks();
+        List<String> expectedTasks = Arrays.asList("task0","task3");
         assertEquals(expectedTasks, actualTasks);
     }
 
