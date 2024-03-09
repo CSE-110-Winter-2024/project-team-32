@@ -1,10 +1,15 @@
 package edu.ucsd.cse110.successorator.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
-import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringMitListBinding;
 
 /**
@@ -78,6 +82,50 @@ public class RecurringMitListFragment extends Fragment {
     }
 
     /**
+     * Gets called right after onCreateView, making sure that the ListView exists before
+     * attaching a long click listener to it
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        var mitListView = this.view.mitList;
+        mitListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("i detected a click");
+            }
+        });
+        mitListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Delete Recurring Task");
+                builder.setMessage("Are you sure you want to delete this recurring task?");
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO - ADD DELETION LOGIC
+                        // let adapter know that the dataset changed
+                        ((RecurringMitListAdapter) mitListView.getAdapter()).notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
+    }
+
+    /**
      * Set up Model-View-Presenter for fragment
      */
     private void setUpMvp() {
@@ -98,5 +146,6 @@ public class RecurringMitListFragment extends Fragment {
 
         this.view.mitList.setAdapter(adapter);
     }
+
 
 }

@@ -31,6 +31,8 @@
         android:text="@string/recurring_fragment_label"
         app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:clickable="false"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
