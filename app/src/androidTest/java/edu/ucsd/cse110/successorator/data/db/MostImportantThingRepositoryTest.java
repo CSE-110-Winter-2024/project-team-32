@@ -282,7 +282,7 @@ public class MostImportantThingRepositoryTest {
         assertEquals(expectedRecurPeriods, actualRecurPeriods);
     }
 
-    public void testAddNewPendingMitEmpty () {
+    public void testAddNewPendingMitEmpty() {
         this.initializeMits();
         this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
         List<String> actualTasks = getAllPendingTasks();
@@ -291,7 +291,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testAddNewPendingMitNonEmpty () {
+    public void testAddNewPendingMitNonEmpty() {
         this.initializeMits();
         this.prependAllMits();
         this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
@@ -302,7 +302,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testMoveToTopOfFinishedOnlyFinished () {
+    public void testMoveToTopOfFinishedOnlyFinished() {
         this.initializeMits();
         mit0.setCompleted(true);
         mit1.setCompleted(true);
@@ -321,7 +321,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testMoveToTopOfFinishedHasFinished () {
+    public void testMoveToTopOfFinishedHasFinished() {
         this.initializeMits();
         mit0.setCompleted(true);
         mit1.setCompleted(true);
@@ -347,7 +347,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testMoveToTopOfFinishedNoFinished () {
+    public void testMoveToTopOfFinishedNoFinished() {
         this.initializeMits();
         // defined sort orders shouldn't matter
         this.prependAllMits();
@@ -371,7 +371,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testToggleCompletedNoCompleted () {
+    public void testToggleCompletedNoCompleted() {
         this.initializeMits();
         this.prependAllMits();
         this.mitRepo.toggleCompleted(mit3.id());
@@ -387,7 +387,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testClear () {
+    public void testClear() {
         this.initializeMits();
         this.prependAllMits();
         this.mitRepo.clear();
@@ -395,14 +395,14 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testCount () {
+    public void testCount() {
         this.initializeMits();
         this.prependAllMits();
         assertEquals(4, this.mitRepo.count());
     }
 
     @Test
-    public void testSaveList () {
+    public void testSaveList() {
         this.initializeMits();
         List<MostImportantThing> mitList = List.of(mit0, mit1, mit2, mit3);
         this.mitRepo.save(mitList);
@@ -410,14 +410,14 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testSave () {
+    public void testSave() {
         this.initializeMits();
         this.mitRepo.save(mit0);
         assertEquals(1, this.mitRepo.count());
     }
 
     @Test
-    public void testUpdateRecurringMitsDaily () {
+    public void testUpdateRecurringMitsDaily() {
         this.initializeMitsWithCurrentTime();
         RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Daily");
         this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
@@ -429,7 +429,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testUpdateRecurringMitsWeekly () {
+    public void testUpdateRecurringMitsWeekly() {
         this.initializeMitsWithCurrentTime();
         RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Weekly");
         this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
@@ -441,7 +441,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testUpdateRecurringMitsMonthly () {
+    public void testUpdateRecurringMitsMonthly() {
         this.initializeMitsWithCurrentTime();
         RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Monthly");
         this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
@@ -453,7 +453,7 @@ public class MostImportantThingRepositoryTest {
     }
 
     @Test
-    public void testUpdateRecurringMitsYearly () {
+    public void testUpdateRecurringMitsYearly() {
         this.initializeMitsWithCurrentTime();
         RecurringMostImportantThing recurringMit = new RecurringMostImportantThing(mit0, "Yearly");
         this.mitRepo.addNewRecurringMostImportantThing(recurringMit);
