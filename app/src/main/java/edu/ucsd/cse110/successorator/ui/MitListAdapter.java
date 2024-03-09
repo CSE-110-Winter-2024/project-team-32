@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +126,23 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
 
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(mit.task());
+
+        switch (mit.workContext()) {
+            case "Home":
+                binding.contextDisplay.setText("H");
+                break;
+            case "Work":
+                binding.contextDisplay.setText("W");
+                break;
+            case "School":
+                binding.contextDisplay.setText("S");
+                break;
+            case "Errands":
+                binding.contextDisplay.setText("E");
+                break;
+            default:
+                throw new IllegalStateException("Invalid state for mit");
+        }
 
         return binding.getRoot();
     }

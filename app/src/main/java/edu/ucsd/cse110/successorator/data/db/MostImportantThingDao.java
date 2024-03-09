@@ -68,7 +68,8 @@ public interface MostImportantThingDao {
                 mostImportantThing.completed,
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
-                mostImportantThing.recurPeriod
+                mostImportantThing.recurPeriod,
+                mostImportantThing.workContext
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }
@@ -85,7 +86,8 @@ public interface MostImportantThingDao {
                 mostImportantThing.completed,
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
-                mostImportantThing.recurPeriod
+                mostImportantThing.recurPeriod,
+                mostImportantThing.workContext
         );
         return Math.toIntExact(insert(newMostImportantThing));
     }

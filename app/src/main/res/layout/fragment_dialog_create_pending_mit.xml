@@ -5,46 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RadioGroup
-        android:id="@+id/mit_options_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mit_edit_text">
-
-        <RadioButton
-            android:id="@+id/one_time_radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/one_time"
-            android:checked="true"/>
-
-        <RadioButton
-            android:id="@+id/daily_radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/daily" />
-
-        <RadioButton
-            android:id="@+id/weekly_radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/weekly" />
-
-        <RadioButton
-            android:id="@+id/monthly_radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/monthly" />
-
-        <RadioButton
-            android:id="@+id/yearly_radio_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/yearly" />
-    </RadioGroup>
-
     <EditText
         android:id="@+id/mit_edit_text"
         android:layout_width="0dp"
@@ -66,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mit_options_radio_group">
+        app:layout_constraintTop_toBottomOf="@+id/mit_edit_text">
 
         <RadioButton
             android:id="@+id/home_radio_button"
