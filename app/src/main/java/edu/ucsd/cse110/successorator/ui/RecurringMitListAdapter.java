@@ -98,8 +98,9 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         binding.mitTaskText.setText(recurringMit.mit.task());
         binding.mitRecurringDateText.setText(recurText);
 
-        // TODO - testing
-        binding.mitTaskText.setOnLongClickListener(v -> {
+        // activate an on click listener for the constraint layout, so we can
+        // press and hold to delete
+        binding.recurringConstraintLayout.setOnLongClickListener(v -> {
             var id = recurringMit.id();
             assert id != null;
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
