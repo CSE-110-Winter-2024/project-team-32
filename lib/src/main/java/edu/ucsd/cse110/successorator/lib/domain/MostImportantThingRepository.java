@@ -54,4 +54,9 @@ public interface MostImportantThingRepository {
 
     void setCurrDate(Date currDate);
 
+    void moveToToday(PendingMostImportantThing pendingMit);
+
+    void moveToTomorrow(PendingMostImportantThing pendingMit);
+
+    void finishPending(PendingMostImportantThing pendingMit);
 }

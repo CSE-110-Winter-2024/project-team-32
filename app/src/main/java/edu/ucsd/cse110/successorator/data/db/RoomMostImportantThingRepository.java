@@ -28,8 +28,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     private final MostImportantThingDao mostImportantThingDao;
     private Date currDate;
     // TODO - THIS IS OLD, NEED TO MAKE WORK WITH THE NEW UPDATED DAO
+
     /**
      * Constructor for RoomMostImportantThingRepository
+     *
      * @param mostImportantThingDao The DAO for MostImportantThings
      */
     public RoomMostImportantThingRepository(MostImportantThingDao mostImportantThingDao, Date currDate) {
@@ -39,6 +41,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * finds a MostImportantThing by it's id
+     *
      * @param id the ID of the MostImportantThing you are trying to find
      * @return The subject with the MostImportantThing found
      */
@@ -55,6 +58,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Finds all MostImportantThings that are not pending or recurring
+     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -70,6 +74,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Finds all PendingMostImportantThings
+     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -85,6 +90,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Finds all RecurringMostImportantThings
+     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -100,6 +106,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Saves a MostImportantThing
+     *
      * @param mostImportantThing the MostImportantThing to be saved
      */
     @Override
@@ -109,6 +116,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Saves a list of MostImportantThings
+     *
      * @param mostImportantThings The List of MostImportantThings to save
      */
     @Override
@@ -121,6 +129,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Prepends a mostImportantThing
+     *
      * @param mostImportantThing The mostImportantThing to prepend
      */
     @Override
@@ -130,6 +139,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Prepends a pendingMostImportantThing
+     *
      * @param pendingMostImportantThing The pendingMostImportantThing to append
      */
     @Override
@@ -139,6 +149,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Prepends a recurringMostImportantThing
+     *
      * @param recurringMostImportantThing The recurringMostImportantThing to append
      */
     @Override
@@ -148,6 +159,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Appends a mostImportantThing
+     *
      * @param mostImportantThing The mostImportantThing to append
      */
     @Override
@@ -157,6 +169,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Appends a pendingMostImportantThing
+     *
      * @param pendingMostImportantThing The pendingMostImportantThing to append
      */
     @Override
@@ -166,6 +179,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Appends a recurringMostImportantThing
+     *
      * @param recurringMostImportantThing The recurringMostImportantThing to append
      */
     @Override
@@ -175,6 +189,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Removes a mostImportantThing by it's id
+     *
      * @param id The ID of the mostImportantThing to remove
      */
     @Override
@@ -191,6 +206,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Toggles the completed status of the mostImportantThing with the id
+     *
      * @param id The ID of the mostImportantThing to mark completed
      */
     public void toggleCompleted(int id) {
@@ -198,8 +214,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         if (this.mostImportantThingDao.find(id).completed) {
             //Move the item to the aboslute top of the list
             this.moveToTop(id);
-        }
-        else {
+        } else {
             //If te item was not done, move it to the top of the finished
             //portion of the list (This is US8 that was already implemented
             //During the implementation of US4)
@@ -210,6 +225,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Moves a mostImportantThing to the top of the unfinished list
+     *
      * @param id The ID of the mostImportantThing to move
      */
     public void moveToTop(int id) {
@@ -218,6 +234,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Moves a mostImportantThing to the top of the finished list
+     *
      * @param id The ID of the mostImportantThing to move
      */
     public void moveToTopOfFinished(int id) {
@@ -251,6 +268,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Adds a new MostImportantThing to the repository
+     *
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
@@ -292,6 +310,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Adds a new MostImportantThing to the repository
+     *
      * @param mit The MostImportantThing being added
      */
     public void addNewRecurringMostImportantThing(RecurringMostImportantThing mit) {
@@ -336,7 +355,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                         System.out.println("TestUpdate adding to today daily!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
-                    if ( !recurrDatePastToday && !containsNormalMIT(recurringMIT)) {
+                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT)) {
                         System.out.println("TestUpdate adding to tomorrow dai!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
@@ -387,6 +406,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Count of the number of things in the repository
+     *
      * @return The count of the mostImportantThings
      */
     public int count() {
@@ -437,6 +457,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.remove(taskId);
         }
     }
+
     public void removeCompletedTasks(LocalDateTime time) {
         long cutoffTime = getReferenceTimeForRemoval(time);
         var elements = mostImportantThingDao.findAllMits();
@@ -511,7 +532,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             var entityTime = entity.timeCreated;
             Date entityDate = new Date(entityTime);
             if (sameExactDay(entityDate, today)) {
-               outputList.add(entity);
+                outputList.add(entity);
             }
         }
         return outputList;
@@ -538,8 +559,8 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         Calendar calTwo = Calendar.getInstance();
         calTwo.setTime(dateTwo);
         if (calOne.get(Calendar.YEAR) == calTwo.get(Calendar.YEAR)
-            && calOne.get(Calendar.MONTH) == calTwo.get(Calendar.MONTH)
-            && calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)) {
+                && calOne.get(Calendar.MONTH) == calTwo.get(Calendar.MONTH)
+                && calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)) {
             return true;
         }
         return false;
@@ -552,7 +573,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         calTwo.setTime(dateTwo);
         Date today = currDate;
         Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
-        if ((sameDayOfYear(tomorrow,calOne.getTime()) && sameDayOfYear(tomorrow, calTwo.getTime()))
+        if ((sameDayOfYear(tomorrow, calOne.getTime()) && sameDayOfYear(tomorrow, calTwo.getTime()))
                 || ((sameDayOfYear(today, calOne.getTime()) || calOne.getTime().before(today)) && (sameDayOfYear(today, calTwo.getTime()) || calTwo.getTime().before(today)))) {
             return true;
         }
@@ -561,6 +582,22 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     public void setCurrDate(Date currDate) {
         this.currDate = currDate;
+    }
+
+    @Override
+    public void moveToToday(PendingMostImportantThing pendingMit) {
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
+                pendingMit.convertToMit(System.currentTimeMillis())));
+    }
+    @Override
+    public void moveToTomorrow(PendingMostImportantThing pendingMit) {
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
+                pendingMit.convertToMit(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1))));
+    }
+    @Override
+    public void finishPending(PendingMostImportantThing pendingMit) {
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
+                pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
     }
 
 }

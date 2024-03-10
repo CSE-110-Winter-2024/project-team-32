@@ -22,4 +22,9 @@
     <string name="work">Work</string>
     <string name="school">School</string>
     <string name="errands">Errands</string>
+    <string name="move_to_today">Move to today</string>
+    <string name="move_to_tomorrow">Move to tomorrow</string>
+    <string name="finish">Finish</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
