@@ -14,16 +14,50 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 
 public class RoomMostImportantThingRepositoryTest {
 
     private RoomMostImportantThingRepository repository;
     private MockMostImportantThingDao mockDao;
+    private Date currDate;
 
     @Before
     public void setUp() {
         mockDao = new MockMostImportantThingDao();
         repository = new RoomMostImportantThingRepository(mockDao, new Date());
+        currDate = new Date();
+    }
+
+    @Test
+    public void testMoveToToday() {
+        MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
+                currDate.getTime(), 0, true, true, false,
+                null, "home");
+        List<MostImportantThingEntity> entities = new ArrayList<>();
+        entities.add(mitEntity);
+        mockDao.setEntities(entities);
+        PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
+
+        repository.moveToToday(pending);
+        assertTrue(mockDao.contains(mitEntity));
+    }
+
+    @Test
+    public void testMoveToTomorrow() {
+        MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
+                currDate.getTime(), 0, true, true, false,
+                null, "home");
+        List<MostImportantThingEntity> entities = new ArrayList<>();
+        entities.add(mitEntity);
+        mockDao.setEntities(entities);
+        PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
+
+        repository.moveToTomorrow(pending);
+        assertTrue(mockDao.contains(mitEntity));
     }
 
     @Test
@@ -87,6 +121,10 @@ public class RoomMostImportantThingRepositoryTest {
 
         boolean isRemoved(int id) {
             return removedIds.contains(id);
+        }
+
+        public boolean contains(MostImportantThingEntity mit) {
+            return entities.contains(mit);
         }
 
         @Override
