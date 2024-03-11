@@ -1,31 +1,23 @@
 package edu.ucsd.cse110.successorator.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Paint;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
-import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemPendingMitBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemRecurringMitBinding;
-import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
-import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportantThing> {
@@ -105,6 +97,31 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(recurringMit.mit.task());
         binding.mitRecurringDateText.setText(recurText);
+
+        // activate an on click listener for the constraint layout, so we can
+        // press and hold to delete
+        binding.recurringConstraintLayout.setOnLongClickListener(v -> {
+            var id = recurringMit.id();
+            assert id != null;
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+            builder.setTitle("Delete Recurring Task");
+            builder.setMessage("Are you sure you want to delete this recurring task?");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    onDeleteClick.accept(id);
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+            return true;
+        });
+
 
         switch (recurringMit.mit.workContext()) {
             case "Home":
