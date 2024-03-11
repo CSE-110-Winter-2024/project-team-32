@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             case PENDING_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
+                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager()))
                         .commit();
                 this.currentView = PENDING_VIEW;
                 break;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class PendingMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentPendingMitListBinding view;
     private PendingMitListAdapter adapter;
+    private FragmentManager fragmentManager;
 
     /**
      * Use this factory method to create a new instance of
@@ -30,9 +32,10 @@ public class PendingMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static PendingMitListFragment newInstance() {
+    public static PendingMitListFragment newInstance(FragmentManager fragmentManager) {
         PendingMitListFragment fragment = new PendingMitListFragment();
         Bundle args = new Bundle();
+        fragment.setFragmentManager(fragmentManager);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,7 +84,7 @@ public class PendingMitListFragment extends Fragment {
      */
     private void setUpMvp() {
         // init adapter
-        this.adapter = new PendingMitListAdapter(this.getContext(), List.of(),activityModel::remove);
+        this.adapter = new PendingMitListAdapter(this.getContext(), List.of(),activityModel::remove, this.fragmentManager);
         System.out.println("setUpMVP for pending view");
         //Observers that display the MITs, or the default message if there are no MITs
         this.activityModel.getOrderedPendingMits().observe(pendingMits -> {
@@ -97,6 +100,10 @@ public class PendingMitListFragment extends Fragment {
         });
 
         this.view.mitList.setAdapter(adapter);
+    }
+
+    private void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
     }
 
 }

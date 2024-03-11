@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,12 @@ import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemPendingMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.ui.dialog.MovePendingMitDialogFragment;
 
 public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThing> {
     Consumer<Integer> onDeleteClick;
+    private FragmentManager fragmentManager;
+
 
     /**
      * Constructor for the MitListAdapter.
@@ -33,7 +37,8 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
      */
     public PendingMitListAdapter(Context context,
                           List<PendingMostImportantThing> pendingMits,
-                          Consumer<Integer> onDeleteClick
+                          Consumer<Integer> onDeleteClick,
+                          FragmentManager fragmentManager
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
@@ -41,6 +46,7 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(pendingMits));
+        this.fragmentManager = fragmentManager;
         this.onDeleteClick = onDeleteClick;
     }
 
@@ -86,6 +92,15 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
             var id = pendingMit.id();
             assert id != null;
             onDeleteClick.accept(id);
+        });
+
+        // When the list item is long-pressed, initiate dialog to move pending mit
+        binding.getRoot().setOnLongClickListener(v -> {
+            System.out.println("FragmentManager Long click!");
+            System.out.println("FragmentManager is " + this.fragmentManager);
+            var dialogFragment = MovePendingMitDialogFragment.newInstance(pendingMit);
+            dialogFragment.show(this.fragmentManager, "MovePendingMitDialogFragment");
+            return true;
         });
 
         //Make sure the items are in the correct state when the app is loaded

@@ -227,4 +227,28 @@ public class MainViewModel extends ViewModel {
     public MostImportantThingRepository getMostImportantThingRepository() {
         return mostImportantThingRepository;
     }
+
+    /**
+     * Moves a pending MIT to the today secion, unfinished
+     * @param pendingMit the pendind MIT being moved
+     */
+    public void moveToToday(PendingMostImportantThing pendingMit) {
+        mostImportantThingRepository.moveToToday(pendingMit);
+    }
+
+    /**
+     * Moves a pending MIT to the tomorrow secion, unfinished
+     * @param pendingMit the pending MIT being moved
+     */
+    public void moveToTomorrow(PendingMostImportantThing pendingMit) {
+        mostImportantThingRepository.moveToTomorrow(pendingMit);
+    }
+
+    /**
+     * Moves a pending MIT to the today view and checks it off
+     * @param pendingMit the pending MIT being moved
+     */
+    public void finishPending(PendingMostImportantThing pendingMit) {
+        mostImportantThingRepository.finishPending(pendingMit);
+    }
 }
