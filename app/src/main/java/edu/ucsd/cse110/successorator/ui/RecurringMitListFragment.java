@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
-import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringMitListBinding;
 
 /**
@@ -98,5 +97,6 @@ public class RecurringMitListFragment extends Fragment {
 
         this.view.mitList.setAdapter(adapter);
     }
+
 
 }
