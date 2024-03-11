@@ -587,17 +587,20 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     @Override
     public void moveToToday(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
-                pendingMit.convertToMit(System.currentTimeMillis())));
+                pendingMit.convertToMit(currDate.getTime())));
+                //pendingMit.convertToMit(System.currentTimeMillis())));
     }
     @Override
     public void moveToTomorrow(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
-                pendingMit.convertToMit(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1))));
+                pendingMit.convertToMit(currDate.getTime() + TimeUnit.DAYS.toMillis(1))));
+                //pendingMit.convertToMit(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1))));
     }
     @Override
     public void finishPending(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
-                pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
+                pendingMit.convertToMit(currDate.getTime()).withCompleted(true)));
+                //pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
     }
 
 }
