@@ -20,10 +20,10 @@
 
     <RadioGroup
         android:id="@+id/context_button_group"
-        android:layout_width="339dp"
-        android:layout_height="62dp"
+        android:layout_width="91dp"
+        android:layout_height="212dp"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mit_edit_text">
