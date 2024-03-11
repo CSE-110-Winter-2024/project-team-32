@@ -105,6 +105,22 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Finds all MostImportantThings of a given Context
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<MostImportantThing>> findAllOfContext(String context) {
+        var entitiesLiveData = mostImportantThingDao.findAllOfContextAsLiveData(context);
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
      * Saves a MostImportantThing
      *
      * @param mostImportantThing the MostImportantThing to be saved

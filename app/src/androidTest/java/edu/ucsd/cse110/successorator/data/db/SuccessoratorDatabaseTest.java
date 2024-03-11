@@ -58,20 +58,19 @@ public class SuccessoratorDatabaseTest {
     private void initializeMitEntities() {
         mit0 = MostImportantThingEntity.fromMostImportantThing(
                 new MostImportantThing(0, "task0", 0L, 0, false, "Home"));
-
         mit1 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(1, "task1", 0L, 2, false, "Home"));
+                new MostImportantThing(1, "task1", 0L, 2, false, "Work"));
         mit2 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(2, "task2", 0L, 3, false, "Home"));
-
+                new MostImportantThing(2, "task2", 0L, 3, false, "School"));
         mit3 = MostImportantThingEntity.fromMostImportantThing(
-                new MostImportantThing(3, "task3", 0L, 5, false, "Home"));
+                new MostImportantThing(3, "task3", 0L, 5, false, "Errand"));
+
         pendingMit0 = MostImportantThingEntity.fromMostImportantThing(
                 new PendingMostImportantThing(
                         new MostImportantThing(4, "task4", 0L, 0, false, "Home")));
         pendingMit1 = MostImportantThingEntity.fromMostImportantThing(
                 new PendingMostImportantThing(
-                        new MostImportantThing(5, "task5", 0L, 0, false, "Home")));
+                        new MostImportantThing(5, "task5", 0L, 0, false, "Work")));
         pendingMit2 = MostImportantThingEntity.fromMostImportantThing(
                 new PendingMostImportantThing(
                         new MostImportantThing(6, "task6", 0L, 0, false, "Home")));
@@ -88,7 +87,7 @@ public class SuccessoratorDatabaseTest {
                         "Weekly"));
         recurringMit2 = MostImportantThingEntity.fromMostImportantThing(
                 new RecurringMostImportantThing(
-                        new MostImportantThing(10, "task10", 0L, 0, false, "Home"),
+                        new MostImportantThing(10, "task10", 0L, 0, false, "Work"),
                         "Monthly"));
         recurringMit3 = MostImportantThingEntity.fromMostImportantThing(
                 new RecurringMostImportantThing(
@@ -316,5 +315,38 @@ public class SuccessoratorDatabaseTest {
             assertEquals("task" + (i + 8),actualRecurringMits.get(i).mit.task());
         }
     }
+
+    @Test
+    public void testFindAllOfContext() {
+        this.initializeMitEntities();
+        // defined sort orders shouldn't matter
+        this.appendAllMitsOfAllKinds();
+
+        List<MostImportantThing> ContextMITS = mitDao.findAllOfContext("Work").stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .collect(Collectors.toList());
+
+        assertEquals(3,ContextMITS.size());
+
+        ContextMITS = mitDao.findAllOfContext("Errand").stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .collect(Collectors.toList());
+
+        assertEquals(1,ContextMITS.size());
+
+        ContextMITS = mitDao.findAllOfContext("Home").stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .collect(Collectors.toList());
+
+        assertEquals(7,ContextMITS.size());
+
+        ContextMITS = mitDao.findAllOfContext("School").stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .collect(Collectors.toList());
+
+        assertEquals(1,ContextMITS.size());
+
+    }
+
 
 }

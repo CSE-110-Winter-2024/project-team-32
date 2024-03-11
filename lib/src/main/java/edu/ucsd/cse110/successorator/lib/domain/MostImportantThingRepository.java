@@ -20,6 +20,8 @@ public interface MostImportantThingRepository {
 
     Subject<List<RecurringMostImportantThing>> findAllRecurring();
 
+    Subject<List<MostImportantThing>> findAllOfContext(String context);
+
     void save(MostImportantThing mostImportantThing);
 
     void save(List<MostImportantThing> mostImportantThing);

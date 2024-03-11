@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+
 public class RoomMostImportantThingRepositoryTest {
 
     private RoomMostImportantThingRepository repository;
@@ -120,9 +122,14 @@ public class RoomMostImportantThingRepositoryTest {
         }
 
         @Override
+        public LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String Context) {return null;}
+
+        @Override
         public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData() {
             return null;
         }
+
+        public List<MostImportantThingEntity> findAllOfContext(String context) {return null;}
 
         public List<MostImportantThingEntity> findAllPendings() {
             return null;
