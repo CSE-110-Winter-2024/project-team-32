@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,13 +38,14 @@ public class RoomMostImportantThingRepositoryTest {
         MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
                 currDate.getTime(), 0, true, true, false,
                 null, "home");
-        List<MostImportantThingEntity> entities = new ArrayList<>();
-        entities.add(mitEntity);
-        mockDao.setEntities(entities);
+        MostImportantThing mitExpected = new MostImportantThing(1, "task", currDate.getTime(),
+                0, true, "home");
         PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
 
         repository.moveToToday(pending);
-        assertTrue(mockDao.contains(mitEntity));
+
+        assertFalse(mockDao.getEntity(0).isPending);
+        assertEquals(mitExpected, mockDao.getEntity(0).toMostImportantThing());
     }
 
     @Test
@@ -51,13 +53,15 @@ public class RoomMostImportantThingRepositoryTest {
         MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
                 currDate.getTime(), 0, true, true, false,
                 null, "home");
-        List<MostImportantThingEntity> entities = new ArrayList<>();
-        entities.add(mitEntity);
-        mockDao.setEntities(entities);
+        MostImportantThing mitExpected = new MostImportantThing(1, "task", currDate.getTime() + TimeUnit.DAYS.toMillis(1),
+                0, true, "home");
         PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
 
         repository.moveToTomorrow(pending);
-        assertTrue(mockDao.contains(mitEntity));
+
+        assertFalse(mockDao.getEntity(0).isPending);
+        assertEquals(mitExpected, mockDao.getEntity(0).toMostImportantThing());
+
     }
 
     @Test
@@ -119,6 +123,10 @@ public class RoomMostImportantThingRepositoryTest {
             this.entities = entities;
         }
 
+        public MostImportantThingEntity getEntity(int i) {
+            return entities.get(i);
+        }
+
         boolean isRemoved(int id) {
             return removedIds.contains(id);
         }
@@ -129,6 +137,7 @@ public class RoomMostImportantThingRepositoryTest {
 
         @Override
         public Long insert(MostImportantThingEntity mostImportantThing) {
+            entities.add(mostImportantThing);
             return null;
         }
 
