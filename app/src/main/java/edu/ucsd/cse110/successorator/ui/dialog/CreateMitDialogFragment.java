@@ -102,7 +102,7 @@ public class CreateMitDialogFragment extends DialogFragment {
             taskTime = calendar.getTimeInMillis();
         }
 
-        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, "Home");
+        var mit = new MostImportantThing(null, mitText,taskTime,-1, false, mitContext);
         //System.out.println("Trying to append an item via the UI");
         activityModel.addNewMostImportantThing(mit);
 

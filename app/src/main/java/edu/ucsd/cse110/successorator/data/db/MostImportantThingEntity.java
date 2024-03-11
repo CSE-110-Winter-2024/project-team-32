@@ -127,10 +127,11 @@ public class MostImportantThingEntity {
      */
     public static MostImportantThingEntity fromMostImportantThing(@NonNull MostImportantThing mostImportantThing) {
         var mit = new MostImportantThingEntity(mostImportantThing.id(),
-                                               mostImportantThing.task(),
-                                               mostImportantThing.timeCreated(),
-                                               mostImportantThing.sortOrder(),
-                                                mostImportantThing.completed());
+                mostImportantThing.task(),
+                mostImportantThing.timeCreated(),
+                mostImportantThing.sortOrder(),
+                mostImportantThing.completed(),
+                mostImportantThing.workContext());
 
         mit.id = mostImportantThing.id();
         return mit;
