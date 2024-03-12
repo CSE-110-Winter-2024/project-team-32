@@ -188,22 +188,23 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (itemId == R.id.focus_on_home_button) {
             this.contextFocus = "Home";
-            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
             swapFragments(this.currentView);
         }
         else if (itemId == R.id.focus_on_work_button) {
             this.contextFocus = "Work";
-            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
             swapFragments(this.currentView);
         }
         else if (itemId == R.id.focus_on_school_button) {
             this.contextFocus = "School";
-            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
             swapFragments(this.currentView);
         }
         else if (itemId == R.id.focus_on_errands_button) {
             this.contextFocus = "Errands";
-            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
             swapFragments(this.currentView);
         }
         else if (itemId == R.id.cancel_focusing_button) {
