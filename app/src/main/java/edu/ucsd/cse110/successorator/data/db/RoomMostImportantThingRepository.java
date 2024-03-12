@@ -340,8 +340,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     finalIndex = i;
                     break;
                 }
+                if(i == numElems - 1) { //if we reach the end
+                    finalIndex = numElems;
+                }
             }
-            finalIndex = numElems;
+
 
         } else if (mit.workContext().equals("School")) {
 
@@ -353,24 +356,36 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     finalIndex = i;
                     break;
                 }
-            }
-            finalIndex = numElems; //TODO: edit this
 
-        } else if (mit.workContext().equals("Errand")) {
+                if(i == numElems - 1) { //if we reach the end
+                    finalIndex = numElems;
+                }
+            }
+
+        } else if (mit.workContext().equals("Errands")) {
 
             for (int i = 0; i < numElems; i++) {
                 if (ElementList.get(i).workContext.equals("Errand")) {
                     finalIndex = orderInContext(i, "Errand");
                     break;
                 }
+
+                if(i == numElems - 1) { //if we reach the end
+                    finalIndex = numElems;
+                }
             }
-            finalIndex = numElems;
         }
 
-        //Shift all completed MITs down, insert new one before them
-        int sortOrder = ElementList.get(finalIndex - 1).toMostImportantThing().sortOrder();
-        this.mostImportantThingDao.shiftSortOrders(ElementList.get(finalIndex - 1).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
-        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+        if(finalIndex == numElems) {
+            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMaxSortOrder() + 1)));
+        } else {
+            //Shift all completed MITs down, insert new one before them
+            int sortOrder = ElementList.get(finalIndex).toMostImportantThing().sortOrder();
+            this.mostImportantThingDao.shiftSortOrders(ElementList.get(finalIndex).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+        }
+
+
 
     }
 
