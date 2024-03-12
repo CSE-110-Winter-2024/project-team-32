@@ -25,6 +25,7 @@ public class PendingMitListFragment extends Fragment {
     private FragmentPendingMitListBinding view;
     private PendingMitListAdapter adapter;
     private FragmentManager fragmentManager;
+    private String contextFocus;
 
     /**
      * Use this factory method to create a new instance of
@@ -32,10 +33,11 @@ public class PendingMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static PendingMitListFragment newInstance(FragmentManager fragmentManager) {
+    public static PendingMitListFragment newInstance(FragmentManager fragmentManager, String contextFocus) {
         PendingMitListFragment fragment = new PendingMitListFragment();
         Bundle args = new Bundle();
         fragment.setFragmentManager(fragmentManager);
+        fragment.setContextFocus(contextFocus);
         fragment.setArguments(args);
         return fragment;
     }
@@ -105,5 +107,7 @@ public class PendingMitListFragment extends Fragment {
     private void setFragmentManager(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
+
+    private void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 
 }

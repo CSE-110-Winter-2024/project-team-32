@@ -29,7 +29,7 @@ public class TomorrowMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentTomorrowMitListBinding view;
     private MitListAdapter adapter;
-
+    private String contextFocus;
     private Date currDate;
 
     /**
@@ -38,9 +38,10 @@ public class TomorrowMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TomorrowMitListFragment newInstance(Date currDate) {
+    public static TomorrowMitListFragment newInstance(Date currDate,String contextFocus) {
         TomorrowMitListFragment fragment = new TomorrowMitListFragment();
         fragment.setDate(currDate);
+        fragment.setContextFocus(contextFocus);
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -132,4 +133,5 @@ public class TomorrowMitListFragment extends Fragment {
         this.currDate = date;
     }
 
+    public void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 }

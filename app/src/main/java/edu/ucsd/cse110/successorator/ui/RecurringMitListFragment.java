@@ -23,6 +23,7 @@ public class RecurringMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentRecurringMitListBinding view;
     private RecurringMitListAdapter adapter;
+    private String contextFocus;
 
     /**
      * Use this factory method to create a new instance of
@@ -30,10 +31,11 @@ public class RecurringMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static RecurringMitListFragment newInstance() {
+    public static RecurringMitListFragment newInstance(String contextFocus) {
         RecurringMitListFragment fragment = new RecurringMitListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setContextFocus(contextFocus);
         return fragment;
     }
 
@@ -97,6 +99,8 @@ public class RecurringMitListFragment extends Fragment {
 
         this.view.mitList.setAdapter(adapter);
     }
+
+    public void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 
 
 }

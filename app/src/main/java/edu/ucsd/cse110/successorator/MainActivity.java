@@ -71,28 +71,28 @@ public class MainActivity extends AppCompatActivity {
             case TODAY_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate))
+                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TODAY_VIEW;
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
+                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TOMORROW_VIEW;
                 break;
             case PENDING_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager()))
+                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager(), contextFocus))
                         .commit();
                 this.currentView = PENDING_VIEW;
                 break;
             case RECURRING_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
+                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance(contextFocus))
                         .commit();
                 this.currentView = RECURRING_VIEW;
                 break;
