@@ -2,11 +2,9 @@ package edu.ucsd.cse110.successorator.data.db;
 
 import androidx.lifecycle.Transformations;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.lib.domain.ContextOrderer;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
@@ -319,6 +318,9 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         System.out.println("mit has context " + mit.workContext());
         //order goes: Home, Work, School, Errands
         var ElementList = this.mostImportantThingDao.findAllMits();
+
+        ContextOrderer con = new ContextOrderer();
+
         int numElems = ElementList.size();
         int finalIndex = 0;
 
@@ -327,53 +329,16 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             return;
         }
 
-        if (mit.workContext().equals("Home")) {
-            finalIndex = orderInContext(0, "Home");
-        } else if (mit.workContext().equals("Work")) {
-
-            for (int i = 0; i < numElems; i++) {
-                if (ElementList.get(i).workContext.equals("Work")) {
-                    finalIndex = orderInContext(i, "Work");
-                    break;
-                } else if (ElementList.get(i).workContext.equals("School") ||
-                        ElementList.get(i).workContext.equals("Errand")) {
-                    finalIndex = i;
-                    break;
-                }
-                if(i == numElems - 1) { //if we reach the end
-                    finalIndex = numElems;
-                }
+        for(int i = 0; i < numElems; i++) {
+            if(con.compare(mit.workContext(), ElementList.get(i).workContext) == 0) {
+                finalIndex = orderInContext(i, mit.workContext());
+                break;
+            } else if(con.compare(mit.workContext(), ElementList.get(i).workContext) < 0) {
+                finalIndex = i;
+                break;
             }
 
-
-        } else if (mit.workContext().equals("School")) {
-
-            for (int i = 0; i < numElems; i++) {
-                if (ElementList.get(i).workContext.equals("School")) {
-                    finalIndex = orderInContext(i, "School");
-                    break;
-                } else if (ElementList.get(i).workContext.equals("Errand")) {
-                    finalIndex = i;
-                    break;
-                }
-
-                if(i == numElems - 1) { //if we reach the end
-                    finalIndex = numElems;
-                }
-            }
-
-        } else if (mit.workContext().equals("Errands")) {
-
-            for (int i = 0; i < numElems; i++) {
-                if (ElementList.get(i).workContext.equals("Errand")) {
-                    finalIndex = orderInContext(i, "Errand");
-                    break;
-                }
-
-                if(i == numElems - 1) { //if we reach the end
-                    finalIndex = numElems;
-                }
-            }
+            if(i == numElems - 1) {finalIndex = numElems; }
         }
 
         if(finalIndex == numElems) {
