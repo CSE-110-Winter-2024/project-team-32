@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private SuccessoratorDatabase db;
     private TextView dateTextView;
     private int incrementDateBy = 0;
+    private String contextFocus;
     private MainViewModel activityModel;
     private int currentView;
     //NEW VARIABLE - represents the 'current date' of the app, which is sort
@@ -185,7 +186,32 @@ public class MainActivity extends AppCompatActivity {
             roomMostImportantThings.setCurrDate(currDate);
             roomMostImportantThings.updateRecurringMits();
         }
-//        else if (itemId == R.id.)
+        else if (itemId == R.id.focus_on_home_button) {
+            this.contextFocus = "Home";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_work_button) {
+            this.contextFocus = "Work";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_school_button) {
+            this.contextFocus = "School";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_errands_button) {
+            this.contextFocus = "Errands";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundColor(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.cancel_focusing_button) {
+            this.contextFocus = "Any";
+            //Reset the background
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackground(null);
+            swapFragments(this.currentView);
+        }
         else if (itemId == R.id.action_bar_menu_add_mit) {
             if (currentView == RECURRING_VIEW) {
                 var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
