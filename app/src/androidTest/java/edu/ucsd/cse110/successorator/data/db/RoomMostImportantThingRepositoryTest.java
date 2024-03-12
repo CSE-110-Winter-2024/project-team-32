@@ -185,9 +185,20 @@ public class RoomMostImportantThingRepositoryTest {
             return null;
         }
 
+        @Override
+        public List<MostImportantThingEntity> findAllPendings(String context) {
+            return null;
+        }
+
         public List<MostImportantThingEntity> findAllRecurrings() {
             return null;
         }
+
+        @Override
+        public List<MostImportantThingEntity> findAllRecurrings(String context) {
+            return null;
+        }
+
         public List<MostImportantThingEntity> findAll() {
             return null;
         }
