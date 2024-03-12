@@ -185,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
             roomMostImportantThings.setCurrDate(currDate);
             roomMostImportantThings.updateRecurringMits();
         }
-        if (itemId == R.id.action_bar_menu_add_mit) {
+//        else if (itemId == R.id.)
+        else if (itemId == R.id.action_bar_menu_add_mit) {
             if (currentView == RECURRING_VIEW) {
                 var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
