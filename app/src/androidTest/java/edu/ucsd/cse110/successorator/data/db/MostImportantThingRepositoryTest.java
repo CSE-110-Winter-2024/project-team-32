@@ -463,4 +463,5 @@ public class MostImportantThingRepositoryTest {
         List<String> expectedTasks = Arrays.asList("task0");
         assertEquals(expectedTasks, actualTasks);
     }
+
 }
