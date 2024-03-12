@@ -283,45 +283,95 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     *
+     * @param index
+     * @param context
+     * @return index to insert mit at
+     */
+    private int orderInContext(int index, String context) {
+        var ElementList = this.mostImportantThingDao.findAllMits();
+        int numElems = ElementList.size();
+
+        int completedIndex = index;
+
+        //Find index of the first element where the next element is completed
+        for (int i = index; i < numElems; i++) {
+            if (ElementList.get(i).workContext.equals(context)) {
+                if (ElementList.get(i).completed) {
+                    break;
+                }
+                completedIndex ++;
+            } else {
+                break;
+            }
+        }
+        //index is the start of the given context
+        //completedIndex is the index with the last completed val of that context
+        return completedIndex;
+    }
+
+    /**
      * Adds a new MostImportantThing to the repository
      *
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
         System.out.println("mit has context " + mit.workContext());
+        //order goes: Home, Work, School, Errands
         var ElementList = this.mostImportantThingDao.findAllMits();
         int numElems = ElementList.size();
-        int insertIdx = 0;
-        //Find index of the first element where the next element is completed
-        for (int i = 0; i < numElems; i++) {
-            if (ElementList.get(i).completed) {
-                break;
-            }
-            insertIdx++;
-        }
-        //If there are no elements in the list
+        int finalIndex = 0;
+
         if (numElems == 0) {
             this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+            return;
         }
-        //If there are only completed MITs in the list
-        else if (insertIdx == 0) {
-            //Add to the front of the list
-            this.mostImportantThingDao.shiftSortOrders(this.mostImportantThingDao.getMinSortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
-            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMinSortOrder() - 1)));
-        }
-        //If there are only uncompleted MITs in the list
-        else if (insertIdx == numElems) {
-            //Add to the bottom of the list
-            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
-        }
-        //There are uncompleted and completed MITs
-        else {
-            //Shift all completed MITs down, insert new one before them
-            int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
-            this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
-            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
 
+        if (mit.workContext().equals("Home")) {
+            finalIndex = orderInContext(0, "Home");
+        } else if (mit.workContext().equals("Work")) {
+
+            for (int i = 0; i < numElems; i++) {
+                if (ElementList.get(i).workContext.equals("Work")) {
+                    finalIndex = orderInContext(i, "Work");
+                    break;
+                } else if (ElementList.get(i).workContext.equals("School") ||
+                        ElementList.get(i).workContext.equals("Errand")) {
+                    finalIndex = i;
+                    break;
+                }
+            }
+            finalIndex = numElems;
+
+        } else if (mit.workContext().equals("School")) {
+
+            for (int i = 0; i < numElems; i++) {
+                if (ElementList.get(i).workContext.equals("School")) {
+                    finalIndex = orderInContext(i, "School");
+                    break;
+                } else if (ElementList.get(i).workContext.equals("Errand")) {
+                    finalIndex = i;
+                    break;
+                }
+            }
+            finalIndex = numElems; //TODO: edit this
+
+        } else if (mit.workContext().equals("Errand")) {
+
+            for (int i = 0; i < numElems; i++) {
+                if (ElementList.get(i).workContext.equals("Errand")) {
+                    finalIndex = orderInContext(i, "Errand");
+                    break;
+                }
+            }
+            finalIndex = numElems;
         }
+
+        //Shift all completed MITs down, insert new one before them
+        int sortOrder = ElementList.get(finalIndex - 1).toMostImportantThing().sortOrder();
+        this.mostImportantThingDao.shiftSortOrders(ElementList.get(finalIndex - 1).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+
     }
 
     /**
