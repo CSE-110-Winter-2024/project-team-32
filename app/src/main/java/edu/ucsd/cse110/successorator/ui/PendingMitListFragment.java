@@ -14,6 +14,8 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,8 +90,24 @@ public class PendingMitListFragment extends Fragment {
         // init adapter
         this.adapter = new PendingMitListAdapter(this.getContext(), List.of(),activityModel::remove, this.fragmentManager);
         System.out.println("setUpMVP for pending view");
+
+        Subject<List<PendingMostImportantThing>> mitsToObserve;
+        if (this.contextFocus == null) {
+            System.out.println("ContextFocus was null in pending");
+            mitsToObserve = this.activityModel.getOrderedPendingMits();
+        }
+        else if (this.contextFocus.equals("Any")) {
+            //Get all mits
+            mitsToObserve = this.activityModel.getOrderedPendingMits();
+        }
+        else {
+            //Get Mits only of the specific context
+            mitsToObserve = this.activityModel.getOrderedPendingMits(this.contextFocus);
+        }
+
+
         //Observers that display the MITs, or the default message if there are no MITs
-        this.activityModel.getOrderedPendingMits().observe(pendingMits -> {
+        mitsToObserve.observe(pendingMits -> {
             if (pendingMits == null) {
                 System.out.println("MainActivity got null pendingMits");
                 return;

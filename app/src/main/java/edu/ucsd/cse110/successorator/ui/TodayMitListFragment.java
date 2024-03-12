@@ -121,13 +121,19 @@ public class TodayMitListFragment extends Fragment {
                     for (MostImportantThing currMit : mitsToAdd) {
                         if (mit.task().equals(currMit.task())
                             && mit.workContext().equals(currMit.workContext())) {
-                           isDuplicate = true;
-                           this.activityModel.getMostImportantThingRepository().remove(mit.id());
-                           break;
+                            isDuplicate = true;
+                            this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                            break;
                         }
                     }
                     if (!isDuplicate) {
-                        mitsToAdd.add(mit);
+                        //only add if of the correct context
+                        if (this.contextFocus == null) {
+                            mitsToAdd.add(mit);
+                        }
+                        else if (this.contextFocus.equals("Any") || this.contextFocus.equals(mit.workContext())) {
+                            mitsToAdd.add(mit);
+                        }
                     }
                 }
             }

@@ -13,6 +13,8 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentRecurringMitListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,8 +87,22 @@ public class RecurringMitListFragment extends Fragment {
         // init adapter
         this.adapter = new RecurringMitListAdapter(this.getContext(), List.of(),activityModel::remove);
 
+        Subject<List<RecurringMostImportantThing>> mitsToObserve;
+        if (this.contextFocus == null) {
+            System.out.println("ContextFocus was null in recurring");
+            mitsToObserve = this.activityModel.getOrderedRecurringMits();
+        }
+        else if (this.contextFocus.equals("Any")) {
+            //Get all mits
+            mitsToObserve = this.activityModel.getOrderedRecurringMits();
+        }
+        else {
+            //Get Mits only of the specific context
+            mitsToObserve = this.activityModel.getOrderedRecurringMits(this.contextFocus);
+        }
+
         //Observers that display the MITs, or the default message if there are no MITs
-        this.activityModel.getOrderedRecurringMits().observe(recurringMits -> {
+        mitsToObserve.observe(recurringMits -> {
             if (recurringMits == null) {
                 System.out.println("MainActivity got null recurringMits");
                 return;

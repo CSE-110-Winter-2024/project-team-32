@@ -119,7 +119,13 @@ public class TomorrowMitListFragment extends Fragment {
                 Instant instant2 = refDate.toInstant()
                         .truncatedTo(ChronoUnit.DAYS);
                 if (instant1.equals(instant2)) {
-                    mitsToAdd.add(mit);
+                    //only add if of the correct context
+                    if (this.contextFocus == null) {
+                        mitsToAdd.add(mit);
+                    }
+                    else if (this.contextFocus.equals("Any") || this.contextFocus.equals(mit.workContext())) {
+                        mitsToAdd.add(mit);
+                    }
                 }
             }
             adapter.addAll(mitsToAdd);
