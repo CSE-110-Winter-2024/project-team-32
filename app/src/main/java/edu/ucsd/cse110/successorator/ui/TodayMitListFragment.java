@@ -30,6 +30,7 @@ public class TodayMitListFragment extends Fragment {
     private FragmentTodayMitListBinding view;
     private MitListAdapter adapter;
     private Date currDate;
+    private String contextFocus;
 
     /**
      * Use this factory method to create a new instance of
@@ -37,11 +38,12 @@ public class TodayMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TodayMitListFragment newInstance(Date currDate) {
+    public static TodayMitListFragment newInstance(Date currDate, String contextFocus) {
         TodayMitListFragment fragment = new TodayMitListFragment();
         fragment.setDate(currDate);
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setContextFocus(contextFocus);
         return fragment;
     }
 
@@ -119,13 +121,32 @@ public class TodayMitListFragment extends Fragment {
                     for (MostImportantThing currMit : mitsToAdd) {
                         if (mit.task().equals(currMit.task())
                             && mit.workContext().equals(currMit.workContext())) {
-                           isDuplicate = true;
-                           this.activityModel.getMostImportantThingRepository().remove(mit.id());
-                           break;
+                            isDuplicate = true;
+                            //Bug fix - the finished task takes priority over the
+                            // unfinished one, that way when you advance the day
+                            // it shows the finished task that was previously at tomorrow,
+                            // it doesn't show an unfinished goal
+                            //if completed, need to overide duplicate
+                            if (mit.completed()) {
+                                //Manually remove previous duplicate that was previously added
+                                mitsToAdd.remove(currMit);
+                                isDuplicate = false;
+                            }
+                            //else don't override previous added duplicate, just don't add this new one
+                            else {
+                                this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                            }
+                            break;
                         }
                     }
                     if (!isDuplicate) {
-                        mitsToAdd.add(mit);
+                        //only add if of the correct context
+                        if (this.contextFocus == null) {
+                            mitsToAdd.add(mit);
+                        }
+                        else if (this.contextFocus.equals("Any") || this.contextFocus.equals(mit.workContext())) {
+                            mitsToAdd.add(mit);
+                        }
                     }
                 }
             }
@@ -150,5 +171,7 @@ public class TodayMitListFragment extends Fragment {
     public void setDate(Date date) {
         this.currDate = date;
     }
+
+    public void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 
 }
