@@ -17,8 +17,9 @@ public interface MostImportantThingRepository {
     Subject<List<MostImportantThing>> findAllNormal();
 
     Subject<List<PendingMostImportantThing>> findAllPending();
-
+    Subject<List<PendingMostImportantThing>> findAllPending(String context);
     Subject<List<RecurringMostImportantThing>> findAllRecurring();
+    Subject<List<RecurringMostImportantThing>> findAllRecurring(String context);
 
     void save(MostImportantThing mostImportantThing);
 

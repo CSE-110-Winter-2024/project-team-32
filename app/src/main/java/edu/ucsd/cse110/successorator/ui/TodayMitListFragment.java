@@ -30,6 +30,7 @@ public class TodayMitListFragment extends Fragment {
     private FragmentTodayMitListBinding view;
     private MitListAdapter adapter;
     private Date currDate;
+    private String contextFocus;
 
     /**
      * Use this factory method to create a new instance of
@@ -37,11 +38,12 @@ public class TodayMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static TodayMitListFragment newInstance(Date currDate) {
+    public static TodayMitListFragment newInstance(Date currDate, String contextFocus) {
         TodayMitListFragment fragment = new TodayMitListFragment();
         fragment.setDate(currDate);
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setContextFocus(contextFocus);
         return fragment;
     }
 
@@ -119,13 +121,19 @@ public class TodayMitListFragment extends Fragment {
                     for (MostImportantThing currMit : mitsToAdd) {
                         if (mit.task().equals(currMit.task())
                             && mit.workContext().equals(currMit.workContext())) {
-                           isDuplicate = true;
-                           this.activityModel.getMostImportantThingRepository().remove(mit.id());
-                           break;
+                            isDuplicate = true;
+                            this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                            break;
                         }
                     }
                     if (!isDuplicate) {
-                        mitsToAdd.add(mit);
+                        //only add if of the correct context
+                        if (this.contextFocus == null) {
+                            mitsToAdd.add(mit);
+                        }
+                        else if (this.contextFocus.equals("Any") || this.contextFocus.equals(mit.workContext())) {
+                            mitsToAdd.add(mit);
+                        }
                     }
                 }
             }
@@ -150,5 +158,7 @@ public class TodayMitListFragment extends Fragment {
     public void setDate(Date date) {
         this.currDate = date;
     }
+
+    public void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 
 }

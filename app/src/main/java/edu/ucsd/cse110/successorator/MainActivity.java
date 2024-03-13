@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private SuccessoratorDatabase db;
     private TextView dateTextView;
     private int incrementDateBy = 0;
+    private String contextFocus;
     private MainViewModel activityModel;
     private int currentView;
     //NEW VARIABLE - represents the 'current date' of the app, which is sort
@@ -70,28 +71,28 @@ public class MainActivity extends AppCompatActivity {
             case TODAY_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate))
+                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TODAY_VIEW;
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
+                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TOMORROW_VIEW;
                 break;
             case PENDING_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager()))
+                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager(), contextFocus))
                         .commit();
                 this.currentView = PENDING_VIEW;
                 break;
             case RECURRING_VIEW:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
+                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance(contextFocus))
                         .commit();
                 this.currentView = RECURRING_VIEW;
                 break;
@@ -185,7 +186,34 @@ public class MainActivity extends AppCompatActivity {
             roomMostImportantThings.setCurrDate(currDate);
             roomMostImportantThings.updateRecurringMits();
         }
-        if (itemId == R.id.action_bar_menu_add_mit) {
+        else if (itemId == R.id.focus_on_home_button) {
+            this.contextFocus = "Home";
+
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_work_button) {
+            this.contextFocus = "Work";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_school_button) {
+            this.contextFocus = "School";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_errands_button) {
+            this.contextFocus = "Errands";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.cancel_focusing_button) {
+            this.contextFocus = "Any";
+            //Reset the background
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackground(null);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.action_bar_menu_add_mit) {
             if (currentView == RECURRING_VIEW) {
                 var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");

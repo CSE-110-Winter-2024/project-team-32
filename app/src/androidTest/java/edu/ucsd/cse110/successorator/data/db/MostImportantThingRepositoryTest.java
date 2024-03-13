@@ -22,6 +22,7 @@ import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MostImportantThingRepositoryTest {
     private SuccessoratorDatabase db;
@@ -47,6 +48,13 @@ public class MostImportantThingRepositoryTest {
         mit1 = new MostImportantThing(1, "task1", 0L, 2, false, "Home");
         mit2 = new MostImportantThing(2, "task2", 0L, 3, false, "Home");
         mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Home");
+    }
+
+    private void initializeMitsWithContext() {
+        mit0 = new MostImportantThing(0, "task0", 0L, 0, false, "Home");
+        mit1 = new MostImportantThing(1, "task1", 0L, 2, false, "Work");
+        mit2 = new MostImportantThing(2, "task2", 0L, 3, false, "School");
+        mit3 = new MostImportantThing(3, "task3", 0L, 5, false, "Errands");
     }
 
     private void initializeMitsWithCurrentTime() {
@@ -78,9 +86,24 @@ public class MostImportantThingRepositoryTest {
                 .collect(Collectors.toList());
     }
 
+    private List<String> getAllPendingTasks(String context) {
+        return mitDao.findAllPendings(context).stream()
+                .map(MostImportantThingEntity::toMostImportantThing)
+                .map(MostImportantThing::task)
+                .collect(Collectors.toList());
+    }
+
+
 
     private List<String> getAllRecurPeriods() {
         return mitDao.findAllRecurrings().stream()
+                .map(MostImportantThingEntity::toRecurringMostImportantThing)
+                .map(RecurringMostImportantThing::recurPeriod)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getAllRecurPeriods(String context) {
+        return mitDao.findAllRecurrings(context).stream()
                 .map(MostImportantThingEntity::toRecurringMostImportantThing)
                 .map(RecurringMostImportantThing::recurPeriod)
                 .collect(Collectors.toList());
@@ -282,6 +305,7 @@ public class MostImportantThingRepositoryTest {
         assertEquals(expectedRecurPeriods, actualRecurPeriods);
     }
 
+    @Test
     public void testAddNewPendingMitEmpty() {
         this.initializeMits();
         this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
@@ -462,6 +486,58 @@ public class MostImportantThingRepositoryTest {
         //Should be two copies of mit0 in the database, one for today and one for tomorrow
         List<String> expectedTasks = Arrays.asList("task0");
         assertEquals(expectedTasks, actualTasks);
+    }
+
+    @Test
+    public void testFindAllPendingOfContextNone() {
+        initializeMitsWithContext();
+        this.prependAllMits();
+        //Add mits that are not of the Home context
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit1));
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit3));
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit2));
+        //Get all pendings of context home
+        List<String> actualPendingTasks = getAllPendingTasks("Home");
+        List<String> expectedPendingTasks = Arrays.asList();
+        assertEquals(expectedPendingTasks, actualPendingTasks);
+    }
+    @Test
+    public void testFindAllPendingOfContextMixOfContexts() {
+        initializeMitsWithContext();
+        this.prependAllMits();
+        //Add one pendingMit of context home, and one pendingMit of context school
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit0));
+        this.mitRepo.addNewPendingMostImportantThing(new PendingMostImportantThing(mit3));
+        List<String> actualPendingTasks = getAllPendingTasks("Home");
+        //Should only see the home one
+        List<String> expectedPendingTasks = Arrays.asList("task0");
+        assertEquals(expectedPendingTasks, actualPendingTasks);
+    }
+
+    @Test
+    public void testFindAllRecurringOfContextNone() {
+        initializeMitsWithContext();
+        this.prependAllMits();
+        //Add mits that are not of the Home context
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit1, "Daily"));
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit3, "Weekly"));
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit2, "Yearly"));
+        //Get all pendings of context home
+        List<String> actualRecurPeriods = getAllRecurPeriods("Home");
+        List<String> expectedRecurPeriods = Arrays.asList();
+        assertEquals(actualRecurPeriods, expectedRecurPeriods);
+    }
+    @Test
+    public void testFindAllRecurringOfContextMixOfContexts() {
+        initializeMitsWithContext();
+        this.prependAllMits();
+        //Add mits that are not of the Home context
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit0, "Daily"));
+        this.mitRepo.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit1, "Weekly"));
+        //Get all pendings of context home
+        List<String> actualRecurPeriods = getAllRecurPeriods("Home");
+        List<String> expectedRecurPeriods = Arrays.asList("Daily");
+        assertEquals(actualRecurPeriods, expectedRecurPeriods);
     }
 
 }
