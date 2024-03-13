@@ -246,8 +246,36 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      *
      * @param id the ID of the MIT to move
      */
-    public void moveToTopOfContext(int id) {
+    public void moveToBottomOfContext(int id) {
         addNewMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing());
+    }
+
+
+    /**
+     * Moves and MIT to the top of it's given context
+     *
+     * @param id the ID of the MIT that we're movings
+     */
+    public void moveToTopOfContext(int id) {
+        var ElementList = this.mostImportantThingDao.findAllMits();
+        int numElems = ElementList.size();
+        ContextOrderer con = new ContextOrderer();
+        int insertIdx = 0;
+
+        for(int i = 0; i < numElems; i ++) {
+            if(ElementList.get(i).toMostImportantThing().completed() ||
+                    con.compare(this.mostImportantThingDao.find(id).workContext, ElementList.get(i).workContext) <= 0 ) {
+                break;
+            }
+            insertIdx ++;
+        }
+
+
+        int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
+        this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing().withSortOrder(sortOrder)));
+
+
     }
 
     /**
