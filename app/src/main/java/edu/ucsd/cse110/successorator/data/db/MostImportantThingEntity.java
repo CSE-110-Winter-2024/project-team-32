@@ -80,10 +80,10 @@ public class MostImportantThingEntity {
                              @NonNull Long timeCreated,
                              int sortOrder,
                              boolean completed,
-                             String context,
                              boolean isPending,
                              boolean isRecurring,
-                             String recurPeriod) {
+                             String recurPeriod,
+                             String context) {
         this.id = id;
         this.task = task;
         this.timeCreated = timeCreated;
