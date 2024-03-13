@@ -122,7 +122,20 @@ public class TodayMitListFragment extends Fragment {
                         if (mit.task().equals(currMit.task())
                             && mit.workContext().equals(currMit.workContext())) {
                             isDuplicate = true;
-                            this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                            //Bug fix - the finished task takes priority over the
+                            // unfinished one, that way when you advance the day
+                            // it shows the finished task that was previously at tomorrow,
+                            // it doesn't show an unfinished goal
+                            //if completed, need to overide duplicate
+                            if (mit.completed()) {
+                                //Manually remove previous duplicate that was previously added
+                                mitsToAdd.remove(currMit);
+                                isDuplicate = false;
+                            }
+                            //else don't override previous added duplicate, just don't add this new one
+                            else {
+                                this.activityModel.getMostImportantThingRepository().remove(mit.id());
+                            }
                             break;
                         }
                     }
