@@ -7,6 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="homeColor">#EBEB6E</color>
+    <color name="workColor">#70C0DD</color>
+    <color name="schoolColor">#DDA0E7</color>
+    <color name="errandsColor">#6EBC63</color>
+    <color name="checkedOffColor">#C5C5C5</color>
     <color name="defaultContextColor">#F9B1B1</color>
     <color name="hamburger_color">#E2BD8C</color>
 </resources>
