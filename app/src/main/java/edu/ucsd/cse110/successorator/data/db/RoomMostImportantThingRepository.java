@@ -228,7 +228,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         System.out.println("Toggling completed");
         if (this.mostImportantThingDao.find(id).completed) {
             //Move the item to the aboslute top of the list
-            this.moveToTop(id);
+
+            //this.moveToTop(id);
+
+            this.moveToTopOfContext(id);
         } else {
             //If te item was not done, move it to the top of the finished
             //portion of the list (This is US8 that was already implemented
@@ -236,6 +239,15 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.moveToTopOfFinished(id);
         }
         this.mostImportantThingDao.toggleCompleted(id);
+    }
+
+    /**
+     * Moves a MIT to the bottom of it's given context
+     *
+     * @param id the ID of the MIT to move
+     */
+    public void moveToTopOfContext(int id) {
+        addNewMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing());
     }
 
     /**
