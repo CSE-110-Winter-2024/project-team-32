@@ -126,10 +126,11 @@ public class TodayMitListFragment extends Fragment {
                             // unfinished one, that way when you advance the day
                             // it shows the finished task that was previously at tomorrow,
                             // it doesn't show an unfinished goal
-                            //if completed, need to overide duplicate
+                            //if completed, need to override duplicate
                             if (mit.completed()) {
                                 //Manually remove previous duplicate that was previously added
                                 mitsToAdd.remove(currMit);
+                                this.activityModel.getMostImportantThingRepository().remove(currMit.id());
                                 isDuplicate = false;
                             }
                             //else don't override previous added duplicate, just don't add this new one
