@@ -43,7 +43,7 @@
 
     <item android:id="@+id/action_bar_menu_date"
         android:title="Date"
-        android:orderInCategory="0"
+        android:orderInCategory="8"
         app:iconTint="@color/white"
         app:showAsAction="always" />
     <item

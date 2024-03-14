@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TODAY_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
                 currentViewTextView = findViewById(R.id.current_view);
                 if (currentViewTextView != null) {
                     currentViewTextView.setText("Today");
@@ -85,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TOMORROW_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
                 currentViewTextView = findViewById(R.id.current_view);
                 if (currentViewTextView != null) {
                     currentViewTextView.setText("Tomorrow");
@@ -96,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager(), contextFocus))
                         .commit();
                 this.currentView = PENDING_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
                 currentViewTextView = findViewById(R.id.current_view);
                 if (currentViewTextView != null) {
                     currentViewTextView.setText("Pending");
@@ -107,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, RecurringMitListFragment.newInstance(contextFocus))
                         .commit();
                 this.currentView = RECURRING_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
                 currentViewTextView = findViewById(R.id.current_view);
                 if (currentViewTextView != null) {
                     currentViewTextView.setText("Recurring");
@@ -206,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (itemId == R.id.focus_on_home_button) {
             this.contextFocus = "Home";
-
             findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
             swapFragments(this.currentView);
         }
@@ -272,13 +287,38 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         this.currDate = c.getTime();
-        String date = dateFormat.format(c.getTime());
+        String date;
+        if (currentView == TOMORROW_VIEW) {
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = dateFormat.format(c.getTime());
+        } else {
+            date = dateFormat.format(c.getTime());
+        }
+
         dateTextView.setText(date);
         new Thread(() -> roomMostImportantThings
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
         //Update the view, THIS IS WHAT WILL END UP SHIFTING TOMORROW TASKS TO TODAY
         swapFragments(this.currentView);
+    }
+
+    public void updateDate() {
+        System.out.println("Updating date in " + this.currentView + " fragment");
+        dateTextView = findViewById(R.id.action_bar_menu_date);
+        Calendar c = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
+        c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
+        this.currDate = c.getTime();
+        String date;
+        if (currentView == TOMORROW_VIEW) {
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = dateFormat.format(c.getTime());
+        }
+        else {
+            date = dateFormat.format(c.getTime());
+        }
+        dateTextView.setText(date);
     }
 
 }
