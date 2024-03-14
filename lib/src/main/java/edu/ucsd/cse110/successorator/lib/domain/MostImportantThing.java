@@ -41,24 +41,46 @@ public class MostImportantThing implements RepositoryObject {
         this.workContext = workContext;
     }
 
+    /**
+     * Getter for curr MIT instance's ID
+     * @return MIT's ID
+     */
     public @Nullable Integer id() {
         return this.id;
     }
+    /**
+     * Getter for curr MIT instance's task
+     * @return MIT's task
+     */
     public @NonNull String task() {
         return this.task;
     }
+    /**
+     * Getter for curr MIT instance's time created
+     * @return MIT's time created
+     */
     public @NonNull Long timeCreated() {
         return this.timeCreated;
     }
+    /**
+     * Getter for curr MIT instance's completed status
+     * @return MIT's completed status
+     */
     public @NonNull Boolean completed() {
         return this.completed;
     }
-
+    /**
+     * Getter for curr MIT instance's context
+     * @return MIT's context
+     */
     @NonNull
     public String workContext() {
         return this.workContext;
     }
-
+    /**
+     * Getter for curr MIT instance's sort order
+     * @return MIT's sort order
+     */
     public int sortOrder() {
         return this.sortOrder;
     }

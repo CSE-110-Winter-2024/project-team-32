@@ -30,6 +30,7 @@ public class InMemoryDataSource {
     public InMemoryDataSource() {
     }
 
+    //list for testing
     public final static List<MostImportantThing> TEST_MITS = List.of(
             new MostImportantThing(0, "todo1", 0L, 0, false, "Home"),
             new MostImportantThing(1, "todo2", 1L, 1, false, "Home"),
@@ -46,14 +47,29 @@ public class InMemoryDataSource {
         return data;
     }
 
+
+    /**
+     * Gets MIT values
+     * @return MIT value
+     */
     public List<MostImportantThing> getMostImportantThings() {
         return List.copyOf(mostImportantThings.values());
     }
 
+    /**
+     * Getter for MIT with specific id
+     * @param id id of MIT to be found
+     * @return MIT with the value id
+     */
     public MostImportantThing getMostImportantThing(int id) {
         return mostImportantThings.get(id);
     }
 
+    /**
+     * Getter for MIT subject that contains specified id, if it doesn't exist, create and put
+     * @param id id of MIT to be found
+     * @return MIT Subject with specified id
+     */
     public Subject<MostImportantThing> getMostImportantThingSubject(int id) {
         if (!mostImportantThingSubjects.containsKey(id)) {
             var subject = new SimpleSubject<MostImportantThing>();
@@ -63,6 +79,10 @@ public class InMemoryDataSource {
         return mostImportantThingSubjects.get(id);
     }
 
+    /**
+     * Gets all MIT subjects
+     * @return a list of all MIT subjects
+     */
     public Subject<List<MostImportantThing>> getAllMostImportantThingsSubject() {
         return allMostImportantThingsSubject;
     }
@@ -88,6 +108,13 @@ public class InMemoryDataSource {
         allMostImportantThingsSubject.setValue(getMostImportantThings());
     }
 
+    /**
+     * Updates the specified List of Most Important Things
+     * Performs pre-insertion processing, updates the collection, and ensures sort order constraints.
+     * Updates observers and notifies observers of the changes.
+     *
+     * @param mits The list of Most Important Things to be updated in the collection.
+     */
     public void putMostImportantThings(List<MostImportantThing> mits) {
         var fixedCards = mits.stream()
                 .map(this::preInsert)
@@ -105,6 +132,10 @@ public class InMemoryDataSource {
         allMostImportantThingsSubject.setValue(getMostImportantThings());
     }
 
+    /**
+     * Removes MIT with specified id
+     * @param id id of the MIT to be removed
+     */
     public void removeMostImportantThing(int id) {
         var mit = mostImportantThings.get(id);
         var sortOrder = mit.sortOrder();
