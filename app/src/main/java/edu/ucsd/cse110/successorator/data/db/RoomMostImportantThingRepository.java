@@ -490,12 +490,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     break;
                 case "Monthly":
                     System.out.println("Testing if should add a monthly MIT");
-                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfMonth(tomorrow, recurringDate)) {
+                    if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameWeekdayOfMonth(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in today!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
-                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfMonth(today, recurringDate)) {
+                    if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameWeekdayOfMonth(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
                         System.out.println("TestUpdate Doesn't contain in tomorrow!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
@@ -594,14 +594,19 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return (calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
     }
 
-    private boolean sameDayOfMonth(Date dateOne, Date dateTwo) {
+    private boolean sameWeekdayOfMonth(Date dateOne, Date dateTwo) {
+
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
+        int dayOfMonthCalOne = calOne.get(Calendar.DAY_OF_MONTH);
+        int occurrenceOfDayCalOne = (dayOfMonthCalOne / 7);
         Calendar calTwo = Calendar.getInstance();
         calTwo.setTime(dateTwo);
+        int dayOfMonthCalTwo = calTwo.get(Calendar.DAY_OF_MONTH);
+        int occurrenceOfDayCalTwo = (dayOfMonthCalTwo / 7);
         System.out.println("sameDayOfMonth is " + (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)));
         System.out.println("dateOne is " + calOne.get(Calendar.DAY_OF_MONTH) + " and dateTwo is " + calTwo.get(Calendar.DAY_OF_MONTH));
-        return (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH));
+        return ((occurrenceOfDayCalOne == occurrenceOfDayCalTwo) && calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
     }
 
     private boolean sameDayOfYear(Date dateOne, Date dateTwo) {
