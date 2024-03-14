@@ -599,14 +599,15 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
         int dayOfMonthCalOne = calOne.get(Calendar.DAY_OF_MONTH);
-        int occurrenceOfDayCalOne = (dayOfMonthCalOne / 7);
+        int occurrenceOfDayCalOne = ((dayOfMonthCalOne - 1)/ 7);
         Calendar calTwo = Calendar.getInstance();
         calTwo.setTime(dateTwo);
         int dayOfMonthCalTwo = calTwo.get(Calendar.DAY_OF_MONTH);
-        int occurrenceOfDayCalTwo = (dayOfMonthCalTwo / 7);
+        int occurrenceOfDayCalTwo = ((dayOfMonthCalTwo - 1)/ 7);
         System.out.println("sameDayOfMonth is " + (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)));
         System.out.println("dateOne is " + calOne.get(Calendar.DAY_OF_MONTH) + " and dateTwo is " + calTwo.get(Calendar.DAY_OF_MONTH));
         return ((occurrenceOfDayCalOne == occurrenceOfDayCalTwo) && calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
+
     }
 
     private boolean sameDayOfYear(Date dateOne, Date dateTwo) {
