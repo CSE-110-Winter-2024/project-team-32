@@ -83,13 +83,7 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         //TextView date = binding.getRoot().findViewById(R.id.action_bar_menu_date);
         //System.out.println("DATE is + " + date.getText());
 
-        //Delete button that was implemented on accident, but doesn't get in
-        //the way
-        binding.cardDeleteButton.setOnClickListener(v -> {
-            var id = recurringMit.id();
-            assert id != null;
-            onDeleteClick.accept(id);
-        });
+
 
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;

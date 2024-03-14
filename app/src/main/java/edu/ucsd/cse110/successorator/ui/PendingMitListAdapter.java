@@ -87,13 +87,7 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
         //TextView date = binding.getRoot().findViewById(R.id.action_bar_menu_date);
         //System.out.println("DATE is + " + date.getText());
 
-        //Delete button that was implemented on accident, but doesn't get in
-        //the way
-        binding.cardDeleteButton.setOnClickListener(v -> {
-            var id = pendingMit.id();
-            assert id != null;
-            onDeleteClick.accept(id);
-        });
+
 
         // When the list item is long-pressed, initiate dialog to move pending mit
         binding.getRoot().setOnLongClickListener(v -> {

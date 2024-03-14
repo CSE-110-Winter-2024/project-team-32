@@ -85,13 +85,7 @@ public class MitListAdapter extends ArrayAdapter<MostImportantThing> {
         //TextView date = binding.getRoot().findViewById(R.id.action_bar_menu_date);
         //System.out.println("DATE is + " + date.getText());
 
-        //Delete button that was implemented on accident, but doesn't get in
-        //the way
-        binding.cardDeleteButton.setOnClickListener(v -> {
-            var id = mit.id();
-            assert id != null;
-            onDeleteClick.accept(id);
-        });
+
 
         binding.toggleCompletedButton.setOnClickListener(v -> {
             var id = mit.id();
