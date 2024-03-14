@@ -69,4 +69,8 @@ public class RecurringMostImportantThing {
         return this.mit.withTimeCreated(timeCreated);
     }
 
+    public String recurPeriod() {
+        return this.recurPeriod;
+    }
+
 }

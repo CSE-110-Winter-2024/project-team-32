@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.List;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentPendingMitListBinding;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,8 @@ public class PendingMitListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentPendingMitListBinding view;
     private PendingMitListAdapter adapter;
+    private FragmentManager fragmentManager;
+    private String contextFocus;
 
     /**
      * Use this factory method to create a new instance of
@@ -30,9 +35,11 @@ public class PendingMitListFragment extends Fragment {
      *
      * @return A new instance of fragment Mit_list.
      */
-    public static PendingMitListFragment newInstance() {
+    public static PendingMitListFragment newInstance(FragmentManager fragmentManager, String contextFocus) {
         PendingMitListFragment fragment = new PendingMitListFragment();
         Bundle args = new Bundle();
+        fragment.setFragmentManager(fragmentManager);
+        fragment.setContextFocus(contextFocus);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,7 +52,6 @@ public class PendingMitListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //initialize viewModel
         var modelOwner = requireActivity();
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
@@ -70,9 +76,7 @@ public class PendingMitListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = FragmentPendingMitListBinding.inflate(inflater, container, false);
-
         setUpMvp();
-
         return view.getRoot();
     }
 
@@ -81,10 +85,24 @@ public class PendingMitListFragment extends Fragment {
      */
     private void setUpMvp() {
         // init adapter
-        this.adapter = new PendingMitListAdapter(this.getContext(), List.of(),activityModel::remove);
+        this.adapter = new PendingMitListAdapter(this.getContext(), List.of(),activityModel::remove, this.fragmentManager);
         System.out.println("setUpMVP for pending view");
+
+        Subject<List<PendingMostImportantThing>> mitsToObserve;
+        if (this.contextFocus == null) {
+            System.out.println("ContextFocus was null in pending");
+            mitsToObserve = this.activityModel.getOrderedPendingMits();
+        }
+        else if (this.contextFocus.equals("Any")) {
+            //Get all mits
+            mitsToObserve = this.activityModel.getOrderedPendingMits();
+        }
+        else {
+            //Get Mits only of the specific context
+            mitsToObserve = this.activityModel.getOrderedPendingMits(this.contextFocus);
+        }
         //Observers that display the MITs, or the default message if there are no MITs
-        this.activityModel.getOrderedPendingMits().observe(pendingMits -> {
+        mitsToObserve.observe(pendingMits -> {
             if (pendingMits == null) {
                 System.out.println("MainActivity got null pendingMits");
                 return;
@@ -95,8 +113,10 @@ public class PendingMitListFragment extends Fragment {
             adapter.notifyDataSetChanged();
 
         });
-
         this.view.mitList.setAdapter(adapter);
     }
-
+    private void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
+    private void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
 }

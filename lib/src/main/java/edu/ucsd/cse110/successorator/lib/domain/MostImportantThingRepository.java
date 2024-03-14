@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.util.Subject;
@@ -16,8 +17,11 @@ public interface MostImportantThingRepository {
     Subject<List<MostImportantThing>> findAllNormal();
 
     Subject<List<PendingMostImportantThing>> findAllPending();
-
+    Subject<List<PendingMostImportantThing>> findAllPending(String context);
     Subject<List<RecurringMostImportantThing>> findAllRecurring();
+    Subject<List<RecurringMostImportantThing>> findAllRecurring(String context);
+
+    Subject<List<MostImportantThing>> findAllOfContext(String context);
 
     void save(MostImportantThing mostImportantThing);
 
@@ -41,8 +45,21 @@ public interface MostImportantThingRepository {
 
     void addNewMostImportantThing(MostImportantThing mit);
 
+    void addNewRecurringMostImportantThing(RecurringMostImportantThing recurringMit);
+
+    void addNewPendingMostImportantThing(PendingMostImportantThing pendingMit);
+    void updateRecurringMits();
+
     void toggleCompleted(int id);
     int count();
 
-    public void removeCompletedTasks();
+    void removeCompletedTasks();
+
+    void setCurrDate(Date currDate);
+
+    void moveToToday(PendingMostImportantThing pendingMit);
+
+    void moveToTomorrow(PendingMostImportantThing pendingMit);
+
+    void finishPending(PendingMostImportantThing pendingMit);
 }

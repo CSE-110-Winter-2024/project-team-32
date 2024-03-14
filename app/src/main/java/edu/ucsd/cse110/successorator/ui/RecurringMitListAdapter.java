@@ -1,30 +1,26 @@
 package edu.ucsd.cse110.successorator.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
+import edu.ucsd.cse110.successorator.R;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
-import edu.ucsd.cse110.successorator.R;
-import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
-import edu.ucsd.cse110.successorator.databinding.ListItemPendingMitBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemRecurringMitBinding;
-import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
-import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportantThing> {
@@ -104,11 +100,68 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(recurringMit.mit.task());
         binding.mitRecurringDateText.setText(recurText);
+        //Get the background before it's erased by setBackgroundColor
+        Drawable background = binding.contextDisplay.getBackground();
+        ColorStateList colorStateList;
+
+        // activate an on click listener for the constraint layout, so we can
+        // press and hold to delete
+        binding.recurringConstraintLayout.setOnLongClickListener(v -> {
+            var id = recurringMit.id();
+            assert id != null;
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+            builder.setTitle("Delete Recurring Task");
+            builder.setMessage("Are you sure you want to delete this recurring task?");
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    onDeleteClick.accept(id);
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+            return true;
+        });
+
+        switch (recurringMit.mit.workContext()) {
+            case "Home":
+                System.out.println("Setting color for home!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.homeColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("H");
+                break;
+            case "Work":
+                System.out.println("Setting color for work!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.workColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("W");
+                break;
+            case "School":
+                System.out.println("Setting color for school!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.schoolColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("S");
+                break;
+            case "Errands":
+                System.out.println("Setting color for errands!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.errandsColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("E");
+                break;
+            default:
+                throw new IllegalStateException("Invalid state for mit");
+        }
+        binding.contextDisplay.setBackground(background);
+        //Required to re-update the background to being circular
+        binding.contextDisplay.setBackground(background);
 
         return binding.getRoot();
     }
-
-
 
     public static String formatRecurrencePeriod(RecurringMostImportantThing recurringMit) {
         String recurText = recurringMit.recurPeriod;
@@ -127,7 +180,8 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
             //Calculate which occurrence of the day it is in the month
             //e.g. 1st Tuesday, 2nd Tuesday, 3rd Tuesday
-            int occurrenceOfDay = (dayOfMonth / 7);
+            System.out.println("NOW: the day of the month is " + dayOfMonth);
+            int occurrenceOfDay = ((dayOfMonth - 1)/ 7);
             //Convert from 0, 1, 2, to 1st, 2nd, 3rd
             String occurrenceOfDayString = convToNthOccurenceInMonth(occurrenceOfDay);
 
@@ -156,25 +210,25 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         String dayOfWeekString;
         switch (dayOfWeek) {
             case Calendar.SUNDAY:
-                dayOfWeekString = "Sunday";
+                dayOfWeekString = "Sun";
                 break;
             case Calendar.MONDAY:
-                dayOfWeekString = "Monday";
+                dayOfWeekString = "Mon";
                 break;
             case Calendar.TUESDAY:
-                dayOfWeekString = "Tuesday";
+                dayOfWeekString = "Tue";
                 break;
             case Calendar.WEDNESDAY:
-                dayOfWeekString = "Wednesday";
+                dayOfWeekString = "Wed";
                 break;
             case Calendar.THURSDAY:
-                dayOfWeekString = "Thursday";
+                dayOfWeekString = "Thu";
                 break;
             case Calendar.FRIDAY:
-                dayOfWeekString = "Friday";
+                dayOfWeekString = "Fri";
                 break;
             case Calendar.SATURDAY:
-                dayOfWeekString = "Saturday";
+                dayOfWeekString = "Sat";
                 break;
             default:
                 dayOfWeekString = "Invalid Day";
@@ -189,6 +243,7 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
      * @return the translation of n into which occurence it is
      */
     public static String convToNthOccurenceInMonth(int occurrenceOfDay) {
+        System.out.println("NOW: occurenceOfDay is " + occurrenceOfDay);
         String occurrenceOfDayString;
         switch (occurrenceOfDay) {
             case 0:
@@ -202,6 +257,9 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
                 break;
             case 3:
                 occurrenceOfDayString  = "4th";
+                break;
+            case 4:
+                occurrenceOfDayString = "5th";
                 break;
             default:
                 occurrenceOfDayString = "Invalid occurrenceOfDay";

@@ -21,30 +21,29 @@ import java.util.concurrent.TimeUnit;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateMitBinding;
+import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreatePendingMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 
 /**
  * Dialog Fragment for when the user is adding an MIT
  */
-public class CreateMitDialogFragment extends DialogFragment {
-    private FragmentDialogCreateMitBinding view;
+public class CreatePendingMitDialogFragment extends DialogFragment {
+    private FragmentDialogCreatePendingMitBinding view;
     private MainViewModel activityModel;
 
     private int currentView;
-
-    private Date currDate;
     /**
      * Creates a new CreateMitDialogFragment instance
      * @return new CreateMitDialogFragment instance
      */
 
-    public static CreateMitDialogFragment newInstance(int currentView, Date currDate) {
-        var fragment = new CreateMitDialogFragment();
+    public static CreatePendingMitDialogFragment newInstance(int currentView) {
+        var fragment = new CreatePendingMitDialogFragment();
         Bundle args = new Bundle();
         args.putInt("currentView", currentView);
         fragment.setArguments(args);
-        fragment.setCurrDate(currDate);
         return fragment;
     }
 
@@ -75,17 +74,7 @@ public class CreateMitDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        this.view = FragmentDialogCreateMitBinding.inflate(getLayoutInflater());
-        Date currTime = currDate; // Default to current time for TODAY_VIEW
-        if (currentView == 1) { // Corresponds to Tomorrow view
-            currTime = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
-        }
-        String weeklyText = "Weekly " + formatReccurencePeriod("Weekly", currTime);
-        this.view.weeklyRadioButton.setText(weeklyText);
-        String monthlyText = "Monthly " + formatReccurencePeriod("Monthly", currTime);
-        this.view.monthlyRadioButton.setText(monthlyText);
-        String yearlyText = "Yearly " + formatReccurencePeriod("Yearly", currTime);
-        this.view.yearlyRadioButton.setText(yearlyText);
+        this.view = FragmentDialogCreatePendingMitBinding.inflate(getLayoutInflater());
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Enter your new task!")
@@ -103,50 +92,25 @@ public class CreateMitDialogFragment extends DialogFragment {
 
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
-        long taskTime = currDate.getTime(); // Default to current time for TODAY_VIEW
+        long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
 
         var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
         String context = "Default";
         if (checkedContextButton == R.id.home_radio_button) {
             context = "Home";
-            System.out.println("home radio was selected");
         }
         else if (checkedContextButton == R.id.work_radio_button) {
             context = "Work";
-            System.out.println("work radio was selected");
         }
         else if (checkedContextButton == R.id.school_radio_button) {
             context = "School";
-            System.out.println("school radio was selected");
         }
         else if (checkedContextButton == R.id.errands_radio_button) {
             context = "Errands";
-            System.out.println("errands radio was selected");
         }
 
-        var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
-        if (currentView == 1) { // Corresponds to TOMORROW_VIEW
-            taskTime = currDate.getTime() + TimeUnit.DAYS.toMillis(1);
-        }
         var mit = new MostImportantThing(null, mitText,taskTime,-1, false, context);
-        if (checkedButton == R.id.one_time_radio_button) {
-            this.activityModel.addNewMostImportantThing(mit);
-        }
-        else if (checkedButton == R.id.daily_radio_button) {
-            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Daily"));
-        }
-        else if (checkedButton == R.id.weekly_radio_button) {
-            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Weekly"));
-        }
-        else if (checkedButton == R.id.monthly_radio_button) {
-            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Monthly"));
-        }
-        else if (checkedButton == R.id.yearly_radio_button) {
-            this.activityModel.addNewRecurringMostImportantThing(new RecurringMostImportantThing(mit, "Yearly"));
-        }
-
-
-        System.out.println("Trying to append an item via the UI");
+        activityModel.addNewPendingMostImportantThing(new PendingMostImportantThing(mit));
 
         dialog.dismiss();
     }
@@ -188,10 +152,6 @@ public class CreateMitDialogFragment extends DialogFragment {
             recurText = recurText + " on " + dateInYear;
         }
         return recurText;
-    }
-
-    public void setCurrDate(Date currDate) {
-        this.currDate = currDate;
     }
 
 }

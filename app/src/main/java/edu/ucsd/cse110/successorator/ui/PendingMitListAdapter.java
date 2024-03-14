@@ -1,7 +1,9 @@
 package edu.ucsd.cse110.successorator.ui;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,12 @@ import edu.ucsd.cse110.successorator.databinding.ListItemMitBinding;
 import edu.ucsd.cse110.successorator.databinding.ListItemPendingMitBinding;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+import edu.ucsd.cse110.successorator.ui.dialog.MovePendingMitDialogFragment;
 
 public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThing> {
     Consumer<Integer> onDeleteClick;
+    private FragmentManager fragmentManager;
+
 
     /**
      * Constructor for the MitListAdapter.
@@ -32,7 +38,8 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
      */
     public PendingMitListAdapter(Context context,
                           List<PendingMostImportantThing> pendingMits,
-                          Consumer<Integer> onDeleteClick
+                          Consumer<Integer> onDeleteClick,
+                          FragmentManager fragmentManager
     ) {
         // This sets a bunch of stuff internally, which we can access
         // with getContext() and getItem() for example.
@@ -40,6 +47,7 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
         // Also note that ArrayAdapter NEEDS a mutable List (ArrayList),
         // or it will crash!
         super(context, 0, new ArrayList<>(pendingMits));
+        this.fragmentManager = fragmentManager;
         this.onDeleteClick = onDeleteClick;
     }
 
@@ -87,10 +95,56 @@ public class PendingMitListAdapter extends ArrayAdapter<PendingMostImportantThin
             onDeleteClick.accept(id);
         });
 
+        // When the list item is long-pressed, initiate dialog to move pending mit
+        binding.getRoot().setOnLongClickListener(v -> {
+            System.out.println("FragmentManager Long click!");
+            System.out.println("FragmentManager is " + this.fragmentManager);
+            var dialogFragment = MovePendingMitDialogFragment.newInstance(pendingMit);
+            dialogFragment.show(this.fragmentManager, "MovePendingMitDialogFragment");
+            return true;
+        });
+
         //Make sure the items are in the correct state when the app is loaded
         var taskText = binding.mitTaskText;
         // Populate the view with the mit's data.
         binding.mitTaskText.setText(pendingMit.mit.task());
+
+        //Get the background before it's erased by setBackgroundColor
+        Drawable background = binding.contextDisplay.getBackground();
+        ColorStateList colorStateList;
+
+        switch (pendingMit.mit.workContext()) {
+            case "Home":
+                System.out.println("Setting color for home!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.homeColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("H");
+                break;
+            case "Work":
+                System.out.println("Setting color for work!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.workColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("W");
+                break;
+            case "School":
+                System.out.println("Setting color for school!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.schoolColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("S");
+                break;
+            case "Errands":
+                System.out.println("Setting color for errands!");
+                colorStateList = ColorStateList.valueOf(binding.getRoot().getResources().getColor(R.color.errandsColor));
+                binding.contextDisplay.setBackgroundTintList(colorStateList);
+                binding.contextDisplay.setText("E");
+                break;
+            default:
+                throw new IllegalStateException("Invalid state for mit");
+        }
+
+        //Required to re-update the background to being circular
+        binding.contextDisplay.setBackground(background);
+
         return binding.getRoot();
     }
 

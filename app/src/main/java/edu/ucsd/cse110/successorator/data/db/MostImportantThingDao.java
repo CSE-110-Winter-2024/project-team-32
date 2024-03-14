@@ -28,10 +28,20 @@ public interface MostImportantThingDao {
     List<MostImportantThingEntity> findAllMits();
     @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
     List<MostImportantThingEntity> findAllPendings();
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 AND work_context=:context ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllPendings(String context);
     @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
     List<MostImportantThingEntity> findAllRecurrings();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 AND work_context=:context ORDER BY sort_order")
+    List<MostImportantThingEntity> findAllRecurrings(String context);
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     List<MostImportantThingEntity> findAll();
+
+    @Query("SELECT * FROM most_important_things WHERE work_context = :context")
+    LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String context);
+    @Query("SELECT * FROM most_important_things WHERE work_context = :context")
+    List<MostImportantThingEntity> findAllOfContext(String context);
+
     @Query("SELECT * FROM most_important_things WHERE id=:id")
     LiveData<MostImportantThingEntity> findAsLiveData(int id);
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
@@ -40,8 +50,12 @@ public interface MostImportantThingDao {
     LiveData<List<MostImportantThingEntity>> findAllNormalAsLiveData();
     @Query("SELECT * FROM most_important_things WHERE is_pending = 1 ORDER BY sort_order")
     LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData();
+    @Query("SELECT * FROM most_important_things WHERE is_pending = 1 AND work_context =:context ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData(String context);
     @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 ORDER BY sort_order")
     LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData();
+    @Query("SELECT * FROM most_important_things WHERE is_recurring = 1 AND work_context =:context ORDER BY sort_order")
+    LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData(String context);
     // this will update when the corresponding database record does
     // this will be helpful!
     @Query("SELECT COUNT(*) FROM most_important_things")
@@ -68,8 +82,8 @@ public interface MostImportantThingDao {
                 mostImportantThing.completed,
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
-                mostImportantThing.recurPeriod
-        );
+                mostImportantThing.recurPeriod,
+                mostImportantThing.workContext);
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
@@ -85,8 +99,8 @@ public interface MostImportantThingDao {
                 mostImportantThing.completed,
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
-                mostImportantThing.recurPeriod
-        );
+                mostImportantThing.recurPeriod,
+                mostImportantThing.workContext);
         return Math.toIntExact(insert(newMostImportantThing));
     }
 

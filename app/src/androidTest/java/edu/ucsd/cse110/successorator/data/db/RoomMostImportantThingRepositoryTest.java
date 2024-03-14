@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.data.db;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -12,17 +13,57 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
+
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 
 public class RoomMostImportantThingRepositoryTest {
 
     private RoomMostImportantThingRepository repository;
     private MockMostImportantThingDao mockDao;
+    private Date currDate;
 
     @Before
     public void setUp() {
         mockDao = new MockMostImportantThingDao();
-        repository = new RoomMostImportantThingRepository(mockDao);
+        repository = new RoomMostImportantThingRepository(mockDao, new Date());
+        currDate = new Date();
+    }
+
+    @Test
+    public void testMoveToToday() {
+        MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
+                currDate.getTime(), 0, true, true, false,
+                null, "home");
+        MostImportantThing mitExpected = new MostImportantThing(1, "task", currDate.getTime(),
+                0, true, "home");
+        PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
+
+        repository.moveToToday(pending);
+
+        assertFalse(mockDao.getEntity(0).isPending);
+        assertEquals(mitExpected, mockDao.getEntity(0).toMostImportantThing());
+    }
+
+    @Test
+    public void testMoveToTomorrow() {
+        MostImportantThingEntity mitEntity = new MostImportantThingEntity(1, "task",
+                currDate.getTime(), 0, true, true, false,
+                null, "home");
+        MostImportantThing mitExpected = new MostImportantThing(1, "task", currDate.getTime() + TimeUnit.DAYS.toMillis(1),
+                0, true, "home");
+        PendingMostImportantThing pending = mitEntity.toPendingMostImportantThing();
+
+        repository.moveToTomorrow(pending);
+
+        assertFalse(mockDao.getEntity(0).isPending);
+        assertEquals(mitExpected, mockDao.getEntity(0).toMostImportantThing());
+
     }
 
     @Test
@@ -84,12 +125,21 @@ public class RoomMostImportantThingRepositoryTest {
             this.entities = entities;
         }
 
+        public MostImportantThingEntity getEntity(int i) {
+            return entities.get(i);
+        }
+
         boolean isRemoved(int id) {
             return removedIds.contains(id);
         }
 
+        public boolean contains(MostImportantThingEntity mit) {
+            return entities.contains(mit);
+        }
+
         @Override
         public Long insert(MostImportantThingEntity mostImportantThing) {
+            entities.add(mostImportantThing);
             return null;
         }
 
@@ -119,17 +169,43 @@ public class RoomMostImportantThingRepositoryTest {
         }
 
         @Override
+        public LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String Context) {return null;}
+
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData(String context) {
+            return null;
+        }
+        @Override
         public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData() {
             return null;
         }
 
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData(String context) {
+            return null;
+        }
+
+        @Override
+        public List<MostImportantThingEntity> findAllOfContext(String context) {return null;}
+
         public List<MostImportantThingEntity> findAllPendings() {
+            return null;
+        }
+
+        @Override
+        public List<MostImportantThingEntity> findAllPendings(String context) {
             return null;
         }
 
         public List<MostImportantThingEntity> findAllRecurrings() {
             return null;
         }
+
+        @Override
+        public List<MostImportantThingEntity> findAllRecurrings(String context) {
+            return null;
+        }
+
         public List<MostImportantThingEntity> findAll() {
             return null;
         }

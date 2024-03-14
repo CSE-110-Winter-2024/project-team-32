@@ -82,13 +82,14 @@ public class MostImportantThingEntity {
                              boolean completed,
                              boolean isPending,
                              boolean isRecurring,
-                             String recurPeriod) {
+                             String recurPeriod,
+                             String context) {
         this.id = id;
         this.task = task;
         this.timeCreated = timeCreated;
         this.sortOrder = sortOrder;
         this.completed = completed;
-        this.workContext = "Home";
+        this.workContext = context;
         this.isRecurring = isRecurring;
         this.isPending = isPending;
         this.recurPeriod = recurPeriod;
@@ -129,7 +130,8 @@ public class MostImportantThingEntity {
                                                mostImportantThing.task(),
                                                mostImportantThing.timeCreated(),
                                                mostImportantThing.sortOrder(),
-                                                mostImportantThing.completed());
+                                                mostImportantThing.completed(),
+                                                mostImportantThing.workContext());
 
         mit.id = mostImportantThing.id();
         return mit;
@@ -143,7 +145,8 @@ public class MostImportantThingEntity {
                 pendingMostImportantThing.mit.task(),
                 pendingMostImportantThing.mit.timeCreated(),
                 pendingMostImportantThing.mit.sortOrder(),
-                pendingMostImportantThing.mit.completed());
+                pendingMostImportantThing.mit.completed(),
+                pendingMostImportantThing.mit.workContext());
         pMit.isPending = true;
         pMit.id = pendingMostImportantThing.id();
         return pMit;
@@ -157,7 +160,8 @@ public class MostImportantThingEntity {
                 recurringMostImportantThing.mit.task(),
                 recurringMostImportantThing.mit.timeCreated(),
                 recurringMostImportantThing.mit.sortOrder(),
-                recurringMostImportantThing.mit.completed());
+                recurringMostImportantThing.mit.completed(),
+                recurringMostImportantThing.mit.workContext());
         rMit.isRecurring = true;
         rMit.recurPeriod = recurringMostImportantThing.recurPeriod;
         rMit.id = recurringMostImportantThing.id();

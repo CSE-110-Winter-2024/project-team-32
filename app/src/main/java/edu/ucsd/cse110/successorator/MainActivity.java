@@ -22,6 +22,7 @@ import java.util.Date;
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.databinding.ActivityMainBinding;
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleTimeKeeper;
 import edu.ucsd.cse110.successorator.lib.domain.TimeKeeper;
 import edu.ucsd.cse110.successorator.ui.PendingMitListFragment;
@@ -29,6 +30,8 @@ import edu.ucsd.cse110.successorator.ui.RecurringMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TodayMitListFragment;
 import edu.ucsd.cse110.successorator.ui.TomorrowMitListFragment;
 import edu.ucsd.cse110.successorator.ui.dialog.CreateMitDialogFragment;
+import edu.ucsd.cse110.successorator.ui.dialog.CreatePendingMitDialogFragment;
+import edu.ucsd.cse110.successorator.ui.dialog.CreateRecurringMitDialogFragment;
 
 /**
  * The MainActivity class of Succesorator that displays the user interface and
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private SuccessoratorDatabase db;
     private TextView dateTextView;
     private int incrementDateBy = 0;
+    private String contextFocus;
     private MainViewModel activityModel;
     private int currentView;
     //NEW VARIABLE - represents the 'current date' of the app, which is sort
@@ -57,43 +61,78 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Swaps from the current fragment to whatever fragment you pass in as an argument,
      * according for static variables above
+     *
      * @param newFragment
      */
     private void swapFragments(int newFragment) {
         System.out.println("Swapping fragments from " + currentView + " to " + newFragment);
+        TextView currentViewTextView;
         switch (newFragment) {
             case TODAY_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate))
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate, contextFocus))
+                        .commit();
                 this.currentView = TODAY_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Today");
+                }
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate))
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate, contextFocus))
+                        .commit();
                 this.currentView = TOMORROW_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Tomorrow");
+                }
                 break;
             case PENDING_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, PendingMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager(), contextFocus))
+                        .commit();
                 this.currentView = PENDING_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Pending");
+                }
                 break;
             case RECURRING_VIEW:
                 getSupportFragmentManager()
-                       .beginTransaction()
-                       .replace(R.id.fragment_container, RecurringMitListFragment.newInstance())
-                       .commit();
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, RecurringMitListFragment.newInstance(contextFocus))
+                        .commit();
                 this.currentView = RECURRING_VIEW;
+                dateTextView = findViewById(R.id.action_bar_menu_date);
+                if (this.dateTextView != null) {
+                    updateDate();
+                }
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Recurring");
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Trying to switch to a non-existing state");
-       }
+        }
     }
+
 
     /**
      * Called when an activity is first created
@@ -118,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         this.timeKeeper = new SimpleTimeKeeper(); // Initialize with current time
         this.timeKeeper.setDateTime(LocalDateTime.now());
         this.roomMostImportantThings = (RoomMostImportantThingRepository) SuccessoratorApplication.mostImportantThingRepository;
+        //updates/adds recurring mits
+        roomMostImportantThings.updateRecurringMits();
     }
 
     @Override
@@ -138,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
         //When you resume, swap the fragment to the current fragment, just to
         //update the list in case the time has changed
         this.currDate = new Date();
+        this.roomMostImportantThings.setCurrDate(currDate);
         swapFragments(currentView);
 
         if (lastTime != null) {
@@ -146,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(() -> roomMostImportantThings.removeCompletedTasks(twoAmToday)).start();
             }
         }
+        //updates/adds recurring mits
+        roomMostImportantThings.updateRecurringMits();
+        swapFragments(currentView);
     }
 
     /**
@@ -158,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         //When you make the options menu, add the date
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
         String date = dateFormat.format(c.getTime());
         var dateItem = (menu.findItem(R.id.action_bar_menu_date)).setTitle(date);
 
@@ -167,58 +212,91 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        System.out.println("Current date is " + currDate);
         var itemId = item.getItemId();
 
         if (itemId == R.id.action_bar_menu_advance_date) {
             incrementDateBy++;
             advanceDate(incrementDateBy);
+            roomMostImportantThings.setCurrDate(currDate);
+            roomMostImportantThings.updateRecurringMits();
         }
-        if (itemId == R.id.action_bar_menu_add_mit) {
-            //Todo, make button initiate a Dialog
-            var dialogFragment = CreateMitDialogFragment.newInstance();
-            dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
+        else if (itemId == R.id.focus_on_home_button) {
+            this.contextFocus = "Home";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
         }
-        //Depricated, before we made dropdown menu - For testing:
-//        if (itemId == R.id.action_bar_menu_swap_views) {
-//            swapFragments((++frag % 4));
-//        }
-
-        else if (itemId == R.id.go_to_today_view_button) {
+        else if (itemId == R.id.focus_on_work_button) {
+            this.contextFocus = "Work";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_school_button) {
+            this.contextFocus = "School";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.focus_on_errands_button) {
+            this.contextFocus = "Errands";
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackgroundResource(R.color.black);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.cancel_focusing_button) {
+            this.contextFocus = "Any";
+            //Reset the background
+            findViewById(R.id.action_bar_focus_on_context_menu).setBackground(null);
+            swapFragments(this.currentView);
+        }
+        else if (itemId == R.id.action_bar_menu_add_mit) {
+            if (currentView == RECURRING_VIEW) {
+                var dialogFragment = CreateRecurringMitDialogFragment.newInstance(currDate);
+                dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
+                swapFragments(currentView);
+            } else if (currentView == PENDING_VIEW) {
+                var dialogFragment = CreatePendingMitDialogFragment.newInstance(currentView);
+                dialogFragment.show(getSupportFragmentManager(), "CreatePendingMitDialogFragment");
+                swapFragments(currentView);
+            }
+            else {
+                var dialogFragment = CreateMitDialogFragment.newInstance(currentView,currDate);
+                dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
+                swapFragments(currentView);
+            }
+        } else if (itemId == R.id.go_to_today_view_button) {
             System.out.println("Trying to go to Today view");
             swapFragments(TODAY_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_tomorrow_view_button) {
+        } else if (itemId == R.id.go_to_tomorrow_view_button) {
             System.out.println("Trying to go to Tomorrow view");
             swapFragments(TOMORROW_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_pending_view_button) {
+        } else if (itemId == R.id.go_to_pending_view_button) {
             System.out.println("Trying to go to Pending view");
             swapFragments(PENDING_VIEW);
-        }
-
-        else if (itemId == R.id.go_to_recurring_view_button) {
+        } else if (itemId == R.id.go_to_recurring_view_button) {
             System.out.println("Trying to go to Recurring view");
             swapFragments(RECURRING_VIEW);
         }
 
         return super.onOptionsItemSelected(item);
     }
-
     //only advances the date by 1 day
     //restarting the app will reset to current day
     public void advanceDate(int incrementDateBy) {
+
         dateTextView = findViewById(R.id.action_bar_menu_date);
         Calendar c = Calendar.getInstance();
 //        String dateForTesting = dateTextView.getText().toString();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         this.currDate = c.getTime();
-        String date = dateFormat.format(c.getTime());
+        String date;
+        if (currentView == TOMORROW_VIEW) {
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = dateFormat.format(c.getTime());
+        } else {
+            date = dateFormat.format(c.getTime());
+        }
+
         dateTextView.setText(date);
-//        System.out.println("Advancing date from " + dateForTesting + " to " + date);
-//        System.out.println("Advancing: IncrementDateBy is " + incrementDateBy);
         new Thread(() -> roomMostImportantThings
                 .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
                 .start();
@@ -226,25 +304,23 @@ public class MainActivity extends AppCompatActivity {
         swapFragments(this.currentView);
     }
 
+    public void updateDate() {
+        System.out.println("Updating date in " + this.currentView + " fragment");
+        dateTextView = findViewById(R.id.action_bar_menu_date);
+        Calendar c = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
+        c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
+        this.currDate = c.getTime();
+        String date;
+        if (currentView == TOMORROW_VIEW) {
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            date = dateFormat.format(c.getTime());
+        }
+        else {
+            date = dateFormat.format(c.getTime());
+        }
+        dateTextView.setText(date);
+    }
 
-
-
-//    private void scheduleAlarm() {
-//        scheduleAlarm(System.currentTimeMillis(), 2, 0);
-//    }
-//
-//    private void scheduleAlarm(Long systemTime, int hour, int minute) {
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        Intent intent = new Intent(this, AlarmReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 200, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        // Set the alarm to start at 2 am every day
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(systemTime);
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
-//
-//        // Repeat the alarm every day
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//    }
 }
+
