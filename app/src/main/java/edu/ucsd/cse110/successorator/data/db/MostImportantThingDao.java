@@ -36,6 +36,12 @@ public interface MostImportantThingDao {
     List<MostImportantThingEntity> findAllRecurrings(String context);
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
     List<MostImportantThingEntity> findAll();
+
+    @Query("SELECT * FROM most_important_things WHERE work_context = :context")
+    LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String context);
+    @Query("SELECT * FROM most_important_things WHERE work_context = :context")
+    List<MostImportantThingEntity> findAllOfContext(String context);
+
     @Query("SELECT * FROM most_important_things WHERE id=:id")
     LiveData<MostImportantThingEntity> findAsLiveData(int id);
     @Query("SELECT * FROM most_important_things ORDER BY sort_order")
@@ -77,8 +83,7 @@ public interface MostImportantThingDao {
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
                 mostImportantThing.recurPeriod,
-                mostImportantThing.workContext
-        );
+                mostImportantThing.workContext);
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
@@ -95,8 +100,7 @@ public interface MostImportantThingDao {
                 mostImportantThing.isPending,
                 mostImportantThing.isRecurring,
                 mostImportantThing.recurPeriod,
-                mostImportantThing.workContext
-        );
+                mostImportantThing.workContext);
         return Math.toIntExact(insert(newMostImportantThing));
     }
 
