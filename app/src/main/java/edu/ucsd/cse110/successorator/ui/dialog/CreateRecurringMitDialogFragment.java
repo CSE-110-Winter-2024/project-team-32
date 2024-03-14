@@ -89,19 +89,19 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
             mitDay = calendar.get(Calendar.DATE);
         }
         else {
-            mitDay = Integer.valueOf(view.recurringMitDateEditTextNumber.getText().toString());
+            mitDay = Integer.parseInt(view.recurringMitDateEditTextNumber.getText().toString());
         }
         if (view.recurringMitMonthEditTextNumber.getText().toString().equals("")) {
             mitMonth = calendar.get(Calendar.MONTH) + 1;
         }
         else {
-            mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
+            mitMonth = Integer.parseInt(view.recurringMitMonthEditTextNumber.getText().toString());
         }
         if (view.recurringMitYearEditTextNumber.getText().toString().equals("")) {
             mitYear = calendar.get(Calendar.YEAR);
         }
         else {
-            mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
+            mitYear = Integer.parseInt(view.recurringMitYearEditTextNumber.getText().toString());
         }
 
         Calendar cal = Calendar.getInstance();
