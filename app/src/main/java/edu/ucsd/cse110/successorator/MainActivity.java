@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         //When you make the options menu, add the date
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
         String date = dateFormat.format(c.getTime());
         var dateItem = (menu.findItem(R.id.action_bar_menu_date)).setTitle(date);
 
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.action_bar_menu_date);
         Calendar c = Calendar.getInstance();
 //        String dateForTesting = dateTextView.getText().toString();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EE MM/dd");
         c.add(Calendar.DAY_OF_YEAR, incrementDateBy);
         this.currDate = c.getTime();
         String date = dateFormat.format(c.getTime());
