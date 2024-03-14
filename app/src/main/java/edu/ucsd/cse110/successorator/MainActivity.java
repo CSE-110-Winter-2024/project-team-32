@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (itemId == R.id.action_bar_menu_add_mit) {
             if (currentView == RECURRING_VIEW) {
-                var dialogFragment = CreateRecurringMitDialogFragment.newInstance();
+                var dialogFragment = CreateRecurringMitDialogFragment.newInstance(currDate);
                 dialogFragment.show(getSupportFragmentManager(), "CreateRecurringMitDialogFragment");
                 swapFragments(currentView);
             } else if (currentView == PENDING_VIEW) {

@@ -22,15 +22,17 @@ import edu.ucsd.cse110.successorator.lib.domain.RecurringMostImportantThing;
 public class CreateRecurringMitDialogFragment extends DialogFragment{
     private FragmentDialogCreateRecurringMitBinding view;
     private MainViewModel activityModel;
+    private Date currDate;
 
     /**
      * Creates a new CreateMitDialogFragment instance
      * @return new CreateMitDialogFragment instance
      */
-    public static CreateRecurringMitDialogFragment newInstance() {
+    public static CreateRecurringMitDialogFragment newInstance(Date currDate) {
         var fragment = new CreateRecurringMitDialogFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setCurrDate(currDate);
         return fragment;
     }
 
@@ -76,12 +78,25 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
 
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.recurringMitEditText.getText().toString();
-
-        var mitDay = Integer.valueOf(view.recurringMitDateEditTextNumber.getText().toString());
-        var mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
-        var mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
         Calendar cal = Calendar.getInstance();
-        cal.set(mitYear, mitMonth - 1, mitDay);
+        cal.setTime(currDate);
+        if (!view.recurringMitDateEditTextNumber.getText().toString().equals("")) {
+            int mitDay = Integer.valueOf(view.recurringMitDateEditTextNumber.getText().toString());
+            cal.set(Calendar.DAY_OF_MONTH, mitDay);
+        }
+        if (!view.recurringMitMonthEditTextNumber.getText().toString().equals("")) {
+            int mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
+            cal.set(Calendar.MONTH, mitMonth);
+        }
+        if (!view.recurringMitYearEditTextNumber.getText().toString().equals("")) {
+            int mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
+            cal.set(Calendar.YEAR, mitYear);
+        }
+
+//        var mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
+//        var mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
+
+//        cal.set(mitYear, mitMonth - 1, mitDay);
 
         var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
         String context = "Default";
@@ -128,5 +143,9 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
      */
     public void onNegativeButtonClick(DialogInterface dialog, int which) {
         dialog.cancel();
+    }
+
+    public void setCurrDate(Date currDate) {
+        this.currDate = currDate;
     }
 }
