@@ -52,7 +52,6 @@ public class PendingMitListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //initialize viewModel
         var modelOwner = requireActivity();
         var modelFactory = ViewModelProvider.Factory.from(MainViewModel.initializer);
@@ -77,9 +76,7 @@ public class PendingMitListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = FragmentPendingMitListBinding.inflate(inflater, container, false);
-
         setUpMvp();
-
         return view.getRoot();
     }
 
@@ -104,8 +101,6 @@ public class PendingMitListFragment extends Fragment {
             //Get Mits only of the specific context
             mitsToObserve = this.activityModel.getOrderedPendingMits(this.contextFocus);
         }
-
-
         //Observers that display the MITs, or the default message if there are no MITs
         mitsToObserve.observe(pendingMits -> {
             if (pendingMits == null) {
@@ -118,14 +113,10 @@ public class PendingMitListFragment extends Fragment {
             adapter.notifyDataSetChanged();
 
         });
-
         this.view.mitList.setAdapter(adapter);
     }
-
     private void setFragmentManager(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
-
     private void setContextFocus(String contextFocus) { this.contextFocus = contextFocus; }
-
 }

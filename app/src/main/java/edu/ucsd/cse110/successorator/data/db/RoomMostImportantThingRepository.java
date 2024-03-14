@@ -2,11 +2,9 @@ package edu.ucsd.cse110.successorator.data.db;
 
 import androidx.lifecycle.Transformations;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.lib.domain.ContextOrderer;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThingRepository;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
@@ -121,8 +120,22 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Finds all MostImportantThings of a given Context
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<MostImportantThing>> findAllOfContext(String context) {
+        var entitiesLiveData = mostImportantThingDao.findAllOfContextAsLiveData(context);
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
      * Finds all RecurringMostImportantThings of a particular context
-     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -245,7 +258,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         System.out.println("Toggling completed");
         if (this.mostImportantThingDao.find(id).completed) {
             //Move the item to the aboslute top of the list
-            this.moveToTop(id);
+
+            //this.moveToTop(id);
+
+            this.moveToTopOfContext(id);
         } else {
             //If te item was not done, move it to the top of the finished
             //portion of the list (This is US8 that was already implemented
@@ -253,6 +269,43 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.moveToTopOfFinished(id);
         }
         this.mostImportantThingDao.toggleCompleted(id);
+    }
+
+    /**
+     * Moves a MIT to the bottom of it's given context
+     *
+     * @param id the ID of the MIT to move
+     */
+    public void moveToBottomOfContext(int id) {
+        addNewMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing());
+    }
+
+
+    /**
+     * Moves and MIT to the top of it's given context
+     *
+     * @param id the ID of the MIT that we're movings
+     */
+    public void moveToTopOfContext(int id) {
+        var ElementList = this.mostImportantThingDao.findAllMits();
+        int numElems = ElementList.size();
+        ContextOrderer con = new ContextOrderer();
+        int insertIdx = 0;
+
+        for(int i = 0; i < numElems; i ++) {
+            if(ElementList.get(i).toMostImportantThing().completed() ||
+                    con.compare(this.mostImportantThingDao.find(id).workContext, ElementList.get(i).workContext) <= 0 ) {
+                break;
+            }
+            insertIdx ++;
+        }
+
+
+        int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
+        this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+        this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(this.mostImportantThingDao.find(id).toMostImportantThing().withSortOrder(sortOrder)));
+
+
     }
 
     /**
@@ -299,45 +352,76 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     *
+     * @param index
+     * @param context
+     * @return index to insert mit at
+     */
+    private int orderInContext(int index, String context) {
+        var ElementList = this.mostImportantThingDao.findAllMits();
+        int numElems = ElementList.size();
+
+        int completedIndex = index;
+
+        //Find index of the first element where the next element is completed
+        for (int i = index; i < numElems; i++) {
+            if (ElementList.get(i).workContext.equals(context)) {
+                if (ElementList.get(i).completed) {
+                    break;
+                }
+                completedIndex ++;
+            } else {
+                break;
+            }
+        }
+        //index is the start of the given context
+        //completedIndex is the index with the last completed val of that context
+        return completedIndex;
+    }
+
+    /**
      * Adds a new MostImportantThing to the repository
      *
      * @param mit The MostImportantThing being added
      */
     public void addNewMostImportantThing(MostImportantThing mit) {
         System.out.println("mit has context " + mit.workContext());
+        //order goes: Home, Work, School, Errands
         var ElementList = this.mostImportantThingDao.findAllMits();
+
+        ContextOrderer con = new ContextOrderer();
+
         int numElems = ElementList.size();
-        int insertIdx = 0;
-        //Find index of the first element where the next element is completed
-        for (int i = 0; i < numElems; i++) {
-            if (ElementList.get(i).completed) {
-                break;
-            }
-            insertIdx++;
-        }
-        //If there are no elements in the list
+        int finalIndex = 0;
+
         if (numElems == 0) {
             this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
+            return;
         }
-        //If there are only completed MITs in the list
-        else if (insertIdx == 0) {
-            //Add to the front of the list
-            this.mostImportantThingDao.shiftSortOrders(this.mostImportantThingDao.getMinSortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
-            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMinSortOrder() - 1)));
-        }
-        //If there are only uncompleted MITs in the list
-        else if (insertIdx == numElems) {
-            //Add to the bottom of the list
-            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit));
-        }
-        //There are uncompleted and completed MITs
-        else {
-            //Shift all completed MITs down, insert new one before them
-            int sortOrder = ElementList.get(insertIdx).toMostImportantThing().sortOrder();
-            this.mostImportantThingDao.shiftSortOrders(ElementList.get(insertIdx).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
-            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
 
+        for(int i = 0; i < numElems; i++) {
+            if(con.compare(mit.workContext(), ElementList.get(i).workContext) == 0) {
+                finalIndex = orderInContext(i, mit.workContext());
+                break;
+            } else if(con.compare(mit.workContext(), ElementList.get(i).workContext) < 0) {
+                finalIndex = i;
+                break;
+            }
+
+            if(i == numElems - 1) {finalIndex = numElems; }
         }
+
+        if(finalIndex == numElems) {
+            this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMaxSortOrder() + 1)));
+        } else {
+            //Shift all completed MITs down, insert new one before them
+            int sortOrder = ElementList.get(finalIndex).toMostImportantThing().sortOrder();
+            this.mostImportantThingDao.shiftSortOrders(ElementList.get(finalIndex).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
+            this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
+        }
+
+
+
     }
 
     /**

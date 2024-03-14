@@ -128,7 +128,6 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             return true;
         });
 
-
         switch (recurringMit.mit.workContext()) {
             case "Home":
                 System.out.println("Setting color for home!");
@@ -163,8 +162,6 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
 
         return binding.getRoot();
     }
-
-
 
     public static String formatRecurrencePeriod(RecurringMostImportantThing recurringMit) {
         String recurText = recurringMit.recurPeriod;
@@ -212,25 +209,25 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
         String dayOfWeekString;
         switch (dayOfWeek) {
             case Calendar.SUNDAY:
-                dayOfWeekString = "Sunday";
+                dayOfWeekString = "Sun";
                 break;
             case Calendar.MONDAY:
-                dayOfWeekString = "Monday";
+                dayOfWeekString = "Mon";
                 break;
             case Calendar.TUESDAY:
-                dayOfWeekString = "Tuesday";
+                dayOfWeekString = "Tue";
                 break;
             case Calendar.WEDNESDAY:
-                dayOfWeekString = "Wednesday";
+                dayOfWeekString = "Wed";
                 break;
             case Calendar.THURSDAY:
-                dayOfWeekString = "Thursday";
+                dayOfWeekString = "Thu";
                 break;
             case Calendar.FRIDAY:
-                dayOfWeekString = "Friday";
+                dayOfWeekString = "Fri";
                 break;
             case Calendar.SATURDAY:
-                dayOfWeekString = "Saturday";
+                dayOfWeekString = "Sat";
                 break;
             default:
                 dayOfWeekString = "Invalid Day";

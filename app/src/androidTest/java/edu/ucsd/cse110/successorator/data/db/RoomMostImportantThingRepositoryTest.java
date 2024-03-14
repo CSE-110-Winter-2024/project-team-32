@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
 import edu.ucsd.cse110.successorator.lib.domain.PendingMostImportantThing;
 
+import edu.ucsd.cse110.successorator.lib.domain.MostImportantThing;
+
 public class RoomMostImportantThingRepositoryTest {
 
     private RoomMostImportantThingRepository repository;
@@ -167,10 +169,12 @@ public class RoomMostImportantThingRepositoryTest {
         }
 
         @Override
+        public LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String Context) {return null;}
+
+        @Override
         public LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData(String context) {
             return null;
         }
-
         @Override
         public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData() {
             return null;
@@ -180,6 +184,9 @@ public class RoomMostImportantThingRepositoryTest {
         public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData(String context) {
             return null;
         }
+
+        @Override
+        public List<MostImportantThingEntity> findAllOfContext(String context) {return null;}
 
         public List<MostImportantThingEntity> findAllPendings() {
             return null;
