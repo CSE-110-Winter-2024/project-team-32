@@ -445,11 +445,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      * Will not add to tomorrow's view if already present
      */
     public void updateRecurringMits() {
-        System.out.println("TestUpdate Updating recurring mits called!");
+        System.out.println("finalTest: TestUpdate THIS IS NOW HERE Updating recurring mits called!");
         var recurringMITs = mostImportantThingDao.findAllRecurrings();
+//        System.out.println("Finished findAllRecurrings()");
         Date tomorrow = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
         Date today = currDate;
-        System.out.println("TestUpdate there are " + recurringMITs.size() + " recurrings!");
+        System.out.println("finalTest: TestUpdate there are " + recurringMITs.size() + " recurrings!");
+        System.out.println("finalTest: The currDate is " + currDate);
         for (var recurringMIT : recurringMITs) {
             RecurringMostImportantThing recurring = recurringMIT.toRecurringMostImportantThing();
             Date recurringDate = new Date(recurring.mit.timeCreated());
@@ -463,53 +465,54 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             refCal.setTime(new Date(today.getTime() + TimeUnit.DAYS.toMillis(1)));
             boolean recurrDatePastTomorrow = (recurrCal.get(Calendar.DAY_OF_YEAR) > refCal.get(Calendar.DAY_OF_YEAR)
                     && recurrCal.get(Calendar.YEAR) >= refCal.get(Calendar.YEAR));
-            System.out.println("recurrDatePastToday is " + recurrDatePastToday + " and recurrDatePastTomorrow is " + recurrDatePastTomorrow);
+            System.out.println("finalTest: recurrDatePastToday is " + recurrDatePastToday + " and recurrDatePastTomorrow is " + recurrDatePastTomorrow);
             switch (recurringMIT.recurPeriod) {
                 case "Daily":
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT)) {
                         //If it doesn't have it, check if you need to add it
-                        System.out.println("TestUpdate adding to today daily!");
+                        System.out.println("finalTest: TestUpdate adding to today daily!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!recurrDatePastToday && !containsNormalMIT(recurringMIT)) {
-                        System.out.println("TestUpdate adding to tomorrow dai!");
+                        System.out.println("finalTest: TestUpdate adding to tomorrow dai!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Weekly":
+                    System.out.println("finalTest: found weekly recurring mit");
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfWeek(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
-                        System.out.println("TestUpdate Doesn't contain in today!");
+                        System.out.println("finalTest: TestUpdate Doesn't contain in today!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfWeek(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
-                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        System.out.println("finalTest: TestUpdate Doesn't contain in tomorrow!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Monthly":
-                    System.out.println("Testing if should add a monthly MIT");
+                    System.out.println("finalTest: Testing if should add a monthly MIT");
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameWeekdayOfMonth(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
-                        System.out.println("TestUpdate Doesn't contain in today!");
+                        System.out.println("finalTest: TestUpdate Doesn't contain in today!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameWeekdayOfMonth(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
-                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        System.out.println("finalTest: TestUpdate Doesn't contain in tomorrow!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;
                 case "Yearly":
                     if (!recurrDatePastTomorrow && !containsNormalMITInTomorrow(recurringMIT) && sameDayOfYear(tomorrow, recurringDate)) {
                         //If it doesn't have it in tomorrow, check if you need to add it
-                        System.out.println("TestUpdate doesn't contain in today!");
+                        System.out.println("finalTest: TestUpdate doesn't contain in today!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime() + TimeUnit.DAYS.toMillis(1), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     if (!recurrDatePastToday && !containsNormalMIT(recurringMIT) && sameDayOfYear(today, recurringDate)) {
                         //If id doesn't have it in today, check if you need to add it
-                        System.out.println("TestUpdate Doesn't contain in tomorrow!");
+                        System.out.println("finalTest: TestUpdate Doesn't contain in tomorrow!");
                         this.addNewMostImportantThing(new MostImportantThing(null, recurringMIT.task, currDate.getTime(), -1, recurringMIT.completed, recurringMIT.workContext));
                     }
                     break;

@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
         //When you resume, swap the fragment to the current fragment, just to
         //update the list in case the time has changed
         this.currDate = new Date();
+        this.roomMostImportantThings.setCurrDate(currDate);
         swapFragments(currentView);
 
         if (lastTime != null) {
