@@ -180,7 +180,8 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
             int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
             //Calculate which occurrence of the day it is in the month
             //e.g. 1st Tuesday, 2nd Tuesday, 3rd Tuesday
-            int occurrenceOfDay = (dayOfMonth / 7);
+            System.out.println("NOW: the day of the month is " + dayOfMonth);
+            int occurrenceOfDay = ((dayOfMonth - 1)/ 7);
             //Convert from 0, 1, 2, to 1st, 2nd, 3rd
             String occurrenceOfDayString = convToNthOccurenceInMonth(occurrenceOfDay);
 
@@ -242,6 +243,7 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
      * @return the translation of n into which occurence it is
      */
     public static String convToNthOccurenceInMonth(int occurrenceOfDay) {
+        System.out.println("NOW: occurenceOfDay is " + occurrenceOfDay);
         String occurrenceOfDayString;
         switch (occurrenceOfDay) {
             case 0:
@@ -255,6 +257,9 @@ public class RecurringMitListAdapter extends ArrayAdapter<RecurringMostImportant
                 break;
             case 3:
                 occurrenceOfDayString  = "4th";
+                break;
+            case 4:
+                occurrenceOfDayString = "5th";
                 break;
             default:
                 occurrenceOfDayString = "Invalid occurrenceOfDay";

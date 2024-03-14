@@ -38,6 +38,7 @@
             android:id="@+id/recurring_mit_weekly_radiobutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="weekly" />
 
         <RadioButton

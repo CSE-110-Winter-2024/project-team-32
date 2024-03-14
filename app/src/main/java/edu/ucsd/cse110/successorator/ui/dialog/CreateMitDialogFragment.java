@@ -32,16 +32,19 @@ public class CreateMitDialogFragment extends DialogFragment {
     private MainViewModel activityModel;
 
     private int currentView;
+
+    private Date currDate;
     /**
      * Creates a new CreateMitDialogFragment instance
      * @return new CreateMitDialogFragment instance
      */
 
-    public static CreateMitDialogFragment newInstance(int currentView) {
+    public static CreateMitDialogFragment newInstance(int currentView, Date currDate) {
         var fragment = new CreateMitDialogFragment();
         Bundle args = new Bundle();
         args.putInt("currentView", currentView);
         fragment.setArguments(args);
+        fragment.setCurrDate(currDate);
         return fragment;
     }
 
@@ -73,9 +76,9 @@ public class CreateMitDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         this.view = FragmentDialogCreateMitBinding.inflate(getLayoutInflater());
-        Date currTime = new Date(); // Default to current time for TODAY_VIEW
+        Date currTime = currDate; // Default to current time for TODAY_VIEW
         if (currentView == 1) { // Corresponds to Tomorrow view
-            currTime = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+            currTime = new Date(currDate.getTime() + TimeUnit.DAYS.toMillis(1));
         }
         String weeklyText = "Weekly " + formatReccurencePeriod("Weekly", currTime);
         this.view.weeklyRadioButton.setText(weeklyText);
@@ -100,7 +103,7 @@ public class CreateMitDialogFragment extends DialogFragment {
 
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.mitEditText.getText().toString();
-        long taskTime = System.currentTimeMillis(); // Default to current time for TODAY_VIEW
+        long taskTime = currDate.getTime(); // Default to current time for TODAY_VIEW
 
         var checkedContextButton = view.mitContextOptionsRadioGroup.getCheckedRadioButtonId();
         String context = "Default";
@@ -123,9 +126,7 @@ public class CreateMitDialogFragment extends DialogFragment {
 
         var checkedButton = view.mitOptionsRadioGroup.getCheckedRadioButtonId();
         if (currentView == 1) { // Corresponds to TOMORROW_VIEW
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1); // Add one day for tomorrow's tasks
-            taskTime = calendar.getTimeInMillis();
+            taskTime = currDate.getTime() + TimeUnit.DAYS.toMillis(1);
         }
         var mit = new MostImportantThing(null, mitText,taskTime,-1, false, context);
         if (checkedButton == R.id.one_time_radio_button) {
@@ -187,6 +188,10 @@ public class CreateMitDialogFragment extends DialogFragment {
             recurText = recurText + " on " + dateInYear;
         }
         return recurText;
+    }
+
+    public void setCurrDate(Date currDate) {
+        this.currDate = currDate;
     }
 
 }
