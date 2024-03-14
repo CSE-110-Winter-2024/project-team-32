@@ -131,9 +131,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     .map(MostImportantThingEntity::toMostImportantThing)
                     .collect(Collectors.toList());
         });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
 
+    /**
      * Finds all RecurringMostImportantThings of a particular context
-     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
