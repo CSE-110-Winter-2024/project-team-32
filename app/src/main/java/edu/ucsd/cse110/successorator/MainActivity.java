@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import edu.ucsd.cse110.successorator.data.db.RoomMostImportantThingRepository;
 import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
@@ -67,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void swapFragments(int newFragment) {
         System.out.println("Swapping fragments from " + currentView + " to " + newFragment);
-        Calendar c = Calendar.getInstance(); // Get the calendar instance to manage date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd", Locale.getDefault());
-
+        TextView currentViewTextView;
         switch (newFragment) {
             case TODAY_VIEW:
                 getSupportFragmentManager()
@@ -77,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, TodayMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TODAY_VIEW;
-                this.currDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Today");
+                }
                 break;
             case TOMORROW_VIEW:
                 getSupportFragmentManager()
@@ -85,8 +85,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, TomorrowMitListFragment.newInstance(currDate, contextFocus))
                         .commit();
                 this.currentView = TOMORROW_VIEW;
-                c.add(Calendar.DAY_OF_YEAR, 1);
-                this.currDate = c.getTime();
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Tomorrow");
+                }
                 break;
             case PENDING_VIEW:
                 getSupportFragmentManager()
@@ -94,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, PendingMitListFragment.newInstance(getSupportFragmentManager(), contextFocus))
                         .commit();
                 this.currentView = PENDING_VIEW;
-                this.currDate = null;
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Pending");
+                }
                 break;
             case RECURRING_VIEW:
                 getSupportFragmentManager()
@@ -102,12 +107,14 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_container, RecurringMitListFragment.newInstance(contextFocus))
                         .commit();
                 this.currentView = RECURRING_VIEW;
-                this.currDate = null;
+                currentViewTextView = findViewById(R.id.current_view);
+                if (currentViewTextView != null) {
+                    currentViewTextView.setText("Recurring");
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Trying to switch to a non-existing state");
         }
-        invalidateOptionsMenu();
     }
 
 
@@ -186,38 +193,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem dateItem = menu.findItem(R.id.action_bar_menu_date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd", Locale.getDefault());
-
-        if (dateItem != null) {
-            String title = "";
-            switch (currentView) {
-                case TODAY_VIEW:
-                    String todayDate = dateFormat.format(new Date()); // Use today's date
-                    title = "Today - " + todayDate;
-                    break;
-                case TOMORROW_VIEW:
-                    Calendar tomorrow = Calendar.getInstance();
-                    tomorrow.add(Calendar.DAY_OF_YEAR, 1); // Tomorrow's date
-                    String tomorrowDate = dateFormat.format(tomorrow.getTime());
-                    title = "Tomorrow - " + tomorrowDate;
-                    break;
-                case PENDING_VIEW:
-                    title = "Pending";
-                    break;
-                case RECURRING_VIEW:
-                    title = "Recurring";
-                    break;
-            }
-            dateItem.setTitle(title);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        System.out.println("Current date is " + currDate);
         var itemId = item.getItemId();
 
         if (itemId == R.id.action_bar_menu_advance_date) {

@@ -28,6 +28,12 @@
         </menu>
     </item>
 
+    <item android:id="@+id/current_view"
+        android:title="Today"
+        android:orderInCategory="6"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_bar_menu_add_mit"
         android:title="AddMit"
         android:icon="@drawable/ic_add"
