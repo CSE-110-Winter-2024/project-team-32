@@ -77,9 +77,33 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
     public void onPositiveButtonClick(DialogInterface dialog, int which) {
         var mitText = view.recurringMitEditText.getText().toString();
 
-        var mitDay = Integer.valueOf(view.recurringMitDateEditTextNumber.getText().toString());
-        var mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
-        var mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
+        Date todayDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(todayDate);
+
+        int mitDay;
+        int mitMonth;
+        int mitYear;
+
+        if (view.recurringMitDateEditTextNumber.getText().toString().equals("")) {
+            mitDay = calendar.get(Calendar.DATE);
+        }
+        else {
+            mitDay = Integer.valueOf(view.recurringMitDateEditTextNumber.getText().toString());
+        }
+        if (view.recurringMitMonthEditTextNumber.getText().toString().equals("")) {
+            mitMonth = calendar.get(Calendar.MONTH) + 1;
+        }
+        else {
+            mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
+        }
+        if (view.recurringMitYearEditTextNumber.getText().toString().equals("")) {
+            mitYear = calendar.get(Calendar.YEAR);
+        }
+        else {
+            mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
+        }
+
         Calendar cal = Calendar.getInstance();
         cal.set(mitYear, mitMonth - 1, mitDay);
 
