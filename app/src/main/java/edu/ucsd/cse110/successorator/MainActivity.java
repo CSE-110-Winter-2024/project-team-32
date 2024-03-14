@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 swapFragments(currentView);
             }
             else {
-                var dialogFragment = CreateMitDialogFragment.newInstance(currentView);
+                var dialogFragment = CreateMitDialogFragment.newInstance(currentView,currDate);
                 dialogFragment.show(getSupportFragmentManager(), "CreateMitDialogFragment");
                 swapFragments(currentView);
             }
