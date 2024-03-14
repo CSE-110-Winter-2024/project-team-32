@@ -29,7 +29,7 @@ public class MainActivityTest {
     public void testDisplaysBlankMessageText() {
         try (var scenario = ActivityScenario.launch(MainActivity.class)) {
 
-            // Observe the scenario's lifecycle to wait until the activity is created.
+            // Observe the scenario's lifecycl wait until the activity is created.
             scenario.onActivity(activity -> {
                 var rootView = activity.findViewById(R.id.root);
                 var binding = ActivityMainBinding.bind(rootView);

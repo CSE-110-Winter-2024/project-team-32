@@ -9,11 +9,20 @@ public class RecurringMostImportantThing {
     public MostImportantThing mit;
     public String recurPeriod;
     private final @Nullable Integer id;
+    public SimpleTimeKeeper timeCurrent;
 
+    /**
+     * Grabs the id of current recurring MIT
+     * @return id of instance's MIT
+     */
     public Integer id() {
         return this.id;
     }
 
+    /**
+     * Grabs current instance's MIT object
+     * @return Current MIT
+     */
     public MostImportantThing mit() {
         return this.mit;
     }
@@ -40,10 +49,22 @@ public class RecurringMostImportantThing {
         this.id = mit.id();
 
     }
+
+    /**
+     * if curr date = recurring date
+     * @param date current date
+     * @return false
+     */
     public boolean isRecurringDate(LocalDateTime date) {
         return false;
         // TODO - should do logic to work out if it is time for this mit to be generated
     }
+
+    /**
+     * create MIT that's recurring; takes in time created
+     * @param timeCreated current time of creation
+     * @return mit that contains it's creation time
+     */
     public MostImportantThing createMit(Long timeCreated) {
         return this.mit.withTimeCreated(timeCreated);
     }
