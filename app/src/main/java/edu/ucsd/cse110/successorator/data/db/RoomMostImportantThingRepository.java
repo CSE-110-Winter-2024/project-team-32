@@ -88,6 +88,22 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
+     * Finds all PendingMostImportantThings of a particular context
+     *
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<PendingMostImportantThing>> findAllPending(String context) {
+        var entitiesLiveData = mostImportantThingDao.findAllPendingAsLiveData(context);
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toPendingMostImportantThing)
+                    .collect(Collectors.toList());
+        });
+        return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
+    }
+
+    /**
      * Finds all RecurringMostImportantThings
      *
      * @return A Subject List of all the MostImportantThings
@@ -116,6 +132,18 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                     .collect(Collectors.toList());
         });
 
+     * Finds all RecurringMostImportantThings of a particular context
+     *
+     * @return A Subject List of all the MostImportantThings
+     */
+    @Override
+    public Subject<List<RecurringMostImportantThing>> findAllRecurring(String context) {
+        var entitiesLiveData = mostImportantThingDao.findAllRecurringAsLiveData(context);
+        var mostImportantThingsLiveData = Transformations.map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(MostImportantThingEntity::toRecurringMostImportantThing)
+                    .collect(Collectors.toList());
+        });
         return new LiveDataSubjectAdapter<>(mostImportantThingsLiveData);
     }
 

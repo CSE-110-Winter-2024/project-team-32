@@ -170,21 +170,43 @@ public class RoomMostImportantThingRepositoryTest {
 
         @Override
         public LiveData<List<MostImportantThingEntity>> findAllOfContextAsLiveData(String Context) {return null;}
+        
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllPendingAsLiveData(String context) {
+            return null;
+        }
 
         @Override
         public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData() {
             return null;
         }
-
+        @Override
         public List<MostImportantThingEntity> findAllOfContext(String context) {return null;}
+        
+        @Override
+        public LiveData<List<MostImportantThingEntity>> findAllRecurringAsLiveData(String context) {
+            return null;
+        }
+
 
         public List<MostImportantThingEntity> findAllPendings() {
+            return null;
+        }
+
+        @Override
+        public List<MostImportantThingEntity> findAllPendings(String context) {
             return null;
         }
 
         public List<MostImportantThingEntity> findAllRecurrings() {
             return null;
         }
+
+        @Override
+        public List<MostImportantThingEntity> findAllRecurrings(String context) {
+            return null;
+        }
+
         public List<MostImportantThingEntity> findAll() {
             return null;
         }

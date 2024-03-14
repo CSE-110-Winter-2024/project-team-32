@@ -122,10 +122,17 @@ public class MainViewModel extends ViewModel {
         return this.orderedPendingMits;
     }
 
+    public Subject<List<PendingMostImportantThing>> getOrderedPendingMits(String context) {
+        return this.mostImportantThingRepository.findAllPending(context);
+    }
+
     public Subject<List<RecurringMostImportantThing>> getOrderedRecurringMits() {
         return this.orderedRecurringMits;
     }
 
+    public Subject<List<RecurringMostImportantThing>> getOrderedRecurringMits(String context) {
+        return this.mostImportantThingRepository.findAllRecurring(context);
+    }
 
     /**
      * Move the non Null MostImportantThing to the next position (up) and save
