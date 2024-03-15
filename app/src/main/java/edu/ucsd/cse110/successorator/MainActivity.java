@@ -166,11 +166,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LocalDateTime lastTime = timeKeeper.getDateTime();
         LocalDateTime currentTime = LocalDateTime.now();
-
+        Calendar c = Calendar.getInstance();
         System.out.println("Resumed the App!");
         dateTextView = findViewById(R.id.action_bar_menu_date);
         if (dateTextView != null) {
-            Calendar c = Calendar.getInstance();
+
             @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd");
             String date = dateFormat.format(c.getTime());
             dateTextView.setText(date);
@@ -190,6 +190,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //updates/adds recurring mits
         roomMostImportantThings.updateRecurringMits();
+        new Thread(() -> roomMostImportantThings
+                .removeCompletedTasks(LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault())))
+                .start();
+        //Update the view, THIS IS WHAT WILL END UP SHIFTING TOMORROW TASKS TO TODAY
         swapFragments(currentView);
     }
 
