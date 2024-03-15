@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_bar_focus_on_context_menu"
+        android:orderInCategory="5"
+        android:title="Focus on a Context"
+        app:showAsAction="always"
+        app:iconTint="@color/hamburger_color"
+        android:icon="@drawable/hamburger_menu">
+        <menu>
+            <item
+                android:id="@+id/focus_on_home_button"
+                android:title="Home" />
+            <item
+                android:id="@+id/focus_on_work_button"
+                android:title="Work" />
+            <item
+                android:id="@+id/focus_on_school_button"
+                android:title="School" />
+            <item
+                android:id="@+id/focus_on_errands_button"
+                android:title="Errands" />
+            <item
+                android:id="@+id/cancel_focusing_button"
+                android:title="Cancel" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/current_view"
+        android:title="Today"
+        android:orderInCategory="6"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bar_menu_add_mit"
+        android:title="AddMit"
+        android:icon="@drawable/ic_add"
+        android:orderInCategory="10"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_bar_menu_date"
+        android:title="Date"
+        android:orderInCategory="8"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_bar_menu_advance_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_advance_date"
+        android:orderInCategory="9"
+        android:title="action_bar_menu_advance_date"
+        app:showAsAction="always" />
+<!--Depricated, before we made drop down menu-->
+<!--    <item android:id="@+id/action_bar_menu_swap_views"-->
+<!--        android:title="Swap Views"-->
+<!--        android:icon="@drawable/ic_swap"-->
+<!--        android:orderInCategory="4"-->
+<!--        app:iconTint="@color/white"-->
+<!--        app:showAsAction="always" />-->
+
+   <item
+        android:id="@+id/menu_dropdown"
+        android:title="Change View"
+        android:icon="@drawable/ic_swap"
+        app:showAsAction="always"
+        android:orderInCategory="11">
+<!--            Trying to throw an error, but the code works? Looks good to me! -->
+<!--       Chalking this one up to Android being Android-->
+       <menu>
+            <item
+                android:id="@+id/go_to_today_view_button"
+                android:title="Today"/>
+            <item
+                android:id="@+id/go_to_tomorrow_view_button"
+                android:title="Tomorrow"/>
+            <item
+                android:id="@+id/go_to_pending_view_button"
+                android:title="Pending"/>
+            <item
+                android:id="@+id/go_to_recurring_view_button"
+                android:title="Recurring"/>
+       </menu>
+    </item>
+
+</menu>

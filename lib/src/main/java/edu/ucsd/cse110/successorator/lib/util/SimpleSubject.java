@@ -14,7 +14,6 @@ public class SimpleSubject<T> implements MutableSubject<T> {
         return value;
     }
 
-
     @Override
     public void setValue(T value) {
         this.value = value;
