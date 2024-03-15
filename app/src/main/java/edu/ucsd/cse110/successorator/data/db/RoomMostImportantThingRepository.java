@@ -123,6 +123,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Finds all MostImportantThings of a given Context
+     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -138,6 +139,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
 
     /**
      * Finds all RecurringMostImportantThings of a particular context
+     *
      * @return A Subject List of all the MostImportantThings
      */
     @Override
@@ -272,7 +274,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.moveToTopOfFinished(id);
         }
         this.mostImportantThingDao.toggleCompleted(id);
-        this.removeAllOfTaskNameWithoutIDInSameView(id, mit.task, mit.workContext );
+        this.removeAllOfTaskNameWithoutIDInSameView(id, mit.task, mit.workContext);
     }
 
     /**
@@ -296,12 +298,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         ContextOrderer con = new ContextOrderer();
         int insertIdx = 0;
 
-        for(int i = 0; i < numElems; i ++) {
-            if(ElementList.get(i).toMostImportantThing().completed() ||
-                    con.compare(this.mostImportantThingDao.find(id).workContext, ElementList.get(i).workContext) <= 0 ) {
+        for (int i = 0; i < numElems; i++) {
+            if (ElementList.get(i).toMostImportantThing().completed() ||
+                    con.compare(this.mostImportantThingDao.find(id).workContext, ElementList.get(i).workContext) <= 0) {
                 break;
             }
-            insertIdx ++;
+            insertIdx++;
         }
 
 
@@ -356,7 +358,6 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
     }
 
     /**
-     *
      * @param index
      * @param context
      * @return index to insert mit at
@@ -373,7 +374,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
                 if (ElementList.get(i).completed) {
                     break;
                 }
-                completedIndex ++;
+                completedIndex++;
             } else {
                 break;
             }
@@ -403,19 +404,21 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             return;
         }
 
-        for(int i = 0; i < numElems; i++) {
-            if(con.compare(mit.workContext(), ElementList.get(i).workContext) == 0) {
+        for (int i = 0; i < numElems; i++) {
+            if (con.compare(mit.workContext(), ElementList.get(i).workContext) == 0) {
                 finalIndex = orderInContext(i, mit.workContext());
                 break;
-            } else if(con.compare(mit.workContext(), ElementList.get(i).workContext) < 0) {
+            } else if (con.compare(mit.workContext(), ElementList.get(i).workContext) < 0) {
                 finalIndex = i;
                 break;
             }
 
-            if(i == numElems - 1) {finalIndex = numElems; }
+            if (i == numElems - 1) {
+                finalIndex = numElems;
+            }
         }
 
-        if(finalIndex == numElems) {
+        if (finalIndex == numElems) {
             this.mostImportantThingDao.append(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(this.mostImportantThingDao.getMaxSortOrder() + 1)));
         } else {
             //Shift all completed MITs down, insert new one before them
@@ -423,7 +426,6 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.mostImportantThingDao.shiftSortOrders(ElementList.get(finalIndex).toMostImportantThing().sortOrder(), this.mostImportantThingDao.getMaxSortOrder(), 1);
             this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(mit.withSortOrder(sortOrder)));
         }
-
 
 
     }
@@ -536,6 +538,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return this.mostImportantThingDao.count();
     }
 
+    /**
+     * Calculates removal time based on given time
+     * @param time Local time
+     * @return Reference time in milliseconds
+     */
     private long getReferenceTimeForRemoval(LocalDateTime time) {
 //        Calendar cal = Calendar.getInstance();
 //        cal.set(Calendar.HOUR_OF_DAY, 2);
@@ -581,6 +588,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         }
     }
 
+    /**
+     * Removes completed tasks before a specified time.
+     *
+     * @param time The cutoff time
+     */
     public void removeCompletedTasks(LocalDateTime time) {
         long cutoffTime = getReferenceTimeForRemoval(time);
         var elements = mostImportantThingDao.findAllMits();
@@ -593,6 +605,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         }
     }
 
+    /**
+     * Checks if two dates fall on the same day of the week
+     *
+     * @param dateOne The first date
+     * @param dateTwo The second date
+     * @return True if the dates are on the same day of the week, false otherwise
+     */
     private boolean sameDayOfWeek(Date dateOne, Date dateTwo) {
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
@@ -601,22 +620,36 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return (calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
     }
 
+    /**
+     * Checks if two dates fall on the same weekday of the month
+     *
+     * @param dateOne The first date
+     * @param dateTwo The second date
+     * @return True if they fall on the same weekday
+     */
     private boolean sameWeekdayOfMonth(Date dateOne, Date dateTwo) {
 
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
         int dayOfMonthCalOne = calOne.get(Calendar.DAY_OF_MONTH);
-        int occurrenceOfDayCalOne = ((dayOfMonthCalOne - 1)/ 7);
+        int occurrenceOfDayCalOne = ((dayOfMonthCalOne - 1) / 7);
         Calendar calTwo = Calendar.getInstance();
         calTwo.setTime(dateTwo);
         int dayOfMonthCalTwo = calTwo.get(Calendar.DAY_OF_MONTH);
-        int occurrenceOfDayCalTwo = ((dayOfMonthCalTwo - 1)/ 7);
+        int occurrenceOfDayCalTwo = ((dayOfMonthCalTwo - 1) / 7);
         System.out.println("sameDayOfMonth is " + (calOne.get(Calendar.DAY_OF_MONTH) == calTwo.get(Calendar.DAY_OF_MONTH)));
         System.out.println("dateOne is " + calOne.get(Calendar.DAY_OF_MONTH) + " and dateTwo is " + calTwo.get(Calendar.DAY_OF_MONTH));
         return ((occurrenceOfDayCalOne == occurrenceOfDayCalTwo) && calOne.get(Calendar.DAY_OF_WEEK) == calTwo.get(Calendar.DAY_OF_WEEK));
 
     }
 
+    /**
+     * Checks if two dates represent the same day of the year
+     *
+     * @param dateOne The first date
+     * @param dateTwo The second date
+     * @return True if they represent the same day of the year, else false
+     */
     private boolean sameDayOfYear(Date dateOne, Date dateTwo) {
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
@@ -625,6 +658,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return (calOne.get(Calendar.DAY_OF_YEAR) == calTwo.get(Calendar.DAY_OF_YEAR));
     }
 
+    /**
+     * Checks if the given entity list contains a non-pending, non-recurring MIT with the same task and work context as the provided entity
+     *
+     * @param mitEntity The entity to check
+     * @return True if a matching entity is found, false otherwise
+     */
     private boolean containsNormalMIT(MostImportantThingEntity mitEntity) {
         var allMitEntities = this.findAllToday();
         for (var entity : allMitEntities) {
@@ -639,6 +678,12 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return false;
     }
 
+    /**
+     * Checks if the given entity list contains a non-pending, non-recurring MIT for tomorrow with the same task and work context as the provided entity.
+     *
+     * @param mitEntity The entity to check
+     * @return True if a matching entity is found, false otherwise
+     */
     private boolean containsNormalMITInTomorrow(MostImportantThingEntity mitEntity) {
         var allMitEntities = this.findAllTomorrow();
         for (var entity : allMitEntities) {
@@ -652,6 +697,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return false;
     }
 
+    /**
+     * Gets all of the MIT entities created today
+     *
+     * @return A list of all the MITs created today
+     */
     public List<MostImportantThingEntity> findAllToday() {
         var entityList = this.mostImportantThingDao.findAllMits();
         List<MostImportantThingEntity> outputList = new ArrayList<>();
@@ -667,6 +717,11 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return outputList;
     }
 
+    /**
+     * Gets all the MIT entities scheduled for tomorrow
+     *
+     * @return a list of all the MIT entities scheduled for tomorrow
+     */
     public List<MostImportantThingEntity> findAllTomorrow() {
         var entityList = this.mostImportantThingDao.findAllMits();
         List<MostImportantThingEntity> outputList = new ArrayList<>();
@@ -682,6 +737,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return outputList;
     }
 
+    /**
+     * Checks if two dates represent the same date
+     *
+     * @param dateOne The first date
+     * @param dateTwo The second date
+     * @return True if both dates are the same date, else false
+     */
     public boolean sameExactDay(Date dateOne, Date dateTwo) {
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
@@ -695,6 +757,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return false;
     }
 
+    /**
+     * Checks if two dates are in the same today or tomorrow fragment
+     *
+     * @param dateOne The first date
+     * @param dateTwo The second date
+     * @return True if they both fall within today or tomorrow, else false
+     */
     public boolean inSameTodaySlashTomorrowFragment(Date dateOne, Date dateTwo) {
         Calendar calOne = Calendar.getInstance();
         calOne.setTime(dateOne);
@@ -709,29 +778,58 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         return false;
     }
 
+    /**
+     * Sets current date
+     *
+     * @param currDate Date to be set
+     */
     public void setCurrDate(Date currDate) {
         this.currDate = currDate;
     }
 
+    /**
+     * Moves a pending MIT to today
+     *
+     * @param pendingMit The pending MIT to be moved
+     */
     @Override
     public void moveToToday(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
                 pendingMit.convertToMit(currDate.getTime())));
-                //pendingMit.convertToMit(System.currentTimeMillis())));
+        //pendingMit.convertToMit(System.currentTimeMillis())));
     }
+
+    /**
+     * Moves a pending MIT to tomorrow
+     *
+     * @param pendingMit The pending MIT to be moved
+     */
     @Override
     public void moveToTomorrow(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
                 pendingMit.convertToMit(currDate.getTime() + TimeUnit.DAYS.toMillis(1))));
-                //pendingMit.convertToMit(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1))));
+        //pendingMit.convertToMit(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1))));
     }
+
+    /**
+     * Marks a pending MIT as completed
+     *
+     * @param pendingMit The MIT to be changed
+     */
     @Override
     public void finishPending(PendingMostImportantThing pendingMit) {
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
                 pendingMit.convertToMit(currDate.getTime()).withCompleted(true)));
-                //pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
+        //pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
     }
 
+    /**
+     * Removes all instances of a task name without ID in the same view
+     *
+     * @param id       The ID of the curr entity
+     * @param taskName The name of the task
+     * @param context  The context of the task
+     */
     public void removeAllOfTaskNameWithoutIDInSameView(int id, String taskName, String context) {
         var list = this.mostImportantThingDao.findAllMits();
         for (var mit : list) {
@@ -741,6 +839,13 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         }
     }
 
+    /**
+     * Checks if two entities are in the same today or tomorrow view
+     *
+     * @param idOne The ID of the first entity
+     * @param idTwo The ID of the second entity
+     * @return True if both entities are in the same today or tomorrow view, else false
+     */
     private boolean isSameTodaySlashTomorrowView(int idOne, int idTwo) {
         var mit1 = this.mostImportantThingDao.find(idOne);
         var mit2 = this.mostImportantThingDao.find(idTwo);
@@ -754,7 +859,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         Instant instant2 = refDate.toInstant()
                 .truncatedTo(ChronoUnit.DAYS);
         //If it was created for any day before today, display it
-        boolean mit1InToday =  (instant1.compareTo(instant2) <= 0);
+        boolean mit1InToday = (instant1.compareTo(instant2) <= 0);
 
 
         Date mit2Date = new Date(mit2.timeCreated);
@@ -767,11 +872,10 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         Instant instantTwo = ref2Date.toInstant()
                 .truncatedTo(ChronoUnit.DAYS);
         //If it was created for any day before today, display it
-        boolean mit2InToday =  (instantOne.compareTo(instantTwo) <= 0);
+        boolean mit2InToday = (instantOne.compareTo(instantTwo) <= 0);
         if (mit1InToday && mit2InToday) {
             return true;
         }
         return false;
     }
-
 }
