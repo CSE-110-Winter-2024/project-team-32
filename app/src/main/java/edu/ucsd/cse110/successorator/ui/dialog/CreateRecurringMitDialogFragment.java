@@ -86,7 +86,7 @@ public class CreateRecurringMitDialogFragment extends DialogFragment{
         }
         if (!view.recurringMitMonthEditTextNumber.getText().toString().equals("")) {
             int mitMonth = Integer.valueOf(view.recurringMitMonthEditTextNumber.getText().toString());
-            cal.set(Calendar.MONTH, mitMonth);
+            cal.set(Calendar.MONTH, mitMonth - 1);
         }
         if (!view.recurringMitYearEditTextNumber.getText().toString().equals("")) {
             int mitYear = Integer.valueOf(view.recurringMitYearEditTextNumber.getText().toString());
