@@ -99,6 +99,7 @@ public class TodayMitListFragment extends Fragment {
                 System.out.println("MainActivity got null mits");
                 return;
             }
+
             adapter.clear();
             //sort through MITs and only add the ones that are tomorrow
             List<MostImportantThing> mitsToAdd = new ArrayList<>();
@@ -127,16 +128,16 @@ public class TodayMitListFragment extends Fragment {
                             // it shows the finished task that was previously at tomorrow,
                             // it doesn't show an unfinished goal
                             //if completed, need to override duplicate
-                            if (mit.completed()) {
-                                //Manually remove previous duplicate that was previously added
-                                mitsToAdd.remove(currMit);
-                                this.activityModel.getMostImportantThingRepository().remove(currMit.id());
-                                isDuplicate = false;
-                            }
-                            //else don't override previous added duplicate, just don't add this new one
-                            else {
-                                this.activityModel.getMostImportantThingRepository().remove(mit.id());
-                            }
+//                            if (mit.completed()) {
+//                                //Manually remove previous duplicate that was previously added
+//                                mitsToAdd.remove(currMit);
+////                                this.activityModel.getMostImportantThingRepository().remove(currMit.id());
+//                                isDuplicate = false;
+//                            }
+//                            //else don't override previous added duplicate, just don't add this new one
+//                            else {
+////                                this.activityModel.getMostImportantThingRepository().remove(mit.id());
+//                            }
                             break;
                         }
                     }

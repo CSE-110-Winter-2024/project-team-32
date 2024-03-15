@@ -2,9 +2,11 @@ package edu.ucsd.cse110.successorator.data.db;
 
 import androidx.lifecycle.Transformations;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -256,6 +258,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
      */
     public void toggleCompleted(int id) {
         System.out.println("Toggling completed");
+        var mit = this.mostImportantThingDao.find(id);
         if (this.mostImportantThingDao.find(id).completed) {
             //Move the item to the aboslute top of the list
 
@@ -269,6 +272,7 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
             this.moveToTopOfFinished(id);
         }
         this.mostImportantThingDao.toggleCompleted(id);
+        this.removeAllOfTaskNameWithoutIDInSameView(id, mit.task, mit.workContext );
     }
 
     /**
@@ -726,6 +730,48 @@ public class RoomMostImportantThingRepository implements MostImportantThingRepos
         this.mostImportantThingDao.insert(MostImportantThingEntity.fromMostImportantThing(
                 pendingMit.convertToMit(currDate.getTime()).withCompleted(true)));
                 //pendingMit.convertToMit(System.currentTimeMillis()).withCompleted(true)));
+    }
+
+    public void removeAllOfTaskNameWithoutIDInSameView(int id, String taskName, String context) {
+        var list = this.mostImportantThingDao.findAllMits();
+        for (var mit : list) {
+            if (mit.id != id && mit.task.equals(taskName) && mit.workContext.equals(context) && isSameTodaySlashTomorrowView(id, mit.id)) {
+                this.mostImportantThingDao.delete(mit.id);
+            }
+        }
+    }
+
+    private boolean isSameTodaySlashTomorrowView(int idOne, int idTwo) {
+        var mit1 = this.mostImportantThingDao.find(idOne);
+        var mit2 = this.mostImportantThingDao.find(idTwo);
+        Date mit1Date = new Date(mit1.timeCreated);
+        Date refDate = currDate;
+        if (this.currDate != null) {
+            refDate = this.currDate;
+        }
+        Instant instant1 = mit1Date.toInstant()
+                .truncatedTo(ChronoUnit.DAYS);
+        Instant instant2 = refDate.toInstant()
+                .truncatedTo(ChronoUnit.DAYS);
+        //If it was created for any day before today, display it
+        boolean mit1InToday =  (instant1.compareTo(instant2) <= 0);
+
+
+        Date mit2Date = new Date(mit2.timeCreated);
+        Date ref2Date = currDate;
+        if (this.currDate != null) {
+            ref2Date = this.currDate;
+        }
+        Instant instantOne = mit2Date.toInstant()
+                .truncatedTo(ChronoUnit.DAYS);
+        Instant instantTwo = ref2Date.toInstant()
+                .truncatedTo(ChronoUnit.DAYS);
+        //If it was created for any day before today, display it
+        boolean mit2InToday =  (instantOne.compareTo(instantTwo) <= 0);
+        if (mit1InToday && mit2InToday) {
+            return true;
+        }
+        return false;
     }
 
 }
